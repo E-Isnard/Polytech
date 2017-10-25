@@ -1,0 +1,267 @@
+* Exercice 1
+
+enzo@enzo-VirtualBox:~$ cat /etc/passwd
+
+root:x:0:0:root:/root:/bin/bash
+daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
+bin:x:2:2:bin:/bin:/usr/sbin/nologin
+sys:x:3:3:sys:/dev:/usr/sbin/nologin
+sync:x:4:65534:sync:/bin:/bin/sync
+games:x:5:60:games:/usr/games:/usr/sbin/nologin
+man:x:6:12:man:/var/cache/man:/usr/sbin/nologin
+lp:x:7:7:lp:/var/spool/lpd:/usr/sbin/nologin
+...
+
+Le dossier passwd contient la liste des utilisateurs ainsi que leurs UID, leurs GID, leurs dossiers personnels et le shell qu'ils utilisent.
+* Exercice 2
+1)Oui il est bien défini : enzo:x:1000:1000:enzo,,,:/home/enzo:/bin/bash
+2 & 3)root:x:0:0:root:/root:/bin/bash
+Le dossier personnel de root est /root et il utilise bash comme shell.
+4)nobody:x:65534:65534:nobody:/nonexistent:/usr/sbin/nologin
+On peut voir que nobody n'a pas de dossier personnel et de shell attribué.
+5)enzo@enzo-VirtualBox:~$ cat /etc/group
+...
+sudo:x:27:enzo
+...
+
+Les utilisateurs faisant partis de ce groupe ont la possibilité d'utiliser la commande "sudo"
+qui permet d'exécuter une commande en tant que root.
+* Exercice 3
+1)
+enzo@enzo-VirtualBox:~$ sudo useradd eve
+
+enzo@enzo-VirtualBox:~$ ls -lrt /
+...
+drwxr-xr-x  27 root root       840 oct.  15 10:13 run
+drwx------   3 root root      4096 oct.  15 10:15 root
+drwxr-xr-x 129 root root     12288 oct.  15 10:41 etc
+drwxrwxrwt  12 root root      4096 oct.  15 10:44 tmp
+
+Seul le dossier "etc" a été modifié lors de la création de l'utilisateur "eve".
+
+enzo@enzo-VirtualBox:~$ ls -lrt /etc
+...
+-rw-r--r--  1 root root   97348 oct.  15 10:12 ld.so.cache
+drwxr-xr-x  5 root lp      4096 oct.  15 10:13 cups
+-rw-------  1 root root    1429 oct.  15 10:15 shadow-
+-rw-r--r--  1 root root    2450 oct.  15 10:41 passwd
+-rw-r-----  1 root shadow  1454 oct.  15 10:41 shadow
+-rw-r--r--  1 root root    1053 oct.  15 10:41 group
+-rw-r-----  1 root shadow   877 oct.  15 10:41 gshadow
+-rw-r--r--  1 root root      35 oct.  15 10:41 subuid
+-rw-r--r--  1 root root      35 oct.  15 10:41 subgid
+
+Les fichiers passwd,shadow,group,gshadow,subuid et subgid ont été modifiés lors de la création
+de l'utilisateur "eve".
+
+2)enzo@enzo-VirtualBox:~$ sudo passwd eve
+
+enzo@enzo-VirtualBox:~$ ls -lrt /
+...
+drwxr-xr-x  27 root root       840 oct.  15 10:13 run
+drwx------   3 root root      4096 oct.  15 10:15 root
+drwxrwxrwt  12 root root      4096 oct.  15 10:44 tmp
+dr-xr-xr-x  13 root root         0 oct.  15 10:45 sys
+drwxr-xr-x 129 root root     12288 oct.  15 10:48 etc
+
+Seul le dossier "etc" a été modifié.
+
+enzo@enzo-VirtualBox:~$ ls -lrt /etc
+...
+-rw-r--r--  1 root root    1053 oct.  15 10:41 group
+-rw-r-----  1 root shadow   877 oct.  15 10:41 gshadow
+-rw-r--r--  1 root root      35 oct.  15 10:41 subuid
+-rw-r--r--  1 root root      35 oct.  15 10:41 subgid
+-rw-r-----  1 root shadow  1551 oct.  15 10:48 shadow
+
+Seul le fichier "shadow" a été modifié.
+
+Le fichier "shadow" est le fichier contenant les mots de passe hashés des utilisateurs.
+* Exercice 4
+1)enzo@enzo-VirtualBox:~$ sudo useradd -m walle
+  enzo@enzo-VirtualBox:~$ sudo passwd walle
+  
+enzo@enzo-VirtualBox:~$ ls -lrt /
+...
+drwx------   3 root root      4096 oct.  15 10:15 root
+drwxrwxrwt  12 root root      4096 oct.  15 10:44 tmp
+dr-xr-xr-x  13 root root         0 oct.  15 10:45 sys
+drwxr-xr-x   4 root root      4096 oct.  15 11:00 home
+drwxr-xr-x 129 root root     12288 oct.  15 11:01 etc
+
+Les dossiers "home" et "etc" ont été modifiés.
+Les fichiers impactés dans "etc" sont les mêmes que ceux vus dans l'exercice 3.
+
+enzo@enzo-VirtualBox:~$ ls -lrt /home
+total 8
+drwxr-xr-x 14 enzo  enzo  4096 oct.  15 10:15 enzo
+drwxr-xr-x  2 walle walle 4096 oct.  15 11:00 walle
+
+Un dossier "walle" a été crée dans "home".
+
+enzo@enzo-VirtualBox:~$ ls -la /home/walle/
+total 32
+drwxr-xr-x 2 walle walle 4096 oct.  15 11:00 .
+drwxr-xr-x 4 root  root  4096 oct.  15 11:00 ..
+-rw-r--r-- 1 walle walle  220 nov.  15  2016 .bash_logout
+-rw-r--r-- 1 walle walle 3771 nov.  15  2016 .bashrc
+-rw-r--r-- 1 walle walle 8980 avril 20  2016 examples.desktop
+-rw-r--r-- 1 walle walle  675 nov.  15  2016 .profile
+
+enzo@enzo-VirtualBox:~$ sudo nano /etc/passwd
+(dans nano)
+...
+vboxadd:x:998:1::/var/run/vboxadd:/bin/false
+eve:x:1001:1001::/home/eve:
+walle:x:1002:1002::/home/walle:/bin/bash
+
+* Exercice 5
+1)enzo@enzo-VirtualBox:~$ sudo groupadd walle-movie
+
+enzo@enzo-VirtualBox:~$ ls -lrt /
+...
+drwxr-xr-x   4 root root      4096 oct.  15 11:00 home
+drwxrwxrwt  12 root root      4096 oct.  15 11:11 tmp
+drwx------   4 root root      4096 oct.  15 11:11 root
+drwxr-xr-x 131 root root     12288 oct.  15 11:15 etc
+
+Seul le dossier "etc" a été modidié.
+
+enzo@enzo-VirtualBox:~$ ls -lrt /etc
+...
+drwxr-xr-x  3 root root    4096 oct.  15 11:09 apache2
+drwxr-xr-x  4 root root    4096 oct.  15 11:09 lighttpd
+-rw-r--r--  1 root root   97906 oct.  15 11:09 ld.so.cache
+drwxr-xr-x  2 root root    4096 oct.  15 11:10 alternatives
+-rw-r--r--  1 root root    2491 oct.  15 11:11 passwd
+-rw-r--r--  1 root root    1087 oct.  15 11:15 group
+-rw-r-----  1 root shadow   903 oct.  15 11:15 gshadow
+
+Les fichiers "group" et "gshadow" ont été modifiés.
+2)
+
+enzo@enzo-VirtualBox:~$ sudo nano /etc/group
+(dans nano)
+...
+vboxsf:x:998:
+eve:x:1001:
+walle:x:1002:
+walle-movie:x:1003:walle,eve
+
+enzo@enzo-VirtualBox:~$ groups walle eve
+walle : walle walle-movie
+eve : eve walle-movie
+
+* Exercice 6
+1)
+walle@enzo-VirtualBox:~$ whoami
+walle
+2)
+walle@enzo-VirtualBox:~$ pwd
+/home/walle
+
+On se trouve dans ce dossier car il s'agit du "home directory" de walle.
+3)
+walle@enzo-VirtualBox:~$ cp /etc/passwd ~
+
+On peut donc copier le fichier "etc".
+
+walle@enzo-VirtualBox:~$ rm /etc/passwd
+rm: supprimer fichier (protégé en écriture) '/etc/passwd' ? yes
+rm: impossible de supprimer '/etc/passwd': Permission non accordée
+
+walle@enzo-VirtualBox:~$ echo "hello">>/etc/passwd
+bash: /etc/passwd: Permission non accordée
+
+On peut donc ni modifier ni supprimer le fichier "etc".
+
+walle@enzo-VirtualBox:~$ ls -l /
+...
+drwxr-xr-x 131 root root     12288 oct.  15 11:22 etc/
+...
+
+Walle ne fait pas parti du groupe root et le dossier etc appartient à root.
+Walle a donc les droits de lecture et d'éxécution sur "etc" donc il peut lister le 
+contenu de etc et y accéder mais ne peut pas supprimer ou ajouter des fichiers dans 
+etc.
+Walle ne peut donc pas supprimer etc.
+
+walle@enzo-VirtualBox:~$ ls -l /etc
+...
+-rw-r--r--  1 root root    2491 oct.  15 11:11 passwd
+...
+
+Walle n'a pas les droits d'écriture sur le fichier passwd donc il ne peut pas modifier son contenu
+par contre il possède les droits de lecture sur passwd donc il peut copier son contenu.
+
+4)walle@enzo-VirtualBox:~$ cp /etc/shadow ~
+cp: impossible d'ouvrir '/etc/shadow' en lecture: Permission non accordée
+
+walle@enzo-VirtualBox:~$ ls -l /etc/shadow
+-rw-r----- 1 root shadow 1675 oct.  15 11:01 /etc/shadow
+
+Walle ne fait pas parti du groupe shadow donc il n'a pas les dtois de lecture sur shadow donc il ne peut copier son contenu.
+
+On peut pas copier le fichier "shadow" car sinon un utilisateur pourrait copier son contenu et essayer de cracker
+les mots de passe des autres utilisateus.
+
+Le fichier "passwd" contient seulement une liste des utilisateurs ainsi que leurs caractéristiques donc il n'y pas de danger à ce 
+qu'un utilisateur lambda puisse copier son contenu.
+
+* Exercice 7
+1)
+walle@enzo-VirtualBox:~$ touch file.txt
+walle@enzo-VirtualBox:~$ chmod 555 file.txt
+walle@enzo-VirtualBox:~$ ls -l file.txt
+-r-xr-xr-x 1 walle walle 0 oct.  15 12:22 file.txt
+
+walle@enzo-VirtualBox:~$ echo "hello">file.txt
+bash: file.txt: Permission non accordée
+
+walle@enzo-VirtualBox:~$ su
+Mot de passe: 
+root@enzo-VirtualBox:/home/walle# echo "hello">file.txt
+root@enzo-VirtualBox:/home/walle# cat file.txt 
+hello
+
+2)walle@enzo-VirtualBox:~$ mkdir secret && chmod 700 secret
+3)walle@enzo-VirtualBox:~$ chgrp walle-movie secret/
+walle@enzo-VirtualBox:~$ su eve
+Mot de passe: 
+
+eve@enzo-VirtualBox:/home/walle$ cd secret/
+bash: cd: secret/: Permission non accordée
+
+eve@enzo-VirtualBox:/home/walle$ ls secret/
+ls: impossible d'ouvrir le répertoire 'secret/': Permission non accordée
+
+walle@enzo-VirtualBox:~$ touch secret/hello
+
+walle@enzo-VirtualBox:~$ chmod g=+w secret/hello
+
+walle@enzo-VirtualBox:~$ chgrp walle-movie secret/hello
+
+walle@enzo-VirtualBox:~$ chmod g=+rw secret/hello
+
+walle@enzo-VirtualBox:~$ su eve
+eve@enzo-VirtualBox:/home/walle$ cat secret/hello
+cat: secret/hello: Permission non accordée
+
+donc les fichiers placés dans "secret" ne sont pas lisibles pas les membres du groupe même si le groupe a les droits de lecture
+et d'écriture sur le fichier.
+
+
+
+
+
+* Exercice 8
+enzo@enzo-VirtualBox:~$ sudo userdel eve
+enzo@enzo-VirtualBox:~$ sudo userdel -r walle
+enzo@enzo-VirtualBox:~$ cat /etc/group
+...
+walle-movie:x:1003:
+
+Aucun utilisateur ne fait parti du groupe walle-movie désormais.
+
+enzo@enzo-VirtualBox:~$ sudo groupdel walle-movie
+

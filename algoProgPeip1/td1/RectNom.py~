@@ -1,0 +1,4 @@
+nom =input("Rentre votre nom:")
+for i in range(9):
+    print(10*("*" + nom))
+        
