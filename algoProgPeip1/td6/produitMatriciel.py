@@ -11,13 +11,12 @@ def produitM(matrice,vecteur):
     produit = []
     s = 0
     i = 0
-    while i <ligne:
+    for i in range(ligne):
         for j in range(colonne):
             s += matrice[j] * vecteur[j]
         produit.append(s)
-        i += 1
         s = 0
-        
+
     return produit
 
 ligne = int(input("nombre de ligne: "))
@@ -28,4 +27,3 @@ print("lecture d'un vecteur de taille {}".format(colonne))
 vecteur = lireM(1,colonne)
 
 print(produitM(matrice,vecteur))
-
