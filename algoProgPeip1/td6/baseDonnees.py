@@ -29,3 +29,5 @@ while continuer:
 
     if choix == 4:
         continuer = False
+    else:
+        print("Veuillez rentrer un nombre entre 1 et 4 (gros débile)")
