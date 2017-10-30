@@ -1,4 +1,4 @@
-baseDonnees = [["Collavizza","Hélène",6],["Enzo","Isnard",14],["Reed","Lou",12]]
+baseDonnees = [["Collavizza","Hélène",6],["Enzo","Isnard",20],["Reed","Lou",12]]
 continuer = True
 while continuer:
     print("Voulez-vous :\n\n")
