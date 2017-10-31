@@ -1,66 +1,108 @@
 from turtle import *
 import random
-import time
 import os
 
-fichier = open("dicoFrancais.txt")
-dico = []
-ligne = "aha"
-while ligne != "":
-    ligne = fichier.readline()
-    dico.append(ligne)
-fichier.close()
+def choisirMot():
+    """fonction qui choisit un mot parmis une liste de mot dans un fichier texte"""
+    fichier = open("dicoFrancais.txt")
+    dico = []
+    ligne = " "
+    while ligne != "":
+        ligne = fichier.readline()
+        ligne = ligne[:-1]
+        dico.append(ligne)
+    fichier.close()
+    return random.choice(dico)
 
-motMystere = random.choice(dico)
+def motMasqueFunc(lettresTrouvees,motComplet):
+    motMasque = ""
+    for lettre in motComplet:
+        if lettre in lettreTrouvees:
+            motMasque += lettre
+        else:
+            motMasque += "*"
+    return motMasque
 
-while 
+def drawPendu(nbDevie):
+    """fonction qui dessine le pendu"""
+    if nbDeVie == 6:
+        #dessine la base
+        forward(100)
+
+    elif nbDeVie == 5:
+        #dessine le poteau
+        forward(-50)
+        left(90)
+        forward(200)
+
+    elif nbDeVie == 4:
+        #dessine la fin du poteau
+        right(90)
+        forward(100)
+        right(90)
+        forward(50)
+
+    elif nbDeVie == 3:
+        #dessine la tete
+        up()
+        forward(30)
+        left(90)
+        down()
+        circle(15)
+
+    elif nbDeVie == 2:
+        #dessine le corps
+        right(90)
+        forward(50)
+
+    elif nbDeVie == 1:
+        #dessine les bras
+        forward(-30)
+        right(45)
+        forward(20)
+        forward(-20)
+        left(90)
+        forward(20)
+
+    elif nbDeVie == 0:
+        #dessine les jambes
+        forward(-20)
+        right(45)
+        forward(30)
+        right(45)
+        forward(20)
+        forward(-20)
+        left(90)
+        forward(20)
+        up()
+        goto(0,-20)
+        write("PENDU HAHA !")
+        os.system("pause")
 
 
+#####################################
 
 
-"""
+motComplet = choisirMot().lower()
+#print(motComplet)
+lettreTrouvees = []
+nbDeVie = 7
+motMasque = ""
 
-#dessine la base
-forward(100)
-#dessine le poteau
-forward(-50)
-left(90)
-forward(200)
-#dessine la fin du poteau
-right(90)
-forward(100)
-right(90)
-forward(50)
-
-#dessine la tete
-up()
-forward(30)
-left(90)
-down()
-circle(15)
-#dessine le corps
-right(90)
-forward(50)
-#dessine les bras
-forward(-30)
-right(45)
-forward(20)
-forward(-20)
-left(90)
-forward(20)
-#dessine les jambes
-forward(-20)
-right(45)
-forward(30)
-right(45)
-forward(20)
-forward(-20)
-left(90)
-forward(20)
-up()
-goto(0,-20)
-write("PENDU HAHA !")
-
-
-time.sleep(3)
-"""
+while motMasque != motComplet and nbDeVie > 0:
+    motMasque = motMasqueFunc(lettreTrouvees,motComplet)
+    print("mot trouvé : {} ; vous avez {} vie(s)".format(motMasque,nbDeVie))
+    lettre = input("Veuillez saisir une lettre: ").lower()
+    if lettre in lettreTrouvees:
+        print("Vous avez déjà choisi cette lettre")
+    elif lettre in motComplet:
+        lettreTrouvees.append(lettre)
+        print("Bien joué")
+    else:
+        nbDeVie -= 1
+        print("La lettre n'est pas dans le mot")
+        drawPendu(nbDeVie)
+if nbDeVie == 0:
+    print("Vous avez perdu ! Le mot complet était {}".format(motComplet))
+else:
+    print("Vous avez gagné !")
