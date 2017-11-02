@@ -81,7 +81,7 @@ def drawPendu(nbDevie):
 
             os.system("pause")
         elif os.name == "posix":
-            os.system("echo appuyer sur une touche pour continuer && read variable")
+            os.system("echo Appuyez sur une touche pour continuer... && read variable")
 
 
 #####################################
