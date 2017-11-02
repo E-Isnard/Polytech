@@ -2,6 +2,8 @@ from turtle import *
 import random
 import os
 
+#Listes des fonctions
+
 def choisirMot():
     """fonction qui choisit un mot parmis une liste de mot dans un fichier texte"""
     fichier = open("dicoFrancais.txt", encoding="ISO-8859-1")
@@ -15,6 +17,8 @@ def choisirMot():
     return random.choice(dico)
 
 def motMasqueFunc(lettresTrouvees,motComplet):
+    """fonction qui choisit un mot parmis une liste de mots
+    dans un fichier texte"""
     motMasque = ""
     for lettre in motComplet:
         if lettre in lettreTrouvees:
@@ -78,14 +82,14 @@ def drawPendu(nbDevie):
         goto(0,-20)
         write("PENDU HAHA !")
         if os.name == "nt":
-
             os.system("pause")
         elif os.name == "posix":
             os.system("echo Appuyez sur une touche pour continuer... && read variable")
+            #la variable de read est inutile
 
 
 #####################################
-
+# Programme principal
 
 motComplet = choisirMot().lower()
 #print(motComplet)
