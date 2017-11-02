@@ -5,7 +5,7 @@ import os
 #Listes des fonctions
 
 def choisirMot():
-     """fonction qui choisit un mot parmis une liste de mots
+    """fonction qui choisit un mot parmis une liste de mots
     dans un fichier texte"""
     fichier = open("dicoFrancais.txt", encoding="ISO-8859-1")
     dico = []
