@@ -4,7 +4,7 @@ import os
 
 def choisirMot():
     """fonction qui choisit un mot parmis une liste de mot dans un fichier texte"""
-    fichier = open("dicoFrancais.txt")
+    fichier = open("dicoFrancais.txt", encoding="ISO-8859-1")
     dico = []
     ligne = " "
     while ligne != "":
@@ -77,7 +77,11 @@ def drawPendu(nbDevie):
         up()
         goto(0,-20)
         write("PENDU HAHA !")
-        os.system("pause")
+        if os.name == "nt":
+
+            os.system("pause")
+        elif os.name == "posix":
+            os.system("echo appuyer sur une touche pour continuer && read variable")
 
 
 #####################################
