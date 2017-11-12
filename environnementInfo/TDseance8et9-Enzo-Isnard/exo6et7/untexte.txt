@@ -1,0 +1,3 @@
+carotte, patate... carotte, poireau !
+haricot; poireau; carotte; patate...
+patate+patate=patate

@@ -1,0 +1,2 @@
+On tape echo Voici un texte > untexte.txt
+Voici un texte

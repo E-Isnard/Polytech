@@ -1,0 +1,1 @@
+ls: impossible d'accéder à '*.com': Aucun fichier ou dossier de ce type

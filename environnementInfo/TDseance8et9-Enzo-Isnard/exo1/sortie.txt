@@ -1,0 +1,3 @@
+samedi 11 novembre 2017, 18:01:19 (UTC+0100)
+total 4
+-rw-rw-r-- 1 enzo enzo 45 nov.  11 18:01 sortie.txt

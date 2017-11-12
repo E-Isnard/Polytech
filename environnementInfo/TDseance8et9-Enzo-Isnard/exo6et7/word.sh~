@@ -1,0 +1,11 @@
+#!/bin/bash
+
+words=$(cat untexte.txt)
+
+echo $words
+
+
+#for word in $(echo $words)
+#do 
+#echo $(grep -c "$word" $1) $word
+#done
