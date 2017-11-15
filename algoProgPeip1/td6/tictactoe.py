@@ -50,12 +50,6 @@ def play(x,y):
     if 100<x<250 and -200<y<-50:
             drawCircle(175,-200)
 
-
-
-
-
-
-
 drawGrid()
 onscreenclick(play)
 mainloop()
