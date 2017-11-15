@@ -24,3 +24,4 @@ def drawGrid():
 
 
 drawGrid()
+mainloop()
