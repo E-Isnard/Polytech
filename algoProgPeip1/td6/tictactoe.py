@@ -1,6 +1,6 @@
 from turtle import *
 import time
-#hideturtle()
+hideturtle()
 speed("fastest")
 def drawSquare(x,y):
     up()
