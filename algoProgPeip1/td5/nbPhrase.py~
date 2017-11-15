@@ -1,7 +1,0 @@
-def isDot(char):
-    if char in "?.!":
-        return True
-    else:
-        return False
-
-print((isDot("a")))

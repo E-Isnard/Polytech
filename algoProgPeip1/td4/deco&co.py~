@@ -1,5 +1,0 @@
-def surfaceAPeindre(h,L,l):
-    """Fonction qui renvoie la surface totale des faces intérieures d'un cube"""
-    return 2*h*l + 2*h*L + L*l
-
-print(surfaceAPeindre(2,2,2))

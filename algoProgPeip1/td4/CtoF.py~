@@ -1,8 +1,0 @@
-def CtoF(choice,T):
-    """Fonction qui prend en argument une température en C° ou F° et la 
-    convertit respectivement en F° ou en C°"""
-    if choice == "C":
-        return (T-32)/1
-    if choice == "F":
-        return T*1.8 +32
-        
