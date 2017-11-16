@@ -5,7 +5,7 @@ import os
 #Listes des fonctions
 
 def choisirMot():
-    """fonction qui choisit un mot parmis une liste de mots
+    """fonction qui choisit un mot parmis une liste
     dans un fichier texte"""
     fichier = open("dicoFrancais.txt", encoding="ISO-8859-1")
     dico = []
@@ -19,7 +19,7 @@ def choisirMot():
 
 def motMasqueFunc(lettresTrouvees,motComplet):
     """fonction qui affiche un mot incomplet 
-    dépendant des lettres qu'on a trouvé"""
+    dépendant des lettres trouvées"""
     motMasque = ""
     for lettre in motComplet:
         if lettre in lettreTrouvees:
