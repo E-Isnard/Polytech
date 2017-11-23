@@ -1,0 +1,71 @@
+* Exercice1
+Un film sous-titré est un objet multimédia composite
+car il contient une vidéo et du texte.
+
+* Exercice2
+L'objet "Karaoké" est un objet composite car il est composé d'un
+fichier son et d'un fichier texte.
+
+* Exercice3
+Un logicel qui écrit dans un fichier texte ce que l'utilisateur lui dicte.
+Le traitement spécifique s'insère entre le dispositif d'acquisition
+et le logiciel de rendu.
+
+Acquisition son -> traitement -> logicel de rendu texte
+
+
+* Exercice4
+Un logiciel de reconnaissance d'image qui analyse les caractères d'un
+texte et qui le traduit en une autre langue.
+Le traitement se situe entre l'acquisition de l'image et le logiciel de rendu
+texte.
+
+Acquisition image -> traitement -> logiciel de rendu texte.
+
+* Exercice5
+
+A = 1010
+B = 11111
+C = 100000
+
+* Exercice6
+
+D = 41
+E = 179
+F  =101
+G = 279
+
+* Exercice7
+
+H = 16 < 84
+I = 129 > 101
+J = 128 = 128
+K = 255 < 256
+
+* Exerice 10
+
+Affichage de texteANSI:Bonjour!
+Affichahe de texteUTF8:´╗┐Bonjour!
+Affichage de texteUTF16BE:■  B o n j o u r !
+
+* Exercice 11
+
+Blocnote affiche les trois fichiers de la même manière et sans "erreur 
+d'affichage".
+On peut supposer l'encodage utilisé est indiqué dans le fichier.
+
+
+* Exercice 12
+les neuneus font que cliquer
+
+* Exercice 13
+
+?? l e s  n e u n e u s  f o n t  q u e  c l i q u e r  
+
+"?" repésente un caracète qui n'est pas dans la table ASCI.
+
+Le texte est similaire à celui que nous a affiché la commande
+"type UTF816BE.txt"
+
+On peut supposer que la commande "type" affiche les fichiers textes 
+avec l'encodage ASCI.
