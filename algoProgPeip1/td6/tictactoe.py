@@ -1,3 +1,5 @@
+#-*- coding: utf-8 -*-
+
 from turtle import *
 from math import *
 import time
@@ -111,7 +113,7 @@ def main(x,y):
             up()
             goto(0,-400)
             down()
-            write("Le joueur {} a gagne".format(1 if player==2 else 2))
+            write("Le joueur {} a gagné".format(1 if player==2 else 2))
             exitonclick()
 
 def checkWin(grid):
