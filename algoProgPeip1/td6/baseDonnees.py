@@ -1,10 +1,10 @@
-baseDonnees = [["Collavizza","Hélène",6],["Enzo","Isnard",20],["Reed","Lou",12]]
+baseDonnees = [["Collavizza","Hélène",6],["Durand","Gérard",20],["Reed","Lou",12]]
 continuer = True
 while continuer:
     print("Voulez-vous :\n\n")
     print("1.Afficher les élèves\n")
     print('2.Calculer la moyenne de la classe\n')
-    print('3.Trouver le major(ie Enzo)\n')
+    print('3.Trouver le major\n')
     print('4.sortir')
     choix = int(input("Votre choix:"))
     if choix == 1:
