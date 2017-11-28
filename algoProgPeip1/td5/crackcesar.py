@@ -15,7 +15,7 @@ def cesar_crack(string):
     for i in range(26):
         print(cesar_crypt(string,-i))
 
-#Le message doit être écrit en majuscule et il est préférable qu'il ne contienne pas de caractères
+#Le message doit être écrit en majuscules et il est préférable qu'il ne contienne pas de caractères
 #spéciaux
 #print(cesar_crypt('baguette',17))
 
