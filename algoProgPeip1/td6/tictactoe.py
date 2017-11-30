@@ -117,6 +117,11 @@ def main(x,y):
             exitonclick()
 
 def checkWin(grid):
+
+    for i in range(3):
+            
+        if [grid[j][i] for j in range(3)] in ([1,1,1],[2,2,2]):
+            return True    
     for i in range(3):
         if grid[i] in ([1,1,1],[2,2,2]):
             return True
