@@ -46,7 +46,7 @@ On prend affiche la valeur RVG de la couleur indéxée du pixel 320/314
 
 * Exercice6
 
-Il s'agit de l'image de droite car on peut voir distinguer les pixels.
+Il s'agit de l'image de droite car on peut distinguer les pixels.
 Cela est du au fait qu'elle ne peut pas représenter suffisemment de couleurs
 différentes pour afficher convenablement le dégradé de blanc de la fleur.
 
@@ -58,19 +58,18 @@ la qualité de l'image.
 Les dégradés deviennent de plus en plus uniformes lorsqu'on réduit la 
 qualités.
 
-On remarque aussi qu'il y a des taches proches à cotes des lettres du texte
+On remarque aussi qu'il y a des taches à côtes des lettres du texte
 lorsqu'on réduit la qualité.
 
 
-
 * Exercice8
-En tracant la courbe d'évolution de la taille des fichiers en fonction 
+En traçant la courbe d'évolution de la taille des fichiers en fonction 
 de la qualité définite on remarque que l'on a le meilleur raport qualité/taille
 à 75.
 
 * Exercice9
 On ne peut observer qu'un seul canal car l'image est en format gif, ce qui
-fait que chaque pixel est codée avec une palette de couleur prè-construite et
+fait que chaque pixel est codé avec une palette de couleur prè-construite et
 non avec un codage RGB.
 
 * Exercice10
@@ -99,4 +98,4 @@ Ici vu que notre matrice de covolution est nulle la valeur finale du pixel sera 
 
 * Exercice14
 
-C'est psychédélique.
+  C'est psychédélique.
