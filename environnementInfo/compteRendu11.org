@@ -58,9 +58,8 @@ la qualité de l'image.
 Les dégradés deviennent de plus en plus uniformes lorsqu'on réduit la 
 qualités.
 
-On remarque aussi qu'il y a des taches à côtes des lettres du texte
+On remarque aussi qu'il y a des taches à côtés des lettres du texte
 lorsqu'on réduit la qualité.
-
 
 * Exercice8
 En traçant la courbe d'évolution de la taille des fichiers en fonction 
