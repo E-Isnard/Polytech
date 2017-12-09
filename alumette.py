@@ -12,7 +12,7 @@ def checkWin(nbAlumettes):
 def ia(nbAlumettes):
     if nbAlumettes > 3:
         if nbAlumettes%4 == 0:
-            return 1
+            return randint(1,2)
         else:
             return nbAlumettes%4
         
