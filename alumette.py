@@ -11,14 +11,11 @@ def checkWin(nbAlumettes):
 
 def ia(nbAlumettes):
     if nbAlumettes > 3:
-        if (nbAlumettes-1)%4 == 0:
-            return 1
-        elif (nbAlumettes-2)%4 == 0:
-            return 2
-        elif (nbAlumettes-3)%4 == 0:
-            return 3
-        else:
+        if nbAlumettes%4 == 0:
             return randint(1,3)
+        else:
+            return nbAlumettes%4
+        
     else:
         return nbAlumettes
 
@@ -27,6 +24,7 @@ def ia(nbAlumettes):
 
 
 nbAlumettes = randint(5,10)
+print("Le jeu commence avec {} alumettes".format(nbAlumettes))
 afficher(nbAlumettes)
 while checkWin(nbAlumettes) == False:
     tirage = 0
