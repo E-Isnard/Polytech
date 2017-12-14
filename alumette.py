@@ -19,16 +19,22 @@ def ia(nbAlumettes):
     else:
         return nbAlumettes
 
+def make_rule():
+    length = randint(3,4)
+    rule = sample(range(1,9),length)
+    rule.sort()
+    return rule
 
-
-
-
+rule = make_rule()
 nbAlumettes = randint(10,20)
 print("Le jeu commence avec {} alumettes".format(nbAlumettes))
+print("Les règles sont {}".format(rule))
 afficher(nbAlumettes)
+
 while checkWin(nbAlumettes) == False:
+
     tirage = 0
-    while 1>tirage or 3<tirage:
+    while tirage not in rule:
         tirage = int(input("Joueur 1: "))
     nbAlumettes -= tirage
     afficher(nbAlumettes)
@@ -44,4 +50,3 @@ while checkWin(nbAlumettes) == False:
         print("Il reste {} alumette(s)".format(nbAlumettes))
         if checkWin(nbAlumettes):
             print("L'IA a gagné")
-    
