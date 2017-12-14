@@ -12,7 +12,7 @@ def checkWin(nbAlumettes):
         return False
 
 def ia(nbAlumettes):
-    """Ne marche seulement avec la règle [1,2,3]"""
+    """Ne marche qu'avec la règle [1,2,3]"""
     if nbAlumettes%4 == 0:
         return 1
     else:
