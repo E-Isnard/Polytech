@@ -13,14 +13,12 @@ def checkWin(nbAlumettes):
 
 def ia(nbAlumettes):
     """Ne marche seulement avec la règle [1,2,3]"""
-    if nbAlumettes > 3:
-        if nbAlumettes%4 == 0:
-            return 1
-        else:
-            return nbAlumettes%4
-        
+    if nbAlumettes%4 == 0:
+        return 1
     else:
-        return nbAlumettes
+        return nbAlumettes%4
+        
+    
 
 def make_rule():
     length = randint(3,4)
