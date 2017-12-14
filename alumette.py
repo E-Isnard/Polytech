@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
 from random import *
 
 def afficher(nbAlumettes):
@@ -10,6 +12,7 @@ def checkWin(nbAlumettes):
         return False
 
 def ia(nbAlumettes):
+    """Ne marche seulement avec la règle [1,2,3]"""
     if nbAlumettes > 3:
         if nbAlumettes%4 == 0:
             return 1
@@ -42,8 +45,6 @@ while checkWin(nbAlumettes) == False:
         print("Le joueur 1 a gagné")
     else:
         tirage = ia(nbAlumettes)
-        #while 1>tirage or 3<tirage:
-            #tirage = int(input("Joueur 2: "))
         nbAlumettes -= tirage
         afficher(nbAlumettes)
         print("L'IA a pris {} alumette(s)".format(tirage))
