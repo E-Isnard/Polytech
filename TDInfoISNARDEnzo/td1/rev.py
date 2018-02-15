@@ -3,15 +3,15 @@ from peip3 import *
 
 
 def main():
-	f = open(argv[1],"r")
-	lignes = f.readlines()
-	n = 1
-	last = lignes[0]
-	for i in range(1,lignes):
-		
-
-	print()
-	close(f)
-
+        f = open(argv[1],"r")
+        i = 0
+        for line in f:
+            if i == 0:
+                line = line.replace("\n","")
+                print(line[::-1])
+            else:
+                print(line[::-1])
+            i += 1
+        close(f)
 
 main()
