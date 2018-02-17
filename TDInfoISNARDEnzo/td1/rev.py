@@ -8,10 +8,14 @@ def main():
         for line in f:
             if i == 0:
                 line = line.replace("\n","")
-                print(line[::-1])
+                print(line[::-1],end="")
             else:
-                print(line[::-1])
+                print(line[::-1],end="")
             i += 1
+        print()
         close(f)
 
 main()
+if os.name=="nt":
+
+    system("pause")
