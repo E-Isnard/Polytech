@@ -10,7 +10,7 @@ def build_URL():
  
 
 def main():
-	system("firefox "+build_URL())
+	system("chromium-browser "+build_URL())
 	
 	
 main()
