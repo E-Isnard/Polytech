@@ -7,9 +7,10 @@ def build_URL():
 	URL2="+".join(argv[1:])
 	URL=URL1 + URL2
 	return URL
-
+ 
 
 def main():
 	system("firefox "+build_URL())
-
+	
+	
 main()
