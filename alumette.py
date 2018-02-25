@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
-from random import *
+from random import randint,sample
 
 def afficher(nbAlumettes):
     print("| "*nbAlumettes)
