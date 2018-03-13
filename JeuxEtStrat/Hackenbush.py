@@ -45,5 +45,5 @@ def valTour(l):
 		
 		
 
-print(logFrac(valTour("BRR")))
+print(valTour("BRR"))
 		
