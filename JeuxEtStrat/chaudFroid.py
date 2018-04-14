@@ -1,6 +1,6 @@
 #!/usr/bin/python3
-import sys
-import os
+from sys import *
+from os import *
 def generationSuivante(liste):
 	out = []
 	out.append(liste[0]-1)
@@ -13,14 +13,29 @@ def generationSuivante(liste):
 
 	
 def arbre(n):
-	out = [-1,0,1]
+	out = [0]
 	for i in range(n):
 		out = generationSuivante(out)
 	return out	
+		
+def arbreDiad(n):
+	out = []
+	for el in arbre(n):
+		out.append(diad(el))
+	return out
+def diad(n):
+	i = 0
+	while n != int(n):
+		n *= 2
+		i += 1
+	if i == 0:
+		return(str(n))
+	else:
+		return (str(int(n))+"/"+str(2**i))		
 
-print("Quelle génération de l'arbre voulez-vous ?\n")
-n = ""
-for i in sys.stdin:
-    n += i
-n = int(n)
-print(arbre(n))	
+
+n = int(argv[1])
+print(arbreDiad(n))
+#arbre = arbre(int(n))
+#print(arbre)
+#print(len(arbre))
