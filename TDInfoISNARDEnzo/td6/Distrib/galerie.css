@@ -1,0 +1,45 @@
+/* Un fichier de CSS super simple pour notre galerie photos */
+body {
+    background-color:#777;
+    color:#ddd;
+}
+
+img {
+    margin: 4px;
+    border: 5px solid white;
+    box-shadow: -2px 4px 10px 2px black;
+}
+
+.resized {
+    width: 70%;
+}
+
+.thumbnail {
+    display:inline;
+    float: left;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    width: 220px;
+    height: 220px;
+}
+
+.left {
+    display: inline;
+    float: left;
+}
+
+.left img {
+    width: 100px;
+    border: 2px solid white;
+}
+
+.right {
+    display: inline;
+    float: right;
+}
+
+.right img {
+    width: 100px;
+    border: 2px solid white;
+}
