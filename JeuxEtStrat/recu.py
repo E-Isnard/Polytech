@@ -62,11 +62,12 @@ def permu(l):
 		for el in l:
 			remL = [x for x in l if x != el]
 			for p in permu(remL):
-				if type(p) == type(3):
+				if type(p) != type([]):
 					p = [p]
 				p.insert(0,el)
 				out.append(p)
 		return out
 
-l = [1,2,3,4]
+
+l = ["a","b","c","d"]
 print(permu(l))
