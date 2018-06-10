@@ -1,0 +1,2 @@
+Un fichier de texte simple avec un mot en **gras**
+et un mot en ~~italique~~.

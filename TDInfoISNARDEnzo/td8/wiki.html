@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link href="./css/wiki.css" type="text/css" rel="stylesheet" />
+    <title>Fichier: test.txt</title></head>
+  <body class="grd">
+     <div class="main">
+        <div class="title"> METTRE LE TITRE DE LA PAGE </div>
+<li> -*- coding: utf-8 -*-
+<li> title: Conventions d'Ã©criture du wiki
+<li> author: Erick Gallesio 
+<li> creation date: 31-May-2018 19:26
+<li> Last file update: 31-May-2018 19:28 (eg)
+<p></p>
+<p></p>
+<div class="section"> Introduction</div>
+<p></p>
+Dans un Wiki, ce que l'on veut, c'est pouvoir crÃ©er des pages de texte
+sans Ãªtre un spÃ©cialiste d'HTML. Pour cela, le contenu du Wiki est
+constituÃ© de pages de texte brut enrichi d'un certain nombre de
+caractÃ¨res supplÃ©mentaires qui permettent d'indiquer la mise en forme
+du texte, de crÃ©er des liens, de disposer des images, etc. Les rÃ¨gles
+de mise en forme du texte ont Ã©tÃ©s conÃ§ues pour que les
+fonctionnalitÃ©s les plus courantes soient faciles Ã  taper (et Ã 
+analyser pour notre programme Python). Ces conventions d'Ã©criture sont
+dÃ©crites ci-dessous.
+<p></p>
+<i>Note:</i> Pour bien comprendre, il peut Ãªtre utile de consulter le
+texte source de cet article qui est disponible
+[articles/ConventionsEcriture @ ici]
+<p></p>
+<p></p>
+<div class="section"> Conventions typographiques de base</div>
+<p></p>
+Notre Wiki permet d'avoir des mots en <b>gras</b>, en <i>italique</i> ou
+<u>soulignÃ©s</u> (voire on veut pouvoir avoir des mots en
+<b><u><i>gras, italique et soulignÃ©s</i></u></b>).
+<p></p>
+Attention on peut <b>avoir** plusieurs **mots** en **gras** par **ligne</b>
+(cela veut dire qu'il faut faire un peu attention dans ses expressions
+rÃ©guliÃ¨res).
+<p></p>
+<b>Conventions:</b>
+<ul>
+<li> Pour mettre en gras entourer la zone de deux '*': <b>gras</b>
+<p></p>
+<li> Pour mettre en italique entourer la zone de deux '~': <i>italique</i>
+<p></p>
+<li> Pour souligner entourer la zone de deux '_': <u>soulignÃ©</u>
+<p></p>
+<li> Pour marquer une texte comme important, entourer de deux '$': <mark>Alerte!!</mark>
+<p></p>
+<li> Une ligne complÃ¨tement vide introduit un paragraphe
+<p></p>
+<li> On peut aussi mettre une ligne de sÃ©paration avec au moins 4
+  caractÃ¨res '=' sur une ligne seule:
+  <hr>
+  comme on peut le voir ci-dessus.
+<p></p>
+<li> Les liens inter-pages se font grÃ¢ce Ã  la syntaxe CamelCase
+<p></p>
+<li> Notre Wiki accepte aussi des lignes commentaires (qui n'apparaissent
+  donc pas dans la page HTML produite). Une ligne commentaire, est une
+  ligne dont le premier caractÃ¨re est un diÃ¨se '#'.
+<p></p>
+<li> A l'inverse, les lignes qui commencent par un '%' en dÃ©but de
+    lignes doivent Ãªtre laissÃ©es telles quelles. Cela permet de
+    "tricher" et de mettre un peu d'HTML quand on en a besoin.
+    A priori, cela ne devrait pas souvent vous servir.
+<p></p>
+<li> <i>DerniÃ¨re convention</i>: une suite de deux caractÃ¨res '%' successifs
+  doit disparaÃ®tre dans la version HTML. Cela permet de changer la
+  signification des caractÃ¨res spÃ©ciaux. Par exemple pour afficher
+  quatre '=' successifs sans qu'ils soient interprÃ©tÃ©s comme une ligne
+  des sÃ©paration, on peut taper 2 '=' suivis de 2 '%' en enfin de 2
+  '='. C'est aussi utile pour Ã©crire du <b>CamelCase</b> quand on ne veut
+  pas aller sur la page CamelCase.
+<ul/>
+<p></p>
+<li> <hr>
+<div class="section"> URLs &amp Images</div>
+<li> <hr>
+{images/BabyLinux.png}
+Les URLs se mettent entre crochets, par exemple:
+  [http://www.google.fr]
+ou encore (si on glisse un ' @ ' entre l'URL et son titre):
+  [http://www.google.fr @ Google France].
+<p></p>
+De mÃªme on peut aussi mettre facilement une image dans une page en
+entourant son URL entre accolades.
+<p></p>
+<li> #####################################################################
+<div class="section"> Sections</div>
+<li> #####################################################################
+Une section est dÃ©notÃ©e par le caractÃ¨re "!" en dÃ©but de ligne.  Une
+sous-section, quant Ã  elle, est introduite par le caractÃ¨re '!!' en
+dÃ©but de ligne. Un exemple de sous section est donnÃ© ci-dessous.
+<p></p>
+<li> --------------------
+<div class="sous section"> Sous-section</div>
+<li> --------------------
+Cette sous-section dÃ©crit comment faire des listes d'items avec notre Wiki:
+<p></p>
+Une liste d'items:
+<ul>
+<li> Un item est entrÃ© avec le caractÃ¨re '#'
+<li> On peut avoir plusieurs niveaux
+<ul>
+<li> Cet item est au niveau 2
+<li> Pour que ce soit plus lisible, il peut y avoir des espaces ou
+      des tabulations devant le '#'
+<ul/>
+<li> Eventuellement les liste peuvent Ãªtre numÃ©rotÃ©es
+<ol>
+<li> un
+<li> deux
+<li> trois
+<ol/>
+<li> C'est pas gÃ©nial mais Ã§a marche.
+<li> Pour savoir comment entrer des liste regarder le
+      [articles/ConventionsEcriture @ texte source] de la page courante
+<ul/>
+<p></p>
+<li> --------------------
+<div class="sous section"> Comment s'y prendre?</div>
+<li> --------------------
+<p></p>
+Pour rÃ©aliser la mise en forme de vote texte (cÃ d pour passer de la
+forme texte Ã  la forme HTML, il faudra utiliser la fonction Python
+<b>regsub</b>. Cette fonction permet de faire des remplacements dans une
+chaÃ®ne de caractÃ¨res. Elle prend 3 paramÃ¨tres:
+<ul>
+<li> une expression rÃ©guliÃ¨re de rechercher
+<li> la chaÃ®ne par laquelle on veut remplacer
+<li> la chaÃ®ne sur laquelle on travaille
+<ul/>
+<p></p>
+Un exemple d'utilisation de cette fonction est montrÃ© ci-dessous
+pour le texte &ampltfoo&ampgt &amp&amp &ampltbar&ampgt (qui doit apparaÃ®tre ici)
+<p></p>
+%&ampltdiv style="font-weight: bold"&ampgt&ampltpre&ampgt
+balico$ python3
+Python 3.4.3+ (default, May  7 2015, 23:10:14) 
+Type "help", "copyright", "credits" or "license" for more information.
+&ampgt&ampgt&ampgt from peip3 import *
+&ampgt&ampgt&ampgt line = "&ampltfoo&ampgt et &ampltbar&ampgt"
+&ampgt&ampgt&ampgt line = regsub('&amplt', '&amplt;', line)
+&ampgt&ampgt&ampgt line = regsub('&ampgt', '&ampgt;', line)
+&ampgt&ampgt&ampgt print(line)
+&amplt;foo&ampgt; et &amplt;bar&ampgt;
+%&amplt/pre&ampgt&amplt/div&ampgt
+<p></p>
+Ici on remplace les caractÃ¨res '&amplt' et '&ampgt' par les entitÃ©s '&amplt;' et
+'&ampgt;' comme le requiert HTML. De la mÃªme faÃ§on le caractÃ¨re '&amp' doit
+Ãªtre remplacÃ© par l'entitÃ© '&ampamp;' en HTML. Cette substitution est
+laissÃ©e en exercice.
+<p></p>
+Toutes les substitutions se font de la mÃªme faÃ§on, mais il y en a
+certianes qui sont plus faciles que d'autres. N'attaquez pas tout
+ensemble, mais traitez chaque cas les un aprÃ¨s les autres. Voila en
+gros l'ordre de difficultÃ©:
+<p></p>
+<ul>
+<li> Les caractÃ¨res '&amp', '&amplt' et '&ampgt', mais ce qui est dit plus haut
+   doit pas mal vous aider.
+<li> La suite de 2 '%' qui doit disparaÃ®tre
+<li> ligne de sÃ©paration (4 '=', au moins, successifs)
+<li> paragraphe
+<li> listes numÃ©rotÃ©s ou non
+<li> section et sous section
+<li> <mark>marques</mark>, <b>gras</b>, <u>soulignÃ©</u> et <i>italique</i>
+<li> Syntaxe CamelCase
+<li> Images et  URLs
+<ul/>
+<p></p>
+<b>Bon courage</b>
+     </div>
+  </body>
+</html>
