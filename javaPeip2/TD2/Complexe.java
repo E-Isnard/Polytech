@@ -39,37 +39,37 @@ public class Complexe {
 
     }
 
-    public Complexe plus(Complexe c){
-        return(new Complexe(this.réel + c.Rpart(),this.img + c.Ipart()));
+    public Complexe plus(Complexe c) {
+        return (new Complexe(this.réel + c.Rpart(), this.img + c.Ipart()));
     }
 
-    public Complexe moins(Complexe c){
-        return(new Complexe(this.réel - c.Rpart(),this.img - c.Ipart()));
+    public Complexe moins(Complexe c) {
+        return (new Complexe(this.réel - c.Rpart(), this.img - c.Ipart()));
     }
 
-    public Complexe mult(Complexe c){
-        return(new Complexe(this.réel*c.Rpart()-this.img*c.Ipart(),this.img*c.Ipart()+this.réel*c.Ipart()));
+    public Complexe mult(Complexe c) {
+        return (new Complexe(this.réel * c.Rpart() - this.img * c.Ipart(),
+                this.img * c.Ipart() + this.réel * c.Ipart()));
     }
 
-    public Complexe conj(){
-        return(new Complexe(this.réel,-this.img));
+    public Complexe conj() {
+        return (new Complexe(this.réel, -this.img));
 
     }
 
-    public Complexe div(Complexe c2){
-        Complexe c1 = new Complexe(this.réel,this.img);
-        double r = c1.rho()/c2.rho();
-        double t = c1.theta()-c2.theta();
-        return(polComplexe(r, t));
+    public Complexe div(Complexe c2) {
+        Complexe c1 = new Complexe(this.réel, this.img);
+        double r = c1.rho() / c2.rho();
+        double t = c1.theta() - c2.theta();
+        return (polComplexe(r, t));
     }
 
-    public boolean égal(Complexe c){
-        return(this.réel == c.Rpart() && this.img == c.Ipart());
+    public boolean égal(Complexe c) {
+        return (this.réel == c.Rpart() && this.img == c.Ipart());
     }
 
-    public boolean différent(Complexe c){
-        return(!(this.réel == c.Rpart() && this.img == c.Ipart()));
+    public boolean différent(Complexe c) {
+        return (!(this.réel == c.Rpart() && this.img == c.Ipart()));
     }
 
 }
-
