@@ -2,7 +2,7 @@ public class Complexe {
     private double réel;
     private double img;
 
-    public static Complexe I = new Complexe(0, 1);
+    public static final Complexe I = new Complexe(0, 1);
 
     public String toString() {
         return ("(" + réel + "," + img + ")");
