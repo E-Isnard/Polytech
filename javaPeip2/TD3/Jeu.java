@@ -1,7 +1,8 @@
-public class Jeu{
+import PaD.*;
+
+public class Jeu {
     public static void main(String[] args) {
-        Carte damePique = new Carte(Valeur.dame,Couleur.pique);
-        Carte asPique = new Carte(Valeur.as,Couleur.pique);
-        System.out.println(asPique.compareTo(damePique));
+        Jeu52 jeu52 = new Jeu52();
+        System.out.println(jeu52);
     }
 }
