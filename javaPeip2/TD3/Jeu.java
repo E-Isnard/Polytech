@@ -2,7 +2,10 @@ import PaD.*;
 
 public class Jeu {
     public static void main(String[] args) {
-        Jeu52 jeu52 = new Jeu52();
-        System.out.println(jeu52);
+        PlancheADessin pad = new PlancheADessin();
+        Jeu52 jeu1 = new Jeu52();
+        System.out.println(jeu1);
+        jeu1.melanger();
+        jeu1.dessinJeu(pad);
     }
 }

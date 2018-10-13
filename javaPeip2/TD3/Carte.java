@@ -8,9 +8,7 @@ public class Carte {
     public Carte(Valeur v, Couleur c) {
         this.valeur = v;
         this.couleur = c;
-        this.img = new Image("Cartes/"+this.valeur + "-" + this.couleur + ".gif");
-
-        
+        this.img = new Image("Cartes/" + this.valeur + "-" + this.couleur + ".gif");
 
     }
 
@@ -31,13 +29,12 @@ public class Carte {
         else {
             return (-1);
         }
-   
 
     }
 
-    public void Dessin(PlancheADessin pad,double x,double y){
+    public void dessin(PlancheADessin pad, double x, double y) {
         Dessinable c = this.img;
-        c.setOrig(x,y);
+        c.setOrig(x, y);
         pad.ajouter(c);
     }
 }
