@@ -4,6 +4,10 @@ import PaD.*;
 public class Jeu52 {
     private Carte jeu[] = new Carte[52];
 
+    public Carte[] getJeu(){
+        return(this.jeu);
+    }
+
     Jeu52() {
         int i = 0;
         for (Valeur v : Valeur.values()) {
