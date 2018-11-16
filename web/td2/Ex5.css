@@ -1,0 +1,57 @@
+.mmenu > ul {
+    width: 456px;
+    
+    
+    
+    }
+
+.mmenu > ul > li {
+        float: left;
+        border-style:1px solid \#8AC007;
+        
+        
+        }
+
+.mmenu > ul > li > a {
+            color: white;
+            background-color: red;
+            display: block;
+            width: 150px;
+            border:solid 1px blue;
+            
+            
+            }
+
+.mmenu > ul > li a:hover {
+        background-color: rgb(136, 136, 209);
+                }
+ul {
+    list-style:none;
+}
+
+ul.smenu {
+    width: 150px;
+    padding-left: 0px;
+    display: none;
+    
+    
+    }
+
+.mmenu ul li:hover > ul {
+        display: block;
+        list-style-type: none;
+        }
+ul.smenu> li{
+    background:pink
+}
+
+ul.smenu> li:hover{
+    background:green;
+}
+
+
+
+p {
+    margin-top:2cm;
+    display: inline-block;
+}

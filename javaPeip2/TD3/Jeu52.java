@@ -40,6 +40,43 @@ public class Jeu52 {
 
     }
 
+    public void ordonnerCouleur(){
+        for (int i=52;i>0;i--){
+            for(int j=1;j<i;j++){
+                if(this.jeu[j-1].getCouleur().ordinal() > this.jeu[j].getCouleur().ordinal()){
+                    Carte tempCarte = this.jeu[j-1];
+                    this.jeu[j-1] = this.jeu[j];
+                    this.jeu[j] = tempCarte;
+                    
+
+                }
+            }
+        }
+
+        
+    }
+
+    public void ordonnerValeur(){
+        for (int i=52;i>0;i--){
+            for(int j=1;j<i;j++){
+                if(this.jeu[j-1].getValeur().ordinal() > this.jeu[j].getValeur().ordinal()){
+                    Carte tempCarte = this.jeu[j-1];
+                    this.jeu[j-1] = this.jeu[j];
+                    this.jeu[j] = tempCarte;
+                    
+
+                }
+            }
+        }
+
+        
+    }
+
+    public void ordonner(){
+        this.ordonnerValeur();
+        this.ordonnerCouleur();
+    }
+
     public void dessinJeu(PlancheADessin pad) {
         int x = 0;
         int y = 0;

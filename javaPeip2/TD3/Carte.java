@@ -37,4 +37,12 @@ public class Carte {
         c.setOrig(x, y);
         pad.ajouter(c);
     }
+
+    public Couleur getCouleur(){
+        return(this.couleur);
+    }
+
+    public Valeur getValeur(){
+        return(this.valeur);
+    }
 }

@@ -1,0 +1,62 @@
+/*#col1 {
+    border: 2px solid blue;
+    float: left;
+    width: 200px;
+    
+    }
+#col2 {
+    border: 2px solid black;
+    float: left;
+    margin-left: 10px;
+    width: 200px;
+    
+    }
+#col3 {
+    border: 2px solid black;
+    margin-left: 428px;
+    min-width : 200px;
+    
+    }
+
+#suite {
+    clear: both;
+}
+
+*/
+
+#col1 {
+    border: 2px solid blue;
+    float: left;
+    width: 200px;
+    
+    }
+#col2 {
+    border: 2px solid black;
+    float: left;
+    margin-left: 10px;
+    width: 200px;
+    
+    }
+#col3 {
+    border: 2px solid black;
+    float:left;
+    margin-left: 10px;
+    width : 200px;
+    
+    }
+
+#suite {
+    clear: both;
+}
+
+
+/*
+div.lescols { 
+    width: 500px; 
+    column-width: 150px; 
+    column-count: 3; 
+    column-gap: 10px; 
+    }
+*/
+
+/* c'est pas très beau */

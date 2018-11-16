@@ -1,0 +1,55 @@
+h1 {
+    background-color: black;
+    color:red;
+
+    
+}
+
+h2 {
+    text-decoration: underline;
+}
+
+p::first-letter {
+    color: red;
+    text-transform: uppercase;
+    font-weight: bold;
+    
+}
+
+.acronym {
+    color: green;
+
+}
+
+span#bloc_indirect{
+    font-weight: bold;
+}
+
+strong {
+    font-weight: normal;
+    font-style: italic;
+}
+
+span#mot_a_decorer{
+    color:blue;
+    text-decoration: underline;
+}
+
+p > em {
+    font-weight: bold;
+    color: yellow;
+    font-style: normal;
+}
+
+ol > li:first-child{
+    color:pink;
+}
+
+ol > ul:last-child > li:last-child{
+    color:magenta;  
+}
+
+a:hover{
+    background-color: red;
+    text-decoration: none;
+}

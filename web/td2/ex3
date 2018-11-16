@@ -1,0 +1,3 @@
+Comme les colonnes 1 et 2 sont en mode flottant le marging de la troisièmes colonnes
+se fera par rapport au bord de la page. Comme le margin à gauche d'une page est par défaut 
+de 8 px l'écart entre la colonne 2 et 3 sera de 428-(208+210) = 10px.
