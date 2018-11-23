@@ -1,0 +1,10 @@
+On remarque que dans la version mobile le logo "Le Monde" et le menu pour choisir le type d'information 
+se mettent sur le côté . On voit aussi que les mosaïques de l'acceuil s'organise en une seule colonne.
+La pub se met aussi en haut de la fenêtre au lieu d'être en fond.
+
+Cette différence est due à un brillant ingénieur de chez Le Monde spécialisé dans le développement web de haut niveau qui a mis un règle @media dans
+le fichier CSS du site pour que le style de la page change lorsque l'écran du dispositif devient
+petit.
+
+Cela permet une plus grande accéssiblité au site LeMonde.fr et permet de s'informer n'importe où !
+
