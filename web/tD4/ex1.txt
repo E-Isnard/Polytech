@@ -1,0 +1,2 @@
+Avec la commande ifconfig je trouve que mon adresse locale sur le réseau de Polytech 
+est : 10.154.123.16.

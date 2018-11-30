@@ -1,0 +1,14 @@
+Quand je ping mon ami (pas Sacha ):
+
+ping 10.154.123.14
+PING 10.154.123.14 (10.154.123.14) 56(84) bytes of data.
+
+64 bytes from 10.154.123.14: icmp_seq=1 ttl=64 time=17 ms
+64 bytes from 10.154.123.14: icmp_seq=2 ttl=64 time=17 ms
+64 bytes from 10.154.123.14: icmp_seq=3 ttl=64 time=27 ms
+64 bytes from 10.154.123.14: icmp_seq=4 ttl=64 time=32 ms
+64 bytes from 10.154.123.14: icmp_seq=5 ttl=64 time=16 ms
+64 bytes from 10.154.123.14: icmp_seq=6 ttl=64 time=37 ms
+
+
+Par contre je n'arrive pas à ping les serveurs extérieurs à cause du réseau Polytech.
