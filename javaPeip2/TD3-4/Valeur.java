@@ -5,10 +5,10 @@ public enum Valeur {
     Integer valeur;
 
     Valeur(Integer v) {
-        valeur = v;
+        valeur = v; //constructeur de valeur
     }
 
     Integer valeur() {
-        return valeur;
+        return valeur; //Permet d'avoir la valeur des cartes 
     }
 }

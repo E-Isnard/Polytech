@@ -1,3 +1,3 @@
 public enum Couleur {
-    trèfle, pique, coeur, carreau
+    trèfle, carreau, pique, coeur //Définie les différentes couleurs des cartes
 }
