@@ -4,7 +4,7 @@ public class Carte {
     //On définit les différents attributs de la cartes
     private Couleur couleur; //Couleur de la carte
     private Valeur valeur;   //Valeur de la carte
-    private PaD.Image img;   //Image la représentant dans le PaD
+    private PaD.Image img;   //Image la représentant dans la PaD
 
     public Carte(Valeur v, Couleur c) {
         //Constructeur de la carte
@@ -17,7 +17,7 @@ public class Carte {
 
     public String toString() {
         //On affiche la carte sous forme de chaîne de caractères.
-        //Exemple: Si la carte est l'as de la pique quand on voudra l'afficher avec un print 
+        //Exemple: Si la carte est l'as de pique quand on voudra l'afficher avec un print 
         //cela nous affichera : [as(10),pique]
         return ("[" + this.valeur + "(" + this.valeur.valeur() + ")," + this.couleur + "]");
     }
