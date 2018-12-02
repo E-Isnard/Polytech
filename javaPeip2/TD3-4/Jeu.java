@@ -38,7 +38,7 @@ public class Jeu {
         
         // Ici on crée une main comportant les 5 premières cartes du jeu 
         // Ensuite on crée une copie de cette main et on l'ordonne
-        // Puis on affiche les deux mains pour les comprarer.
+        // Puis on affiche les deux mains pour les comparer.
         // (Question supplémentaire)
         Main main1 = new Main("Première main");
         main1.prendreMesCartes(jeu1, 0, 4);
