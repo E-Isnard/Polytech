@@ -1,0 +1,6 @@
+Quand on fait demande le dossier boyenval avec la commande netcat www.i3s.unice.fr 
+on obtient le fichier retour.html qui contient la page web voulue
+
+Par contre si on oublie de mettre le / à la fin de boyenval le serveur nous renvoie une erreur
+disant que le fichier boyenval n'existe pas et qu'il nous dit qu'on veut surement le dossier boyenval
+et non le fichier.(erreur présente dans le fichier retour2.html)

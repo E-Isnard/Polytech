@@ -1,0 +1,3 @@
+On remarque que le serveur localhost:1235 a recu une requete GET lui demandant /test.jpg.
+
+Le serveur localhost:1234 a redirigé le client vers localhost:1235

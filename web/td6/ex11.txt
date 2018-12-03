@@ -1,0 +1,13 @@
+On copie le fichier dans le serveur avec la commande:
+
+scp -r td3 ie701829@morag.polytech.unice.fr:~/WEB
+
+Puis on se connecte au serveur via ssh avec la commande:
+
+ssh ie701829@morag.polytech.unice.fr
+
+Puis on déplace le dossier WEB dans le bon dossier avec la commande:
+
+mv WEB /net/web/i/ie701829/public
+
+

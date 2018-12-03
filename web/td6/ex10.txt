@@ -1,0 +1,1 @@
+On remarque les fichiers index.html et indexM.html contiennent des styles différents.

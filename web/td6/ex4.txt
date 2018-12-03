@@ -1,0 +1,9 @@
+Pour copier un fichier vers un autre texte.txt on doit faire la commande côté serveur:
+
+Serveur: netcat -l 1234 < texte.txt
+
+Côté client pour recevoir le fichier on doit faire la commande:
+
+Client: netcat 1234 > recu.txt
+
+En faisant Ctrl-C des deux côtés on voie ensuite que le fichier recu.txt contient le contenue de texte.txt

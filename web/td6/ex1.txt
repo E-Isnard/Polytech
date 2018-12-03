@@ -1,4 +1,5 @@
-Quand on lance la page web et qu'on exécute la commande nc -l 1234 on obtient:
+Quand on lance la page web et qu'on exécute la commande nc -l 1234 on obtient et qu'on
+se connecte à la page web donnée en cours on obtient:
 
 GET /?var=coucou HTTP/1.1
 Host: localhost:1234
@@ -8,4 +9,6 @@ Accept-Language: fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3
 Accept-Encoding: gzip, deflate
 Connection: keep-alive
 Upgrade-Insecure-Requests: 1
+
+
 
