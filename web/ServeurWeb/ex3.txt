@@ -1,0 +1,37 @@
+f)
+
+Voici les résultats qu'on obtient avec la commande netcat:
+
+λ ~/ netcat localhost 1234
+POST 1 2
+Bonjour
+Bonjour
+Bonjour
+
+var=200
+Message bien reçu ;-)
+Voici votre requete
+Bonjour
+Bonjour
+Bonjour
+
+var=200
+
+
+
+λ ~/ netcat localhost 1234
+GET 1 2
+Bonjour
+Bonjour
+
+
+Message bien reçu ;-)
+Voici votre requete
+Bonjour
+Bonjour
+
+g)
+
+On ne peut pas tester le serveur avec un navigateur car notre réponse n'est pas conforme au protocol HTTP.
+
+

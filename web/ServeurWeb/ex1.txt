@@ -1,0 +1,2 @@
+La méthode verose sert à imprimer un message mais uniquement si le paramètre
+"verbose" est vrai.
