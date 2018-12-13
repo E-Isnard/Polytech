@@ -64,7 +64,7 @@ public class ServerHttp extends Server {
     }
 
     private void repRequete(String requete) throws IOException {
-        this.writeline("\nMessage bien reçu ;-)");
+        this.writeline("Message bien reçu ;-)");
         this.writeline("Voici votre requete");
         this.writeline(requete);
 
