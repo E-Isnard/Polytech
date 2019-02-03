@@ -51,6 +51,7 @@ class ServeurHttpD extends Server {
 
 			flux.read(buf);
 			write(buf);
+			flux.close();
 
 		}
 	}
