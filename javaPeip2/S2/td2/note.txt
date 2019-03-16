@@ -1,0 +1,17 @@
+Exercice 1)
+
+L'axiome 3 et 4 définissent le fait que dépiler et sommet n'agissent que sur la fin de la pile.
+
+Exercice 2)
+
+Dépiler et sommet sont des fonctions partielles car elles ne peuvent pas s'appliquer à la pile vide.
+En réalité leur ensemble de définition et E\{pileVide}
+
+Exercice 3)
+
+On voit que empty correspond à estVide, pop correspond à dépiler sauf qu'elle renvoie l'élément qu'on a enlévé au lieu de la pile,
+empiler correspond à push et sommet correspond à peek.
+
+Exercice 4)
+
+Stack hérite de la class Vector en implémentant les méthodes correpondant à Pile.
