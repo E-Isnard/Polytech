@@ -25,11 +25,13 @@ public class MyStack<E> {
     }
 
     public E peek(){
+        if(maListe.isEmpty()) throw new EmptyStackException();
         return (maListe.get(maListe.size()-1));
 
     }
 
-    public E pop() {
+    public E pop(){
+        if(maListe.isEmpty()) throw new EmptyStackException();
         E e = this.peek();
         maListe.remove(maListe.size()-1);
         return(e);
@@ -37,10 +39,14 @@ public class MyStack<E> {
 
     
     public String toString() {
+        if(maListe.isEmpty()){
+            return("[]");
+        }
         String out = "[";
         for(E e:maListe){
             out+=e+",";
         }
+
         return((String) out.subSequence(0, out.length()-1)+"]");
     }
 
