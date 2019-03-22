@@ -2,7 +2,7 @@ import java.util.*;
 
 public class Test {
     public static void main(String[] args) {
-        java.util.List<String> l1 = new ArrayList<String>();
+        List<String> l1 = new ArrayList<String>();
         l1.add(0, "aa");
         l1.add(1, "bb");
         l1.add(2, "cc");
