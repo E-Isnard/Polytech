@@ -1,6 +1,6 @@
-public class ArbreVideException extends Exception{
+public class ArbreVideException extends Exception {
 
-    public ArbreVideException(){
+    public ArbreVideException() {
         super();
     }
 }
