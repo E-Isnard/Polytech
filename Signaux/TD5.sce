@@ -79,6 +79,23 @@ bode(sys3,0.1,2000,"Systeme 3")
 bode([sys1;sys2;sys3],0.1,2000,["Systeme1";"Systeme2";"Systeme3"])
 
 
+//TD6
+
+K1 = s1($);
+K2 = s2($);
+
+i1 = find(abs(s1(t)-K1)/K1<0.05);
+i2 = find(abs(s2(t)-K2)/K2<0.05);
+
+disp(i1);
+disp(i2);
+
+
+
+
+
+
+
 
 
 

@@ -25,17 +25,25 @@ sleep(200)
 bode(sys,0.1,2000,'Diagramme de Bode du système')
 //Filtre passe-bas car le gain décroît avec la fréquence
 
-[frq,repf]=repfreq(sys,0.000000001,2000);
-[mag,phi]= phasemag(repf)
-i = find(mag<-3)
+[frq,repf]=repfreq(sys,0.0000000000000001,2000);
+[phi,mag]= phasemag(repf)
+i = find(mag< -3,1)
 disp("La fréquence de coupure (en Hz) est ")
-disp(frq(i(1)))
+disp(frq(i))
 disp("Avec une magnitude(en dB) de ")
-disp(mag(i(1)))
+disp(mag(i))
 
 //disp([frq,mag])
 
 //Le premier signal s'entend mieux car il a une fréquence plus basse que le premier et que le systeme est un filtre passe-bas =)
+
+
+
+
+//TD6
+
+
+
 
 
 
