@@ -1,3 +1,5 @@
+import java.io.*;
+import java.util.*;
 
 public class ArbreChaine<T extends Comparable<T>> implements ArbreBinaire<T> {
 
@@ -51,18 +53,18 @@ public class ArbreChaine<T extends Comparable<T>> implements ArbreBinaire<T> {
     }
 
     public T getValue() throws ArbreVideException {
-        
+
         return this.value;
 
     }
 
-    public ArbreBinaire<T> getLeft()  {
-        
+    public ArbreBinaire<T> getLeft() {
+
         return this.leftTree;
     }
 
     public ArbreBinaire<T> getRight() {
-        
+
         return this.rightTree;
     }
 
@@ -70,16 +72,16 @@ public class ArbreChaine<T extends Comparable<T>> implements ArbreBinaire<T> {
         return (this == emptyTree);
     }
 
-    public static void affichage(ArbreBinaire a,String offset) throws ArbreVideException {
+    public static void affichage(ArbreBinaire a, String offset) throws ArbreVideException {
         if (a == emptyTree) {
             System.out.print("");
         } else {
             if (a.getLeft() != emptyTree) {
-                affichage(a.getRight(),offset+"--");
+                affichage(a.getRight(), offset + "--");
             }
-            System.out.println(offset+a.getValue());
+            System.out.println(offset + a.getValue());
             if (a.getRight() != emptyTree) {
-                affichage(a.getLeft(),offset+"--");
+                affichage(a.getLeft(), offset + "--");
             }
         }
     }
@@ -91,12 +93,43 @@ public class ArbreChaine<T extends Comparable<T>> implements ArbreBinaire<T> {
             return (1 + Math.max(hauteur(a.getLeft()), hauteur(a.getRight())));
     }
 
-    public static boolean mirror(ArbreBinaire a,ArbreBinaire b) throws ArbreVideException{
-        if(a.isEmpty() && b.isEmpty()) return true;
-        if(a.isEmpty() || b.isEmpty()) return false;
-        if(a.getValue() != b.getValue()) return false;
-        return mirror(a.getLeft(),b.getLeft()) && mirror(a.getRight(),b.getRight());
+    public static boolean mirror(ArbreBinaire a, ArbreBinaire b) throws ArbreVideException {
+        if (a.isEmpty() && b.isEmpty())
+            return true;
+        if (a.isEmpty() || b.isEmpty())
+            return false;
+        if (a.getValue() != b.getValue())
+            return false;
+        return mirror(a.getLeft(), b.getLeft()) && mirror(a.getRight(), b.getRight());
 
     }
+
+
+    @SuppressWarnings("unchecked")
+    public static ArbreChaine opArbre(List<Character> o) {
+        
+        Stack<ArbreChaine> s = new Stack();
+        for (int i = 0; i < o.size(); i++) {
+            if(!(o.get(i)=='+' || o.get(i)=='-' || o.get(i)=='*' || o.get(i)=='/')){
+                s.push(new ArbreChaine(o.get(i)));
+            }
+            else{ 
+                ArbreChaine c1 = s.pop();
+                ArbreChaine c2 = s.pop();
+                s.push(new ArbreChaine(o.get(i),c1,c2));
+                
+            }
+        }
+
+        return(s.pop());
+    }
+
+    public static String evalArbre(ArbreBinaire<Character> a) throws ArbreVideException{
+        if(a==emptyTree) return "";
+        return("("+evalArbre(a.getLeft())+a.getValue()+evalArbre(a.getRight())+")");
+    }
+
+    
+    
 
 }
