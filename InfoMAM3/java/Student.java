@@ -1,4 +1,3 @@
-
 /**
  * The Student class represents a student in a student administration system.
  * 
@@ -14,16 +13,30 @@ public class Student {
     // the student ID
     private String id;
 
+    // student promotion
     private Promotion promo;
+
+    private int ects;
 
     /**
      * Create a new student with a given name and ID number.
      */
-    public Student(String name, String firstName, String id, Promotion promo) {
+    public Student(String name, String firstName, String id, Promotion promo, int ects) {
         this.lastName = name;
         this.firstName = firstName;
         this.id = id;
         this.promo = promo;
+        this.ects = ects;
+        
+    }
+
+    public Student(String name, String firstname, String id) {
+        this.lastName = name;
+        this.firstName = firstname;
+        this.id = id;
+        this.promo = null;
+        this.ects = 0;
+
     }
 
     /**
@@ -52,6 +65,20 @@ public class Student {
      */
     public String getId() {
         return id;
+    }
+
+    /**
+     * @param ects the ects to set
+     */
+    public void setEcts(int ects) {
+        this.ects = ects;
+    }
+
+    /**
+     * @return the ects
+     */
+    public int getEcts() {
+        return ects;
     }
 
     /**
@@ -86,5 +113,16 @@ public class Student {
         return (firstName + " " + lastName + " (" + id + ")");
     }
 
-  
+    public void addCredits(int credits) {
+        this.ects = this.ects + credits;
+    }
+
+    public String getLogin() {
+        if (lastName.length() > 3) {
+            return (lastName.substring(0, 4) + id.substring(0, 3));
+        }
+        return (lastName + id.substring(0, 3));
+
+    }
+
 }

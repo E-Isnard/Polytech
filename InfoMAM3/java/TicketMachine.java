@@ -22,10 +22,10 @@ public class TicketMachine {
      * Create a machine that issues tickets of the given price.
      */
     public TicketMachine(int ticketCost, String nom) {
-        price = ticketCost;
-        balance = 0;
-        total = 0;
-        nomMachine = nom;
+        this.price = ticketCost;
+        this.balance = 0;
+        this.total = 0;
+        this.nomMachine = nom;
     }
 
     /**
