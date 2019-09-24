@@ -14,6 +14,11 @@ public class Test {
         System.out.println(cd.getTime());
         cd.setTime(15, 0);
         System.out.println(cd.getTime());
+        Utilisateur u = new Utilisateur("Enzo", "Isnard", "enzoisnard@gmail.com", "permanent", 2017);
+        Badge b = new Badge(u, true, true);
+        System.out.println(b.getNbImpression());
+        
+        System.out.println(b.acceder(1));
         
 
 
