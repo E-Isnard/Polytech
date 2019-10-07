@@ -18,7 +18,7 @@ public class Test {
         Badge b = new Badge(u, true, true);
         System.out.println(b.getNbImpression());
         
-        System.out.println(b.acceder(1));
+        System.out.println(3/2);
         
 
 
