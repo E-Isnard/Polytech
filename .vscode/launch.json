@@ -2,6 +2,12 @@
     "configurations": [
         {
             "type": "java",
+            "name": "CodeLens (Launch) - Secret",
+            "request": "launch",
+            "mainClass": "Secret"
+        },
+        {
+            "type": "java",
             "name": "CodeLens (Launch) - Jeu",
             "request": "launch",
             "cwd": "${workspaceFolder}",

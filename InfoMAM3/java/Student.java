@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.Comparator;
+
 /**
  * The Student class represents a student in a student administration system.
  * 
@@ -17,16 +20,18 @@ public class Student {
     private Promotion promo;
 
     private int ects;
+    private ArrayList<Double> notes;
 
     /**
      * Create a new student with a given name and ID number.
      */
-    public Student(String name, String firstName, String id, Promotion promo, int ects) {
+    public Student(String name, String firstName, String id, Promotion promo, int ects,ArrayList<Double> notes) {
         this.lastName = name;
         this.firstName = firstName;
         this.id = id;
         this.promo = promo;
         this.ects = ects;
+        this.notes = notes;
         
     }
 
@@ -36,6 +41,7 @@ public class Student {
         this.id = id;
         this.promo = null;
         this.ects = 0;
+        this.notes = new ArrayList<Double>();
 
     }
 
@@ -109,8 +115,59 @@ public class Student {
         this.lastName = lastName;
     }
 
+    /**
+     * @return the notes
+     */
+    public ArrayList<Double> getNotes() {
+        return notes;
+    }
+
+    public void addNote(double note){
+        notes.add(note);
+    }
+
+    public double moyenne(){
+        double s =0;
+        double n=0;
+        for(double note:notes){
+            s+=note;
+            n++;
+
+        }
+        return(s/n);
+
+    }
+
+    public double max(){
+        int n = notes.size();
+        double max = notes.get(0);
+        for(int i=1;i<=n;i++){
+            if(max<notes.get(i)){
+                max = notes.get(i);
+            }
+        }
+        return(max);
+    }
+
+    public double min(){
+        int n = notes.size();
+        double min = notes.get(0);
+        for(int i=1;i<=n;i++){
+            if(min>notes.get(i)){
+                min = notes.get(i);
+            }
+        }
+        return(min);
+    }
+    
+
     public String toString() {
-        return (firstName + " " + lastName + " (" + id + ")");
+        String s = "[";
+        for(double note:notes){
+            s+=s+note+" ";
+        }
+        s+="]";
+        return (firstName + " " + lastName + " (" + id + ")" + s);
     }
 
     public void addCredits(int credits) {
