@@ -39,13 +39,27 @@ public class Morceau {
     public String prix() {
         int euros = prix / 100;
         int centimes = prix % 100;
-        return (euros + " € " + centimes + " c");
+        return (euros + "€" + centimes + "c");
     }
 
     public String duree() {
         int minutes = duree / 60;
         int secondes = duree % 60;
         return (minutes + " mn " + secondes + " s");
+    }
+
+    /**
+     * @return the prix
+     */
+    public int getPrix() {
+        return prix;
+    }
+
+    /**
+     * @return the duree
+     */
+    public int getDuree() {
+        return duree;
     }
 
     public static void main(String[] args) {

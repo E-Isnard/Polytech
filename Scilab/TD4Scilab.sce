@@ -86,6 +86,11 @@ function m=matAntiSym(n)
      
 endfunction
 
+function [S,A]=decomp(M)
+    S=1/2.*(M+M')
+    A=1/2*(M-M')
+endfunction
+
 function y=matRand(m,n,p)
     y=rand(m,n)*2*p-p
     
@@ -132,6 +137,7 @@ endfunction
 
 //disp(coeffBinRec(4,2))
 //disp(coeffBinIte(4,2))
+/*
 x=[0:0.01:10]
 disp(serieCos(%pi/3,1000))
 disp(serieSin(%pi/3,1000))
@@ -140,6 +146,15 @@ z=serieCos(x,100)
 //plot2d(x,sin(x),style=3)
 plot2d(x,y)
 plot2d(x,z,style=2)
+*/
+
+/*
+u=1:25;
+M=matrix(u,5,5);
+[S,A]=decomp(M)
+disp(S)
+disp(A)
+*/
 
 funcprot(0)
 

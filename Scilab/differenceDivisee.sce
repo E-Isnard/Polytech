@@ -33,7 +33,7 @@ function val=horner2(X,a,t)
     b=zeros(1,n)
     b($)=a($)
     for i=n-1:-1:1
-        b(i)=a(i)+(t-X(i))*b(i+1)
+        b(i)=a(i)+(t-X(i)).*b(i+1)
         
     end
     val = b(1)
@@ -49,13 +49,13 @@ endfunction
 //X=[-1,0.5,1.5,2]
 //t=2
 //disp(horder(X,a(1,:),t))
-N=60
-p=30
+N=20
+p=10
 T=linspace(-1,1,300)
 img = h(T,p)
 
-X= cos( %pi*(2*(0:N-1)+1)/(2*(N-1)+2)); //Points de Tchebychev
-
+X= cos( %pi*(2*(0:N)+1)/(2*(N+1)+2)); //Points de Tchebychev
+//X=linspace(-1,1,N+1)
 
 Y=h(X,p)
 dfd = DD(X,Y)
