@@ -100,32 +100,49 @@ endfunction
 
 function p=projOrtho(x,A)
     n = size(A,2)
-    p=zeros(n,1)
+    m = size(A,1)
+    p=zeros(m,1)
+    
+    //disp(n)
     for i=1:n
+        
         u = A(:,i)
-        p = p + ps(u,x)*u/(norm(u)^2)  
+        
+        //disp(u)
+        p = p + ps(u,x).*u./(norm(u)^2)  
     end
 endfunction
 
 function U=GS(A)
-    U = FreeMat(A)
-    U(:,1)=U(:,1)/norm(u)
+    U = A
+    U(:,1)=U(:,1)/norm(U(:,1))
     for i=2:size(U,2)
-        u = U(:,i)
         
-        U(:,i)= u - projOrtho(u,U(:,1:i-1))
-        U(:,i) = U(:,i)/norm(u)
+        U(:,i)= U(:,i) - projOrtho(U(:,i),U(:,1:i-1))
+        U(:,i) = U(:,i)/norm(U(:,i))
         
     end
+    U(:,size(U,2))=U(:,size(U,2))/norm(U(:,size(U,2)))
 endfunction
 
-A=[1 2 ; 3 4 ; 5 6]
+function [Q,R]=Qr(A)
+    Q=GS(A)
+    R=triu(Q'*A)
+endfunction
+
+n=5; u=1:n; u=u'; c2=cos(2*u); c=cos(u); s=sin(u);
+A=[u c2 ones(n,1) rand()*c.*c exp(u) s.*s];
 disp(A)
-disp(A(:,2))
-x = [1 1 1]'
-disp(x)
-p = projOrtho(x,A)
-disp(p)
+U=GS(A)
+disp(U)
+disp(U'*U)
+disp(GS(U))
+
+//U'U n'est pas égale à l'identité
+//GS(U)!=U alors que U est orthonormale
+
+
+
 
 
 

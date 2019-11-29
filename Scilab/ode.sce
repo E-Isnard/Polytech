@@ -12,19 +12,20 @@ function xpoint=f(x)
     xpoint=a*x
 endfunction
 
+
 function ypoint=g(y)
     ypoint=r*y*(1-y/k)
 endfunction
 
 x(1)=x0
 y(1)=y0
-for i=2:1:size(t)(2)
+for i=2:size(t)(2)
     x(i)=x(i-1)+f(x(i-1))*h
     
     
 end
 
-for i=2:1:size(t)(2)
+for i=2:size(t)(2)
     y(i)=y(i-1)+g(y(i-1))*h
       
 end
