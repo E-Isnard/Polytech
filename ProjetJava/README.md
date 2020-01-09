@@ -12,3 +12,7 @@ Le projet est décomposé en 2 packages: activites et gesttionhotel:
 <li>Le package activites contient un sous package casino qui contient les classes gérant le casino de l'hôtel.
 
 Le projet contient aussi une documentation trouvable dans le dossier doc et un diagramme qui résume les différentes classes(généré automatiquement avec Eclipse).
+
+Le diagramme du projet:
+
+![Diagramme](Diagram.png)
