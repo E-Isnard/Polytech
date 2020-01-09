@@ -2,6 +2,8 @@
 # -*- coding: utf-8 -*-
 from random import randint,sample
 
+print("Hello it's me")
+
 def afficher(nbAlumettes):
     print("| "*nbAlumettes)
 

@@ -1,0 +1,159 @@
+\hypertarget{classsrc_1_1activites_1_1_restaurant}{}\doxysection{src.\+activites.\+Restaurant Class Reference}
+\label{classsrc_1_1activites_1_1_restaurant}\index{src.activites.Restaurant@{src.activites.Restaurant}}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classsrc_1_1activites_1_1_restaurant_ad81b59a596d2423a7b6f10b3c7319fe2}{Restaurant}} (\mbox{\hyperlink{classsrc_1_1gestionhotel_1_1_client}{src.\+gestionhotel.\+Client}} client2)
+\item 
+void \mbox{\hyperlink{classsrc_1_1activites_1_1_restaurant_a9273cd63660d0d5a30ee4f4d3ede6b7f}{set\+Client}} (\mbox{\hyperlink{classsrc_1_1gestionhotel_1_1_client}{Client}} c)
+\item 
+void \mbox{\hyperlink{classsrc_1_1activites_1_1_restaurant_adfb8f40fddfd94f159c264f74203845b}{add\+Ticket}} (int t)
+\item 
+void \mbox{\hyperlink{classsrc_1_1activites_1_1_restaurant_a9377ae14af42d608200a51d332d53b80}{reset\+Tickets}} ()
+\item 
+void \mbox{\hyperlink{classsrc_1_1activites_1_1_restaurant_a8df175b02e889613678e7d75bc311132}{add\+Commande}} (String ajout)
+\item 
+void \mbox{\hyperlink{classsrc_1_1activites_1_1_restaurant_a5c723436db9099d85d7bfb9e75d9d1a0}{reset\+Commande}} ()
+\item 
+String \mbox{\hyperlink{classsrc_1_1activites_1_1_restaurant_aae3088a0b1211a044f4b5a5690673b19}{reduction\+Tickets}} (double p)
+\item 
+String \mbox{\hyperlink{classsrc_1_1activites_1_1_restaurant_a2bb0390566d9bcc1ddf3ed742f91827c}{to\+String}} ()
+\item 
+double \mbox{\hyperlink{classsrc_1_1activites_1_1_restaurant_ae87139aa4e7b5f6c2edff1f62bd78445}{get\+Prix\+Total}} ()
+\item 
+void \mbox{\hyperlink{classsrc_1_1activites_1_1_restaurant_a995d560ebc98fe57b140c57930247770}{manger}} ()  throws Interrupted\+Exception 
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Fonction qui permet de commander au restaurant
+
+\begin{DoxyAuthor}{Author}
+Enzo Isnard et Théo Picke 
+\end{DoxyAuthor}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classsrc_1_1activites_1_1_restaurant_ad81b59a596d2423a7b6f10b3c7319fe2}\label{classsrc_1_1activites_1_1_restaurant_ad81b59a596d2423a7b6f10b3c7319fe2}} 
+\index{src.activites.Restaurant@{src.activites.Restaurant}!Restaurant@{Restaurant}}
+\index{Restaurant@{Restaurant}!src.activites.Restaurant@{src.activites.Restaurant}}
+\doxysubsubsection{\texorpdfstring{Restaurant()}{Restaurant()}}
+{\footnotesize\ttfamily src.\+activites.\+Restaurant.\+Restaurant (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classsrc_1_1gestionhotel_1_1_client}{src.\+gestionhotel.\+Client}}}]{client2 }\end{DoxyParamCaption})}
+
+Un constructeur qui cree une fiche restaurant pour le Client c. Cette fiche gardera en memoire les tickets utilises et sortis. Si c=null, se comporte comme le constructeur ci-\/dessus
+
+
+\begin{DoxyParams}{Parameters}
+{\em client2} & Le client du restaurant \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classsrc_1_1activites_1_1_restaurant_a8df175b02e889613678e7d75bc311132}\label{classsrc_1_1activites_1_1_restaurant_a8df175b02e889613678e7d75bc311132}} 
+\index{src.activites.Restaurant@{src.activites.Restaurant}!addCommande@{addCommande}}
+\index{addCommande@{addCommande}!src.activites.Restaurant@{src.activites.Restaurant}}
+\doxysubsubsection{\texorpdfstring{addCommande()}{addCommande()}}
+{\footnotesize\ttfamily void src.\+activites.\+Restaurant.\+add\+Commande (\begin{DoxyParamCaption}\item[{String}]{ajout }\end{DoxyParamCaption})}
+
+Fonction reccursive. Ajoute un element a la commande actuelle, ce qui modifie le code\+Commande. L\textquotesingle{}element ajoute doit faire partie de la liste suivante \+: \{\char`\"{}plat\char`\"{},\char`\"{}accompagnement\char`\"{},\char`\"{}boisson\char`\"{},\char`\"{}dessert\char`\"{},\char`\"{}menu\+Mojito\char`\"{},\char`\"{}menu\+Daiquiri\char`\"{}\} et il doit ne pas avoir deja ete commande. Sinon, l\textquotesingle{}action n\textquotesingle{}est pas realisee et un message est envoye sur le terminal
+
+
+\begin{DoxyParams}{Parameters}
+{\em ajout} & commande a rajouter \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classsrc_1_1activites_1_1_restaurant_adfb8f40fddfd94f159c264f74203845b}\label{classsrc_1_1activites_1_1_restaurant_adfb8f40fddfd94f159c264f74203845b}} 
+\index{src.activites.Restaurant@{src.activites.Restaurant}!addTicket@{addTicket}}
+\index{addTicket@{addTicket}!src.activites.Restaurant@{src.activites.Restaurant}}
+\doxysubsubsection{\texorpdfstring{addTicket()}{addTicket()}}
+{\footnotesize\ttfamily void src.\+activites.\+Restaurant.\+add\+Ticket (\begin{DoxyParamCaption}\item[{int}]{t }\end{DoxyParamCaption})}
+
+Rajoute t tickets Mojito-\/\+Mojito a la fiche restaurant du Client, en fonction du nombre qu\textquotesingle{}il presente a la caisse. S\textquotesingle{}il s\textquotesingle{}agit d\textquotesingle{}une fiche non-\/\+Client, l\textquotesingle{}action n\textquotesingle{}a tout simplement pas lieu et un message est envoye sur le terminal.
+
+
+\begin{DoxyParams}{Parameters}
+{\em t} & nombre de ticket a rajouter \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classsrc_1_1activites_1_1_restaurant_ae87139aa4e7b5f6c2edff1f62bd78445}\label{classsrc_1_1activites_1_1_restaurant_ae87139aa4e7b5f6c2edff1f62bd78445}} 
+\index{src.activites.Restaurant@{src.activites.Restaurant}!getPrixTotal@{getPrixTotal}}
+\index{getPrixTotal@{getPrixTotal}!src.activites.Restaurant@{src.activites.Restaurant}}
+\doxysubsubsection{\texorpdfstring{getPrixTotal()}{getPrixTotal()}}
+{\footnotesize\ttfamily double src.\+activites.\+Restaurant.\+get\+Prix\+Total (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Renvoie le prix totale de la commande
+
+\begin{DoxyReturn}{Returns}
+prix\+Total 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classsrc_1_1activites_1_1_restaurant_a995d560ebc98fe57b140c57930247770}\label{classsrc_1_1activites_1_1_restaurant_a995d560ebc98fe57b140c57930247770}} 
+\index{src.activites.Restaurant@{src.activites.Restaurant}!manger@{manger}}
+\index{manger@{manger}!src.activites.Restaurant@{src.activites.Restaurant}}
+\doxysubsubsection{\texorpdfstring{manger()}{manger()}}
+{\footnotesize\ttfamily void src.\+activites.\+Restaurant.\+manger (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) throws Interrupted\+Exception}
+
+Methode qui fait une petite animation lorqu\textquotesingle{}on mange
+
+
+\begin{DoxyExceptions}{Exceptions}
+{\em Interrupted\+Exception} & \\
+\hline
+\end{DoxyExceptions}
+\mbox{\Hypertarget{classsrc_1_1activites_1_1_restaurant_aae3088a0b1211a044f4b5a5690673b19}\label{classsrc_1_1activites_1_1_restaurant_aae3088a0b1211a044f4b5a5690673b19}} 
+\index{src.activites.Restaurant@{src.activites.Restaurant}!reductionTickets@{reductionTickets}}
+\index{reductionTickets@{reductionTickets}!src.activites.Restaurant@{src.activites.Restaurant}}
+\doxysubsubsection{\texorpdfstring{reductionTickets()}{reductionTickets()}}
+{\footnotesize\ttfamily String src.\+activites.\+Restaurant.\+reduction\+Tickets (\begin{DoxyParamCaption}\item[{double}]{p }\end{DoxyParamCaption})}
+
+Cette fonction est utilisee dans la fonction to\+String. Pour la commande dont le prix total est p, renvoie un ticket sur l\textquotesingle{}utilisation des coupon du Client s\textquotesingle{}inspirant de ce qui est indique dans le 3.\+5.\+3.\+4 du Projet
+
+
+\begin{DoxyParams}{Parameters}
+{\em p} & prix de la commande \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+renvoie les prix 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classsrc_1_1activites_1_1_restaurant_a5c723436db9099d85d7bfb9e75d9d1a0}\label{classsrc_1_1activites_1_1_restaurant_a5c723436db9099d85d7bfb9e75d9d1a0}} 
+\index{src.activites.Restaurant@{src.activites.Restaurant}!resetCommande@{resetCommande}}
+\index{resetCommande@{resetCommande}!src.activites.Restaurant@{src.activites.Restaurant}}
+\doxysubsubsection{\texorpdfstring{resetCommande()}{resetCommande()}}
+{\footnotesize\ttfamily void src.\+activites.\+Restaurant.\+reset\+Commande (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Une fonction qui permet de reset la Commande en cours, Client ou non Client. Ne reset pas les tickets Mojitos-\/\+Mojitos sortis. \mbox{\Hypertarget{classsrc_1_1activites_1_1_restaurant_a9377ae14af42d608200a51d332d53b80}\label{classsrc_1_1activites_1_1_restaurant_a9377ae14af42d608200a51d332d53b80}} 
+\index{src.activites.Restaurant@{src.activites.Restaurant}!resetTickets@{resetTickets}}
+\index{resetTickets@{resetTickets}!src.activites.Restaurant@{src.activites.Restaurant}}
+\doxysubsubsection{\texorpdfstring{resetTickets()}{resetTickets()}}
+{\footnotesize\ttfamily void src.\+activites.\+Restaurant.\+reset\+Tickets (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Une fonction qui permet de reset les tickets Mojitos-\/\+Mojitos, sans reset le client \mbox{\Hypertarget{classsrc_1_1activites_1_1_restaurant_a9273cd63660d0d5a30ee4f4d3ede6b7f}\label{classsrc_1_1activites_1_1_restaurant_a9273cd63660d0d5a30ee4f4d3ede6b7f}} 
+\index{src.activites.Restaurant@{src.activites.Restaurant}!setClient@{setClient}}
+\index{setClient@{setClient}!src.activites.Restaurant@{src.activites.Restaurant}}
+\doxysubsubsection{\texorpdfstring{setClient()}{setClient()}}
+{\footnotesize\ttfamily void src.\+activites.\+Restaurant.\+set\+Client (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classsrc_1_1gestionhotel_1_1_client}{Client}}}]{c }\end{DoxyParamCaption})}
+
+Une fonction qui permet d\textquotesingle{}attribuer le client C a la fiche \mbox{\hyperlink{classsrc_1_1activites_1_1_restaurant}{Restaurant}}. Si le client=null, reset les tickets Mojito-\/\+Mojito.
+
+
+\begin{DoxyParams}{Parameters}
+{\em c} & Le client du restaurent \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classsrc_1_1activites_1_1_restaurant_a2bb0390566d9bcc1ddf3ed742f91827c}\label{classsrc_1_1activites_1_1_restaurant_a2bb0390566d9bcc1ddf3ed742f91827c}} 
+\index{src.activites.Restaurant@{src.activites.Restaurant}!toString@{toString}}
+\index{toString@{toString}!src.activites.Restaurant@{src.activites.Restaurant}}
+\doxysubsubsection{\texorpdfstring{toString()}{toString()}}
+{\footnotesize\ttfamily String src.\+activites.\+Restaurant.\+to\+String (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Renvoie l\textquotesingle{}addition de la commande
+
+\begin{DoxyReturn}{Returns}
+L\textquotesingle{}addition 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+activites/Restaurant.\+java\end{DoxyCompactItemize}
