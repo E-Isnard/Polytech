@@ -60,17 +60,17 @@ public class Chambre {
    */
   public Double defPrix(String t) {
     Double rep = 0.0;
-    if (t == "simple") { // on
+    if (t.equals("simple")) { 
       rep = 124.70;
-    } else if (t == "double") {
+    } else if (t.equals("double")) {
       rep = 137.60;
-    } else if (t == "triple") {
+    } else if (t.equals("triple")) {
       rep = 163.40;
-    } else if (t == "deluxe") {
+    } else if (t.equals("deluxe")) {
       rep = 189.20;
     } else { // Si le type n'appartient pas a la liste, on renvoie une erreur
       System.out.println(
-          "Erreur : Le prix de la chambre n'a pu être attribue, car le type de Chambre entre en paramètre ne fait pas partie de la liste suivante : {'simple','double','triple','deluxe'}. Le prix a ete place a 0.0 euros");
+          "Erreur : Le prix de la chambre n'a pu etre attribue, car le type de Chambre entre en paramètre ne fait pas partie de la liste suivante : {'simple','double','triple','deluxe'}. Le prix a ete place a 0.0 euros");
       return 0.0; // En cas d'erreur sur le type de Chambre, on renvoie 0.0 car il ne serait pas
                   // logique de faire payer une Chambre d'un type inconnu.
     }
@@ -89,7 +89,7 @@ public class Chambre {
     if (prix == 0.0) { // Si le prix de la chambre vaut 0.0, c'est-a-dire si le type de chambre est
                        // incorrect, on ne realise pas l'operation et on envoie un message d'erreur
       System.out.println("Erreur : Le changement de client de la chambre " + this.id
-          + " n'a pu être realise, car le type de chambre est incorrect. Veuillez changer le type de chambre en premier lieu.");
+          + " n'a pu etre realise, car le type de chambre est incorrect. Veuillez changer le type de chambre en premier lieu.");
     } else { // Sinon, le changement a lieu normalement
       this.client = c;
     }

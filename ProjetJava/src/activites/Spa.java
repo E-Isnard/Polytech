@@ -29,19 +29,19 @@ public class Spa {
 
         
 
-        String out = "1:Massage Relaxant: 50 euros\n";
+        String out = "\n1:Massage Relaxant: 50 euros\n";
         out += "A la fois relaxant et profond, il vous plongera dans une totale détente musculaire, physique et psychique.\n\n";
         out += "2:Massage aux pierres chauges: 70 euros\n";
         out += "Ce massage, par la douce chaleur des pierres volcaniques, harmonise les flux d’energie et vous transporte dans une profonde relaxation.\n\n";
         out += "3:Massage a l'elixir de bougie: 80 euros\n";
-        out += "Laissez-vous envelopper par la douce chaleur d'une bougie devenue huile de massage qui libere un veritable elixir aromatique hydratant pour un massage d'une infinie douceur sur l'ensemble du corps.";
+        out += "Laissez-vous envelopper par la douce chaleur d'une bougie devenue huile de massage qui libere un veritable elixir aromatique hydratant pour un massage d'une infinie douceur sur l'ensemble du corps.\n";
         return out;
 
     }
 
     /**
      * Fonction qui ajoute 1 au massage sélectioné
-     * @param i
+     * @param i numero du massage selectioné
      */
     public void addMassage(int i) {
         
@@ -69,7 +69,7 @@ public class Spa {
         out += "Nombre Massages relaxants : " + nbMassages[0] + "x50 euros = " + (prix1) + " euros\n";
         out += "Nombre Massages aux pierres chaudes : " + nbMassages[1] + "x70 euros = " + (prix2) + " euros\n";
         out += "Nombre Massages a l'elixir de bougie : " + nbMassages[2] + "x80 euros = " + (prix3) + " euros\n\n";
-        out += "Total des massages a payer : " + (prix1 + prix2 + prix3) + " euros";
+        out += "Total a payer : " + (prix1 + prix2 + prix3) + " euros";
 
         System.out.println(out);
     }

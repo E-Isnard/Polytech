@@ -1,4 +1,5 @@
 package src.activites.casino;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
@@ -27,11 +28,11 @@ public class Casino {
 
     /**
      * Methode permettant de jouer a la roulette On choisit un nombre entre 200 et
-     * 400 puis on incremente un compteur jusqu'à atteindre ce nombre Comme les
-     * nombres d'une roulettes vont de 0 à 35 on prend le reste par 36 à chaque
-     * qu'on affiche le compteur On efface a chaque fois le compteur grace au
-     * caractère \b on fait des poses a chaque incrementation du compteur avec la
-     * classe Thread
+     * 400 puis on incremente un compteur jusqu'à atteindre ce nombre.Comme les
+     * nombres d'une roulettes vont de 0 à 35 on prend le reste par 36 à chaque fois
+     * qu'on affiche le compteur.On efface a chaque fois le compteur grace au
+     * caractère \b et on fait des poses a chaque incrementation avec la classe
+     * Thread.
      * 
      * 
      * @param m
@@ -91,19 +92,19 @@ public class Casino {
     }
 
     /**
-     * Methode qui affiche un message apres avoir jouer a la roulette. g est vraie
-     * si c'est un gain et faux sinon
+     * Methode qui affiche un message apres avoir jouer a la roulette.
      * 
-     * @param g
-     * @param multiplicateur
-     * @param m
+     * @param g              g est vraie si c'est un gain et faux sinon
+     * 
+     * @param multiplicateur multiplicateur de la mise
+     * @param m              mise
      */
 
     public void affichageGainPerte(boolean g, int multiplicateur, Mise m) {
 
         if (g) {
             System.out.println("Bravo !");
-            int gain = m.getMontant() * multiplicateur;
+            int gain = m.getMontant() * (multiplicateur-1); // on gagne le montant de la mise fois le multiplicateur - la mise
             System.out.println("Vous avez gagne " + gain + " jetons !");
             nbJetons += gain;
         } else {
@@ -114,9 +115,9 @@ public class Casino {
     }
 
     /**
-     * Methode qui renvoie la couleur d'un
+     * Methode qui renvoie la couleur du nombre n
      * 
-     * @param n
+     * @param n nombre de la roulette
      * @return "rouge" ou "noir"
      */
     public static String couleurNombre(int n) {

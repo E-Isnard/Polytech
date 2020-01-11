@@ -6,7 +6,7 @@ import java.time.format.DateTimeFormatter; // Import the DateTimeFormatter class
 import src.gestionhotel.Client;
 
 /**
- * Fonction qui permet de commander au restaurant
+ * Classe qui permet de commander au restaurant
  * 
  * @author Enzo Isnard et Théo Picke
  * 
@@ -232,6 +232,8 @@ public class Restaurant { // La classe restaurant permet de creer une fiche rest
       // codeDaiquiri=codePlat*codeComplement*codeBoisson=2*3*5=30
       // Ainsi, il suffit de verifier si le code commande est divisible par 30 pour
       // savoir s'il comprend un Menu Daiquiri ou non
+      // Si le client a pris une boisson, un plat et un accompagnement sans prendre directement la formule
+      // on fait comme s'il l'avait prise directement.
       c = c / 30; // On retire les elements du menu Daiquiri de la commande
       rep = rep + "- 1 Menu Daiquiri : 8.00 euros\n"; // On ajoute cela a l'addition
     }
@@ -250,12 +252,12 @@ public class Restaurant { // La classe restaurant permet de creer une fiche rest
       rep = rep + "- 1 Accompagnement : 2.00 euros\n";
       p = p + 2.0;
     }
-    if (c % 5 == 0) {
+    if (c % 7 == 0) {
       c = c / 5;
       rep = rep + "- 1 Dessert : 3.50 euros\n";
       p = p + 3.5;
     }
-    if (c % 7 == 0) {
+    if (c % 5 == 0) {
       c = c / 7;
       rep = rep + "- 1 Boisson : 2.00 euros\n";
       p = p + 2.0;
@@ -286,7 +288,7 @@ public class Restaurant { // La classe restaurant permet de creer une fiche rest
 
     System.out.print("Crounch");
     for (int i = 1; i <= 3; i++) {
-      Thread.sleep(2000);
+      Thread.sleep(1000);
       System.out.print(",crounch");
     }
     System.out.println();
