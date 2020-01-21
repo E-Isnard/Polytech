@@ -58,7 +58,7 @@ def invDCT(M):
     return np.matmul(P.T, np.matmul(M, P))
 
 
-def decomRGB(img):
+def decompRGB(img):
     """
     Decompose une image en 3 tableaux contenant les valeurs rgb de chaque pixel.
 
@@ -119,7 +119,7 @@ def compressionImg(nomImage):
     img = Image.open(nomImage)
     img = tronquer(img)
 
-    r, g, b = decomRGB(img)
+    r, g, b = decompRGB(img)
 
     imMatrix = np.asarray(img)
     imMatrix = imMatrix.copy()
@@ -127,6 +127,9 @@ def compressionImg(nomImage):
     imMatrix[:, :, 0] = decompression(compression(r))
     imMatrix[:, :, 1] = decompression(compression(g))
     imMatrix[:, :, 2] = decompression(compression(b))
+
+    imMatrix = np.maximum(imMatrix, 0)
+    imMatrix = np.minimum(imMatrix, 255)
 
     return imMatrix
 
@@ -136,7 +139,7 @@ def fourierImg(nomImage):
     img = Image.open(nomImage)
     img = tronquer(img)
 
-    r, g, b = decomRGB(img)
+    r, g, b = decompRGB(img)
 
     imMatrix = np.asarray(img)
     imMatrix = imMatrix.copy()
@@ -145,14 +148,17 @@ def fourierImg(nomImage):
     imMatrix[:, :, 1] = compression(g)
     imMatrix[:, :, 2] = compression(b)
 
+    imMatrix = np.maximum(imMatrix, 0)
+    imMatrix = np.minimum(imMatrix, 255)
+
     return imMatrix
 
 
 imgCompressMatrix = compressionImg("Images\\Image.png")
-imgCompressMatrix = np.maximum(imgCompressMatrix, 0)
-imgCompressMatrix = np.minimum(imgCompressMatrix, 255)
+imgCompressMatrixF = fourierImg("Images\\Image.png")
 
 imgCompress = Image.fromarray(imgCompressMatrix)
-
+imgCompressF = Image.fromarray(imgCompressMatrixF)
 
 imgCompress.save("ImageCompresse.png")
+imgCompressF.save("ImageFourier.png")
