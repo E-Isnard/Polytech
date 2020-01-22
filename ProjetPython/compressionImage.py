@@ -32,7 +32,7 @@ def tauxCompression(MCompress,M):
     nonZeroCompress = np.count_nonzero(MCompress)
     nonZero = np.count_nonzero(M)
     
-    return (nonZeroCompress/nonZero)*100
+    return 100-(nonZeroCompress/nonZero)*100
 
 def searchBloc(M, i, j):
     """
@@ -58,23 +58,23 @@ def invDCT(M):
     """
     Changement de base inverse a l'aide de la transformee de Fourier.
     """
-    return np.matmul(P.T, np.matmul(M, P))
+    return np.dot(P.T, np.dot(M, P))
 
 
-def decompRGB(img):
+def decompRGB(imgMatrix):
     """
-    Decompose une image en 3 tableaux contenant les valeurs rgb de chaque pixel.
+    Decompose un tableau en 3 tableaux contenant les valeurs rgb de chaque pixel.
     Decale aussi les valeurs des pixels pour qu'elles soient entre -128 et 127.
     """
 
-    imMatrix = np.asarray(img)
+    
 
-    centreMatrix = 128*np.ones(imMatrix.shape)
-    imMatrix = imMatrix-centreMatrix
+    centreMatrix = 128*np.ones(imgMatrix.shape)
+    imgMatrix = imgMatrix-centreMatrix
 
-    rMatrix = imMatrix[:, :, 0]
-    gMatrix = imMatrix[:, :, 1]
-    bMatrix = imMatrix[:, :, 2]
+    rMatrix = imgMatrix[:, :, 0]
+    gMatrix = imgMatrix[:, :, 1]
+    bMatrix = imgMatrix[:, :, 2]
 
     return rMatrix, gMatrix, bMatrix
 
@@ -104,17 +104,19 @@ def compdecompression(M):
 
     nb_blocsL = M.shape[0]//8
     nb_blocsC = M.shape[1]//8
-
+    tauxCompression = 0
     for i in range(nb_blocsL):
         for j in range(nb_blocsC):
             bloc = searchBloc(M, i, j)
             bloc = DCT(bloc)
             bloc = (np.divide(bloc, Q))
             bloc = bloc.astype(int)
+            
              
             bloc = np.multiply(bloc, Q)
             replaceBloc(D, invDCT(bloc), i, j)
-            
+    
+    tauxCompression/=(nb_blocsC*nb_blocsL)
     return D+np.ones(D.shape)*128
     
 def decompression(M):
@@ -139,29 +141,40 @@ def compressionImg(nomImage):
     img = tronquer(img)
 
     imgBase = np.asarray(img)
-
-    r, g, b = decompRGB(img)
-
-    
-    imMatrix = np.copy(imgBase)
     
 
-    imMatrix[:, :, 0] = compdecompression(r)
-    imMatrix[:, :, 1] = compdecompression(g)
-    imMatrix[:, :, 2] = compdecompression(b)
-
+    r, g, b = decompRGB(imgBase)
+    
+    
+    imgMatrix = np.copy(imgBase)
     
 
+    # imgMatrix[:, :, 0] = compdecompression(r)
+    # imgMatrix[:, :, 1] = compdecompression(g)
+    # imgMatrix[:, :, 2] = compdecompression(b)
+
+    rCompress = compression(r)
+    gCompress = compression(g)
+    bCompress = compression(b)
+
+    tauxCompressionR = tauxCompression(rCompress,r)
+    tauxCompressionG = tauxCompression(gCompress,g)
+    tauxCompressionB = tauxCompression(bCompress,b)
+
+    tauxCompressionTotal = (tauxCompressionR+tauxCompressionG+tauxCompressionB)/3
+
+    imgMatrix[:,:,0] = decompression(rCompress)
+    imgMatrix[:,:,1] = decompression(gCompress)
+    imgMatrix[:,:,2] = decompression(bCompress)
 
 
-
-    imMatrix = np.maximum(imMatrix, 0)
-    imMatrix = np.minimum(imMatrix, 255)
+    imgMatrix = np.maximum(imgMatrix, 0)
+    imgMatrix = np.minimum(imgMatrix, 255)
 
     
-    imgCompress = Image.fromarray(imMatrix)
+    imgCompress = Image.fromarray(imgMatrix)
 
-    return imgCompress,imMatrix,norm(imMatrix-imgBase)
+    return imgCompress,imgMatrix,norm(imgBase-imgMatrix)/norm(imgBase),np.floor((tauxCompressionTotal*100))/100
 
 
 def fourierImg(nomImage):
@@ -169,28 +182,35 @@ def fourierImg(nomImage):
     img = Image.open(nomImage)
     img = tronquer(img)
 
-    r, g, b = decompRGB(img)
+    imgBase = np.asarray(img)
 
-    imMatrix = np.asarray(img)
-    imMatrix = imMatrix.copy()
+    r, g, b = decompRGB(imgBase)
 
-    imMatrix[:, :, 0] = compression(r)
-    imMatrix[:, :, 1] = compression(g)
-    imMatrix[:, :, 2] = compression(b)
+    
+    imgMatrixF = np.copy(imgBase)
 
-    imMatrix = np.maximum(imMatrix, 0)
-    imMatrix = np.minimum(imMatrix, 255)
+    imgMatrixF[:, :, 0] = compression(r)
+    imgMatrixF[:, :, 1] = compression(g)
+    imgMatrixF[:, :, 2] = compression(b)
 
-    imgCompressF = Image.fromarray(imMatrix)
+    imgMatrixF = np.maximum(imgMatrixF, 0)
+    imgMatrixF = np.minimum(imgMatrixF, 255)
 
-    return imgCompressF,imMatrix
+    imgCompressF = Image.fromarray(imgMatrixF)
+
+    return imgCompressF,imgMatrixF
 
 
-res = compressionImg("Images\\Image.png")
 
-res[0].save("ImageCompressee.png")
-print(res[2])
-fourierImg("Images\\Image.png")[0].save("ImageFourier.png")
+if __name__ == '__main__':
+    res = compressionImg("Images\\arouf.jpg")
+
+    res[0].save("ImageCompressee.jpg")
+    print("Difference en norme L2")
+    print(res[2])
+    print("Taux de compression de l'image")
+    print(res[3])
+    fourierImg("Images\\arouf.jpg")[0].save("ImageFourier.jpg")
 
 
 
