@@ -1,5 +1,6 @@
 from PIL import Image
 import numpy as np
+from numpy.linalg import norm
 
 
 P = np.zeros((8, 8))
@@ -18,18 +19,20 @@ def tronquer(image):
     """
     Tronque une image pour que ses dimensions soient des multiples de 8.
     """
-    try:
-        width, height = image.size
-        newHeight = height - height % 8
-        newWidth = width - width % 8
-        area = (0, 0, newWidth, newHeight)
-        image = image.crop(area)
-        # image.save(name)
-        return image
 
-    except IOError:
-        pass
+    width, height = image.size
+    newHeight = height - height % 8
+    newWidth = width - width % 8
+    area = (0, 0, newWidth, newHeight)
+    image = image.crop(area)
+        
+    return image
 
+def tauxCompression(MCompress,M):
+    nonZeroCompress = np.count_nonzero(MCompress)
+    nonZero = np.count_nonzero(M)
+    
+    return (nonZeroCompress/nonZero)*100
 
 def searchBloc(M, i, j):
     """
@@ -61,9 +64,7 @@ def invDCT(M):
 def decompRGB(img):
     """
     Decompose une image en 3 tableaux contenant les valeurs rgb de chaque pixel.
-
     Decale aussi les valeurs des pixels pour qu'elles soient entre -128 et 127.
-
     """
 
     imMatrix = np.asarray(img)
@@ -97,7 +98,25 @@ def compression(M):
 
     return D
 
+def compdecompression(M):
+    
+    D = np.zeros(M.shape)
 
+    nb_blocsL = M.shape[0]//8
+    nb_blocsC = M.shape[1]//8
+
+    for i in range(nb_blocsL):
+        for j in range(nb_blocsC):
+            bloc = searchBloc(M, i, j)
+            bloc = DCT(bloc)
+            bloc = (np.divide(bloc, Q))
+            bloc = bloc.astype(int)
+             
+            bloc = np.multiply(bloc, Q)
+            replaceBloc(D, invDCT(bloc), i, j)
+            
+    return D+np.ones(D.shape)*128
+    
 def decompression(M):
 
     D = np.zeros(M.shape)
@@ -119,19 +138,30 @@ def compressionImg(nomImage):
     img = Image.open(nomImage)
     img = tronquer(img)
 
+    imgBase = np.asarray(img)
+
     r, g, b = decompRGB(img)
 
-    imMatrix = np.asarray(img)
-    imMatrix = imMatrix.copy()
+    
+    imMatrix = np.copy(imgBase)
+    
 
-    imMatrix[:, :, 0] = decompression(compression(r))
-    imMatrix[:, :, 1] = decompression(compression(g))
-    imMatrix[:, :, 2] = decompression(compression(b))
+    imMatrix[:, :, 0] = compdecompression(r)
+    imMatrix[:, :, 1] = compdecompression(g)
+    imMatrix[:, :, 2] = compdecompression(b)
+
+    
+
+
+
 
     imMatrix = np.maximum(imMatrix, 0)
     imMatrix = np.minimum(imMatrix, 255)
 
-    return imMatrix
+    
+    imgCompress = Image.fromarray(imMatrix)
+
+    return imgCompress,imMatrix,norm(imMatrix-imgBase)
 
 
 def fourierImg(nomImage):
@@ -151,14 +181,16 @@ def fourierImg(nomImage):
     imMatrix = np.maximum(imMatrix, 0)
     imMatrix = np.minimum(imMatrix, 255)
 
-    return imMatrix
+    imgCompressF = Image.fromarray(imMatrix)
+
+    return imgCompressF,imMatrix
 
 
-imgCompressMatrix = compressionImg("Images\\Image.png")
-imgCompressMatrixF = fourierImg("Images\\Image.png")
+res = compressionImg("Images\\Image.png")
 
-imgCompress = Image.fromarray(imgCompressMatrix)
-imgCompressF = Image.fromarray(imgCompressMatrixF)
+res[0].save("ImageCompressee.png")
+print(res[2])
+fourierImg("Images\\Image.png")[0].save("ImageFourier.png")
 
-imgCompress.save("ImageCompresse.png")
-imgCompressF.save("ImageFourier.png")
+
+
