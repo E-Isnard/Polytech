@@ -5,7 +5,7 @@ parser = argparse.ArgumentParser(description='Compression d image utilisant la d
 
 parser.add_argument('ifile',help='chemin de l image de depart')
 parser.add_argument('ofile',help='chemin de l image comprimee')
-parser.add_argument('-f','--fourier',action="store_true",help="Option qui permet de sauvegarder le spectre aprÃƒÂ¨s compression de l'image")
+parser.add_argument('-f','--fourier',action="store_true",help="Option qui permet de sauvegarder le spectre apres compression de l'image")
 parser.add_argument('-i','--info',action="store_true",help="Option qui permet d'afficher le taux de compression de l'image et l'erreur en norme L2")
 
 
