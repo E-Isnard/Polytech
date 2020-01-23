@@ -202,7 +202,7 @@ def compressionImg(nomImage,Q):
     imgMatrix[:, :, 1] = decompression(gCompress,Q)
     imgMatrix[:, :, 2] = decompression(bCompress,Q)
 
-    # On gere les eventuelles valeurs qui ne seraient pas entre 0 et 255(erreurs d'arrondi)
+    # On gère les eventuelles valeurs qui ne seraient pas entre 0 et 255
     imgMatrix = np.maximum(imgMatrix, 0)
     imgMatrix = np.minimum(imgMatrix, 255)
 
@@ -233,8 +233,7 @@ def fourierImg(nomImage,Q):
     imgMatrixF[:, :, 1] = compression(g,Q)
     imgMatrixF[:, :, 2] = compression(b,Q)
 
-    # On gère les eventuelles valeurs qui ne seraient pas entre 0 et 255 (erreurs d'arrondi)
-    imgMatrixF = np.maximum(imgMatrixF, 0)
+    # On gère les eventuelles valeurs qui ne seraient pas entre 0 et 255
     imgMatrixF = np.minimum(imgMatrixF, 255)
 
     # On convertit la matrice en Image
