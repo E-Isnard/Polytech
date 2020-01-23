@@ -77,7 +77,7 @@ def decompRGB(imgMatrix):
     Decompose un tableau en 3 tableaux contenant les valeurs rgb de chaque pixel.
     Decale aussi les valeurs des pixels pour qu'elles soient entre -128 et 127.
     """
-
+    #Matrice permettant de décaler les valeurs des pixels
     centreMatrix = 128*np.ones(imgMatrix.shape)
     imgMatrix = imgMatrix-centreMatrix
 
@@ -95,17 +95,23 @@ def compression(M,Q):
 
     D = np.zeros(M.shape)
 
+    #Nombre de blocs 8x8 dans chaque direction
     nb_blocsL = M.shape[0]//8
     nb_blocsC = M.shape[1]//8
 
+    #On parcourt tous les blocs
     for i in range(nb_blocsL):
         for j in range(nb_blocsC):
+            #On sélectionne le bloc
             bloc = searchBloc(M, i, j)
+            #On calcule sa DCT
             blocFourier = DCT(bloc)
 
+            #On filtre les fréquences avec Q
             blocFourier = (np.divide(blocFourier, Q))
             blocFourier = blocFourier.astype(int)
 
+            #On place le bloc dans la matrice de sortie
             remplaceBloc(D, blocFourier, i, j)
 
     return D
@@ -116,17 +122,23 @@ def compdecompression(M,Q):
     Combine compression et decompression(pas utilisee)
     """
     D = np.zeros(M.shape)
-
+    #Nombre de blocs 8x8 dans chaque direction
     nb_blocsL = M.shape[0]//8
     nb_blocsC = M.shape[1]//8
+    #On parcourt tous les blocs
     for i in range(nb_blocsL):
         for j in range(nb_blocsC):
+            #On sélectionne le bloc
             bloc = searchBloc(M, i, j)
+            #On calcule sa DCT
             bloc = DCT(bloc)
+            #On filtre les frequences
             bloc = (np.divide(bloc, Q))
             bloc = bloc.astype(int)
 
+            #On renormalise les valeurs du spectre
             bloc = np.multiply(bloc, Q)
+            #On place le bloc dans la matrice de sortie
             remplaceBloc(D, invDCT(bloc), i, j)
 
     return D+np.ones(D.shape)*128
@@ -138,16 +150,17 @@ def decompression(M,Q):
     """
 
     D = np.zeros(M.shape)
-
+    #Nombre de blocs 8x8 dans chaque direction
     nb_blocsL = M.shape[0]//8
     nb_blocsC = M.shape[1]//8
-
+    #On parcourt tous les blocs
     for i in range(nb_blocsL):
         for j in range(nb_blocsC):
+            #On renormalise le bloc
             bloc = np.multiply(searchBloc(M, i, j), Q)
-
+            #On le place dans la matrice de sortie
             remplaceBloc(D, invDCT(bloc), i, j)
-
+    #On enlève le décalage
     return D+np.ones(D.shape)*128
 
 
