@@ -11,7 +11,7 @@ parser.add_argument('-f', '--fourier', action="store_true",
                     help="Option qui permet de sauvegarder le spectre apres compression de l'image")
 parser.add_argument('-i', '--info', action="store_true",
                     help="Option qui permet d'afficher le taux de compression de l'image,l'erreur en norme L2 et la matrice Q utilisee")
-parser.add_argument('-q', '--quantization', help="Permet de choisir le matrice de quantification,l'option 0 choisit la matrice de jpg, et les options de 1 à 8 mettent Q avec que des 255 sauf le bloc en haut à gauche de la taille choisie qui contient des 1.", default=0, type=int)
+parser.add_argument('-q', '--quantization', help="Permet de choisir le matrice de quantification,par défaut on utilise la matrice de jpg et les options de 1 à 8 mettent Q avec que des 255 sauf le bloc en haut à gauche de la taille choisie qui contient des 1.", default=0, type=int)
 
 args = parser.parse_args()
 
