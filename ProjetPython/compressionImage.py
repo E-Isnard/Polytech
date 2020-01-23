@@ -1,8 +1,10 @@
+"""Ensemble de fonctions permettant de faire de la compression d'image avec la DCT(Discrete Cosine Transform) """
+
 from PIL import Image
 import numpy as np
 from numpy.linalg import norm
 
-
+#Construction de la matrice P permettant de calculer la DCT de l'image
 P = np.zeros((8, 8))
 for i in range(8):
     for j in range(8):
@@ -12,9 +14,8 @@ for i in range(8):
             P[i, j] = np.sqrt(1/4)*np.cos((np.pi*(2*j+1)*i)/16)
 
 
-# Q = np.matrix('16 11 10 16 24 40 51 61;12 12 13 19 26 58 60 55;14 13 16 24 40 57 69 56; 14 17 22 29 51 87 80 62;18 22 37 56 68 109 103 77;24 35 55 64 81 104 113 92;49 64 78 87 103 121 120 101;72 92 95 98 112 100 103 99')
-# Q=np.ones((8,8))*255
-# Q[0,0]=1
+del i
+del j
 
 
 def tronquer(image):
@@ -32,6 +33,9 @@ def tronquer(image):
 
 
 def tauxCompression(MCompress, M):
+    """
+    Calcule le taux de compression entre MCompress et M
+    """
     nonZeroCompress = np.count_nonzero(MCompress)
     nonZero = np.count_nonzero(M)
 
@@ -45,9 +49,9 @@ def searchBloc(M, i, j):
     return M[8*i:8*(i+1), 8*j:8*(j+1)]
 
 
-def replaceBloc(M, bloc, i, j):
+def remplaceBloc(M, bloc, i, j):
     """
-    Remlace le bloc de (i,j) de la matrice M par bloc
+    Remplace le bloc de (i,j) de la matrice M par bloc
     """
 
     M[8*i:8*(i+1), 8*j:8*(j+1)] = bloc
@@ -102,7 +106,7 @@ def compression(M,Q):
             blocFourier = (np.divide(blocFourier, Q))
             blocFourier = blocFourier.astype(int)
 
-            replaceBloc(D, blocFourier, i, j)
+            remplaceBloc(D, blocFourier, i, j)
 
     return D
 
@@ -123,7 +127,7 @@ def compdecompression(M,Q):
             bloc = bloc.astype(int)
 
             bloc = np.multiply(bloc, Q)
-            replaceBloc(D, invDCT(bloc), i, j)
+            remplaceBloc(D, invDCT(bloc), i, j)
 
     return D+np.ones(D.shape)*128
 
@@ -142,7 +146,7 @@ def decompression(M,Q):
         for j in range(nb_blocsC):
             bloc = np.multiply(searchBloc(M, i, j), Q)
 
-            replaceBloc(D, invDCT(bloc), i, j)
+            remplaceBloc(D, invDCT(bloc), i, j)
 
     return D+np.ones(D.shape)*128
 
@@ -166,7 +170,7 @@ def compressionImg(nomImage,Q):
     # imgMatrix[:, :, 1] = compdecompression(g)
     # imgMatrix[:, :, 2] = compdecompression(b)
 
-    # On calcule les spectres filtrees des canneaux
+    # On calcule les spectres filtrés des canneaux
     rCompress = compression(r,Q)
     gCompress = compression(g,Q)
     bCompress = compression(b,Q)
@@ -180,16 +184,16 @@ def compressionImg(nomImage,Q):
     tauxCompressionTotal = (
         tauxCompressionR+tauxCompressionG+tauxCompressionB)/3
 
-    # On affecte a la matrice de sortie les canneaux comprimes
+    # On affecte à la matrice de sortie les canneaux comprimes
     imgMatrix[:, :, 0] = decompression(rCompress,Q)
     imgMatrix[:, :, 1] = decompression(gCompress,Q)
     imgMatrix[:, :, 2] = decompression(bCompress,Q)
 
-    # On gere les eventueles valeurs qui ne seraient pas entre 0 et 255(erreurs d'arrondi)
+    # On gere les eventuelles valeurs qui ne seraient pas entre 0 et 255(erreurs d'arrondi)
     imgMatrix = np.maximum(imgMatrix, 0)
     imgMatrix = np.minimum(imgMatrix, 255)
 
-    # On convertit la matrice en img
+    # On convertit la matrice en image
     imgCompress = Image.fromarray(imgMatrix)
 
     # On renvoie l'image comprimee,sa matrice,l'erreur en norme L2 et le taux de compression de l'image(arrondi au dixieme)
@@ -198,7 +202,7 @@ def compressionImg(nomImage,Q):
 
 def fourierImg(nomImage,Q):
     """
-    Calcule le spectre filtree d'une imae
+    Calcule le spectre filtré d'une image
     """
     # Initialisation
     img = Image.open(nomImage)
@@ -211,12 +215,12 @@ def fourierImg(nomImage,Q):
     # On copie la matrice de base(bizarrement si on initialise la matrice avec des 0 on obtient des valeurs non entières)
     imgMatrixF = np.copy(imgBaseMatrix)
 
-    # On affecte a chaque canneaux de la matrice les canneaux comprime
+    # On affecte a chaque cannal de la matrice les canneaux comprimés
     imgMatrixF[:, :, 0] = compression(r,Q)
     imgMatrixF[:, :, 1] = compression(g,Q)
     imgMatrixF[:, :, 2] = compression(b,Q)
 
-    # On gere les eventuels valeurs qui ne seraient pas entre 0 et 255 (erreurs d'arrondi)
+    # On gère les eventuelles valeurs qui ne seraient pas entre 0 et 255 (erreurs d'arrondi)
     imgMatrixF = np.maximum(imgMatrixF, 0)
     imgMatrixF = np.minimum(imgMatrixF, 255)
 
@@ -227,6 +231,10 @@ def fourierImg(nomImage,Q):
 
 
 if __name__ == '__main__':
+    Q = np.matrix('16 11 10 16 24 40 51 61;12 12 13 19 26 58 60 55;14 13 16 24 40 57 69 56; 14 17 22 29 51 87 80 62;18 22 37 56 68 109 103 77;24 35 55 64 81 104 113 92;49 64 78 87 103 121 120 101;72 92 95 98 112 100 103 99')
+    # Q=np.ones((8,8))*255
+    # Q[0,0]=1
+
     res = compressionImg("Images\\arouf.jpg",Q)
 
     res[0].save("ImageCompressee.jpg")
