@@ -1,0 +1,257 @@
+---
+title: "Introduction aux données 1"
+author: "Michaël Brunengo - Agustin Yabo"
+date: "April 8, 2020"
+output: html_document
+---
+
+Dans ce TD, nous allons étudier les fondements pour étudier des bases de données en utilisant le langage R avec des commandes simples. Nous vous conseillons d'aller au-delà des TDs pour vous familiariser avec le code. La programmation s'apprend en programmant, en testant, et en visualisant ce que vous venez de coder.
+
+
+## Packages
+
+R est un langage de programmation open-source, ce qui signifie que les utilisateurs peuvent constribuer sur à des différents packages qui nous facilitent la vie, et nous pouvons les utiliser gratuitement. Généralement, nous utiliserons les packages installés ci-dessous, à savoir :
+
+    - `statsr` : pour les fichiers de données et les fonctions utilisés dans ce TD
+    - `dplyr` : pour le démêlage de données
+    - `ggplot2` : pour la visualisation des données
+
+
+Une fois installés, il faut charger ces packages grâce à la fonction `library`. Notons qu'il faut **installer** les packages une fois, mais les **charger** à chaque fois que nous relançons RStudio.
+
+```{r load-packages, message = FALSE, warning=FALSE}
+library(dplyr)
+library(ggplot2)
+library(statsr)
+```
+
+## Un premier jeu de données : les dossiers du dr. Arbuthnot
+
+Pour commencer, nous allons charger les dites données :
+
+```{r load-abrbuthnot-data}
+data(arbuthnot)
+```
+
+L'ensemble des données Arbuthnot fait référence au Dr John Arbuthnot, un médecin, écrivain et mathématician du 18e siècle. Il était intéressé par le ratio du nombre de nouveau-nés garçons et filles, et pour cette raison il a receuilli les dossiers de baptême des enfants nés à Londres pour chaque année de 1629 à 1710. Nous pouvons jeter un coup d'oeil aux données en tapant le nom dans la console.
+
+```{r view-data}
+arbuthnot
+```
+
+L'affichage des données dans la console n'est pas très pratique, cliquer sur le nom `arbuthnot` dans le volet `environnement` listant les objets dans votre espace de travail. Cela fera apparaître un affichage alternatif de l'ensemble de données dans `data viewer`. Ce que nous voyons sont quatre colonnes de chiffres, chaque ligne représentant une année différente : la première entrée dans chaque rangée est simplement le numéro de ligne (un index que nous pouvons utiliser pour accéder aux données des années individuelles si nous voulons), le second est l'année, et le troisième et le quatrième sont respectivement le nombre de garçons et de filles baptisés cette année là. Notons que les numéros de ligne dans la première colonne ne font pas partie des donnes d'Arbuthnot, ils représentent les index pour chaque ligne.
+
+Nous pouvons voir les dimensions de ce `data frame` :
+
+```{r dim-data}
+dim(arbuthnot)
+```
+
+La réponse indique qu'il y a 82 lignes et trois colonnes. On peut voir les noms de ces trois colonnes en tapant :
+
+```{r names-data}
+names(arbuthnot)
+```
+
+1. Combien de variables sont contenues dans cette base de donnée ? 
+<ol>
+<li> 2 </li>
+<li> 3 </li>
+<li> 4 </li>
+<li> 82 </li>
+<li> 1710 </li>
+</ol>
+
+
+Nous pouvons accéder aux données d'une seule colonne du `data frame` en utilisant séparément une commande comme
+
+```{r view-boys}
+arbuthnot$boys
+```
+
+Ici nous voyons le nombre de garçons nés chaque année.
+
+2. Quelle commande utiliseriez-vous pour extraire le nombre de filles baptisées? 
+<ol>
+<li> `arbuthnot$boys` </li>
+<li> `arbuthnot$girls` </li>
+<li> `girls` </li>
+<li> `arbuthnot[girls]` </li>
+<li> `$girls` </li>
+</ol>
+
+```{r extract-counts-of-girls-born}
+# Vous pouvez taper votre code ici
+
+```
+
+#### Graphique
+
+R a quelques fonctions utiles pour tracer des graphiques. Nous pouvons créer un simple plot du nombre de filles nées par an avec la commande 
+
+```{r plot-girls-vs-year}
+ggplot(data = arbuthnot, aes(x = year, y = girls)) +
+  geom_point()
+```
+
+
+Nous utilisons la fonction `ggplot()` pour construire des graphiques. Les arguments de cette fonction sont :
+
+\begin{itemize}
+    \item Le premier argument est toujours l'ensemble de données.
+    \item Ensuite, nous fournissons les variables de l'ensemble de données à affecter aux axes x et y.
+    \item Enfin, nous utilisons une autre couche, séparée par un + pour spécifier la géométrie du plot. Puisque nous voulons un nuage de points, nous utilisons `geompoint`.
+\end{itemize}
+
+Une aide plus complète sur le paquet `ggplot` si besoin : http://docs.ggplot2.org/current/.
+
+Maintenant, supposons que nous voulons tracer le nombre total de baptisés. Si nous ajoutons le vecteur des baptisés pour les garçons à celui des filles, R calculera toutes les sommes simultanément.
+
+```{r calc-total-bapt-vars}
+arbuthnot$boys + arbuthnot$girls
+```
+
+Nous allons utiliser ce nouveau vecteur pour générer quelques graphiques, nous allons donc vouloir le sauvegarder comme une colonne permanente dans notre `data frame`.
+
+```{r calc-total-bapt-vars-save}
+arbuthnot <- arbuthnot %>%
+  mutate(total = boys + girls)
+```
+
+L'opératuer `%>%` est appelé opérateur de piping. Fondamentalement, il prend la sortie de la ligne actuelle et la met dans la ligne de code suivante. En utilisant la commande `mutate` une nouvelle variable appelée `total` est créée qui est la somme des variables `boys` et `girls` Puis on affecte ce nouveau jeu de données résultant à l'objet appelé `arbuthnot`, c'est à dire on écrase l'ancien jeu de données `arbuthnot` avec le nouveau contenant la nouvelle variable. Vous verrez qu'il y a maintenant une nouvelle colonne appelée `total` qui a été ajoutée au `data frame`. Nous pouvons maintenant tracer le nombre total de baptêmes avec la commande suivante.
+
+```{r plot-total-vs-year-line}
+ggplot(data = arbuthnot, aes(x = year, y = total)) +
+  geom_line()
+```
+
+Noter l'usage de `geom_line()` au lieu de `geom_point()`. Nous pouvons concaténer les deux plots :
+
+```{r plot-total-vs-year-line-and-point}
+ggplot(data = arbuthnot, aes(x = year, y = total)) +
+  geom_line() +
+  geom_point()
+```
+
+<div id="exercise">
+**Exercise**: Maintenant, générer un plot de la proportion de garçons nés à travers le temps. Que voyez-vous? 
+</div>
+
+```{r plot-proportion-of-boys-over-time}
+ggplot(data = arbuthnot, aes(x = year, y = boys/total)) +
+  geom_line() +
+  geom_point()
+
+```
+
+Enfin, nous pouvons faire des opérations mathématiques classiques ou des comparaisons logiques. Par exemple :
+
+```{r boys-more-than-girls}
+arbuthnot <- arbuthnot %>%
+  mutate(more_boys = boys > girls)
+```
+
+
+Cette commande ajoute une nouvelle variable au `data frame` contenant les valeurs de `TRUE` si cette année avait plus de garçons que de filles, ou `FALSE` si c'est l'opposé. Cette variable contient des types de données différentes par rapport à celles que nous avons conidérées jusqu'à présent. En général, l'analyse des données impliquera de nombreux types de données, et une raison d'utiliser R est qu'il est capable de représenter et de calculer avec beaucoup d'entre eux.
+
+## Dataset 2: Registre des naissances actuelles
+
+
+Nous souhaitons faire une analyse similaire pour un jeu de données issu des registres de naissance actuels aux Etats-Unis. Charger les données actuelles avec la commande suivante.
+
+```{r load-present-data}
+data(present)
+```
+
+Les données seront sont stockées dans une `data frame` appelée `present`.
+
+4. Combien de variables sont inclues dans ce jeu de données?
+<ol>
+<li> 2 </li>
+<li> 3 </li>
+<li> 4 </li>
+<li> 74 </li>
+<li> 2013 </li>
+</ol>
+
+```{r variables-in-present}
+# Taper votre code ici
+dim(present)
+```
+
+<div id="exercise">
+**Exercise**: Combien d'années sont inclues dans cette base de données? **Conseil:** Utiliser la fonction `length` puis la fonction `range`.
+</div>
+
+```{r years-in-present-data}
+# Taper votre code ici
+present
+length(present$year)
+```
+
+5. Calculer le nombre total de naissances pour chaque année et stocker ces valeurs dans une nouvelle variable appelée `total` dans le data frame `present`. Ensuite, calculez la proportion de garçons nés chaque année et stocker ces valeurs dans une nouvelle variable appelée `prop_boys` dans le même jeu de données. Tracer ces valeurs au fil du temps et basé sur ce graphique, déterminer si la déclaration suivante est vraie ou fausse: La proportion de garçons nés aux états-Unis a diminué au fil du temps. Écrire ci-dessous le code R correspondant.
+<ol>
+<li> True </li>
+<li> False </li>
+</ol>
+
+```{r total}
+present <- present %>%
+  mutate(total=boys+girls)
+
+
+```
+
+```{r prop-boys-over-time}
+present <- present %>%
+  mutate(prob_boys=boys/total)
+
+present
+
+```
+
+
+6. Créer une nouvelle variable appelée `more_boys` qui contient la valeur `TRUE` si une année avait plus de garçons que de filles, ou `FALSE` sinon. Basé sur ceci laquelle des affirmations suivantes est vraie?
+<ol>
+<li> Chaque année, il y a plus de filles que de garçons. </li>
+<li> Chaque année, il y a plus de garçons nés que de filles. </li>
+<li> La moitié des années, il y a plus de garçons, et l’autre moitié plus de filles. </li>
+</ol>
+
+```{r more-boys-per-year}
+present <- present %>%
+  mutate(more_boys=prob_boys>0.5)
+
+present
+
+```
+
+
+7. Calculer le rapport garçon-fille chaque année et stockez ces valeurs dans une nouvelle variable appelée `prop_boy_girl` dans l’ensemble de données `present` Tracer ces valeurs au fil du temps. Quelle est la tendance que nous pouvons observer?
+
+```{r prop-boy-girl-over-time}
+present <- present %>%
+  mutate(prob_boys_girls=boys/girls)
+
+ggplot(data = present, aes(x = year, y = prob_boys_girls)) +
+  geom_point()
+
+```
+
+8. En quelle année il y a le nombre le plus élevé de naissances aux États-Unis? *Conseil:* Trier votre jeu de données dans l’ordre décroissant basé sur la colonne `total` avec une nouvelle fonction: `desc` (pour 
+descending order).
+<ol>
+<li> 1940 </li>
+<li> 1957 </li>
+<li> 1961 </li>
+<li> 1991 </li>
+<li> 2007 </li>
+</ol>
+$$ \int_{-\infty}^{\infty}e^{-x^2/2}\mathbb{d}x = \sqrt{2\pi} $$
+
+```{r most-total-births}
+
+present2 <- present[order(present$total,decreasing =TRUE),]
+present2
+
+```

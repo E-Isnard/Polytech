@@ -1,0 +1,426 @@
+---
+title: "Introduction aux données"
+author: "Michaël Brunengo - Agustin Yabo"
+date: "April 8, 2020"
+output: html_document
+---
+
+Dans ce TD, nous étudions des vols pris d'un échantillon aléatoire de vols domestiques au départ d'un des trois aéroports principaux de New York. Nous allons faire un résumé des données, générer des graphiques simples et analyser les temps d'attente. Sachant que c'est une grande base données, nous allons voir comment les traiter.
+
+## Se préparer
+
+### Charger les packages
+
+Dans ce TD, nous allons étudier les données en utilise le package `dplyr` et les visualiser en utilisant le package `ggplot2`. Les données peuvent être trouvées dans le package `statsr`.
+
+Chargeons les données.
+
+```{r load-packages, warning=FALSE, message=FALSE}
+library(statsr)
+library(dplyr)
+library(ggplot2)
+```
+
+### Données
+
+Le [Bureau of Transportation Statistics](http://www.rita.dot.gov/bts/about/) 
+(BTS) est une ganece statistique qui fait partie de Research and Innovative 
+Technology Administration (RITA). Comme son nom l'indique BTS collecte et rend disponible les données de moyens de transport, comme les données de vol que nous allons utiliser ici.
+
+Nous commençons par charger la base de donnée `nycflights`. Pour charger les données :
+
+```{r load-data}
+data(nycflights)
+```
+
+La base de données contenant les vols `r nrow(nycflights)` qui est apparue dans votre workspace est une 
+*data matrix*, où chaque ligne représente une *observation* et chaque colonne représente une *variable*. C'est bien une **data frame**, comme vu précédemment.
+
+Pour voir le nom des variables, nous pouvons utiliser la commande 
+
+```{r names}
+names(nycflights)
+```
+
+Cela retourne les noms des variables de la base de données. Le **codebook** (description des variables) est inclu au-dessus.
+Ces informations peuvent être aussi retrouvées dans le fichier d'aide pour la base de données en tapant `?nycflights`
+
+- `year`, `month`, `day`: Date of departure
+- `dep_time`, `arr_time`: Departure and arrival times, local timezone.
+- `dep_delay`, `arr_delay`: Departure and arrival delays, in minutes. Negative times represent early departures/arrivals.
+- `carrier`: Two letter carrier abbreviation.
+    + `9E`:           Endeavor Air Inc.
+    + `AA`:      American Airlines Inc.
+    + `AS`:        Alaska Airlines Inc.
+    + `B6`:             JetBlue Airways
+    + `DL`:        Delta Air Lines Inc.
+    + `EV`:    ExpressJet Airlines Inc.
+    + `F9`:      Frontier Airlines Inc.
+    + `FL`: AirTran Airways Corporation
+    + `HA`:      Hawaiian Airlines Inc.
+    + `MQ`:                   Envoy Air
+    + `OO`:       SkyWest Airlines Inc.
+    + `UA`:       United Air Lines Inc.
+    + `US`:             US Airways Inc.
+    + `VX`:              Virgin America
+    + `WN`:      Southwest Airlines Co.
+    + `YV`:          Mesa Airlines Inc.
+- `tailnum`: Plane tail number
+- `flight`: Flight number
+- `origin`, `dest`: Airport codes for origin and destination. (Google can help
+you with what code stands for which airport.)
+- `air_time`: Amount of time spent in the air, in minutes.
+- `distance`: Distance flown, in miles.
+- `hour`, `minute`: Time of departure broken in to hour and minutes.
+
+Une fonction utile pour jeter un coup d'oeil à une base de données, ses dimensions et types de données est (**str** pour structure): 
+
+```{r str}
+str(nycflights)
+```
+
+La base de données `nycflights` contient de nombreuses informations. Voyons les questions que nous aimerions y répondre grâce aux données :
+
+- Nous pourrions étudier comment se comportent les vols retardés vers des destinations spécifiques.
+- Nous pourrions évaluer comment les départs retardés varient chaque mois.
+- Ou nous pourrions déterminer quel aéroport parmi les trois de NYC a le meilleure pourcentage en temps pour les départs.
+
+### Quelques fonctions
+
+Le package `dplyr` nous offre des functions utiles pour des manipulations basiques de données :
+- `filter()`
+- `arrange()`
+- `select()` 
+- `distinct()`
+- `mutate()`
+- `summarise()`
+- `sample_n()`
+
+Nous allons utiliser certaines de ces fonctions dans ce TD, et nous en apprendrons d'autres plus tard.
+
+## Analyse
+
+### Retard au départ pour les vols à destination de Raleigh-Durham (RDU)
+
+Nous pouvons examiner la distribution des retards au départ pour tous les vols avec un histogramme.
+
+```{r hist-dep-delay}
+ggplot(data = nycflights, aes(x = dep_delay)) +
+  geom_histogram()
+```
+
+Cette fonction demande d'afficher la variable `dep_delay` à partir de la base de données `nycflights` sur l'axe des x
+. Elle définit également un `geom` (abbrévation pour objet géométrique) qui décrit le type de graphique vous voulez produire.
+
+Les histogrammes sont souvent une façon pratique pour voir l'allure d'une seule distribution, cependant comme nous l'avons vu précédemment, ces allures peuvent changer en fonction de la largeur des rectangles en abscisse. Nous pouvons changer cette taille avec :
+
+
+```{r hist-dep-delay-bins}
+ggplot(data = nycflights, aes(x = dep_delay)) +
+  geom_histogram(binwidth = 15)
+ggplot(data = nycflights, aes(x = dep_delay)) +
+  geom_histogram(binwidth = 150)
+```
+
+<div id="exercise">
+**Exercise**: En comparant ces trois histogrammes avec leur largeur de rectangle différente, que pouvons-nous observer? 
+</div>
+
+Si nous voulons nous concentrer sur les retards au départ des vols à destination de RDU seulement, nous avons besoin de filtrer 
+`filter` les données pour les vols à destination de RDU (`dest == "RDU"`) et de générer un histogramme adéquate.
+
+```{r rdu-flights-hist}
+rdu_flights <- nycflights %>%
+  filter(dest == "RDU")
+ggplot(data = rdu_flights, aes(x = dep_delay)) +
+  geom_histogram()
+```
+
+Décrivons ces trois lignes de code :
+
+- Ligne 1: Prendre la base de données `nycflights`, `filter` pour les vols à destination de RDU, et sauvegarder les résultats comme une nouvelle base de données appelée `rdu_flights`.
+    + `==` représente égale à
+    + `RDU` entre guillemets car c'est une chaîne de caractère.
+- Ligne 2: Typiquement le même `ggplot` utilisé précédemment pour faire des histogrammes, seulement ici il utilise la nouvelle base de donnée.
+
+<div id="boxedtext">
+**Opérateur logique: ** Filtrer pour des certaines observations (e.g. vol à des destinations particulières) est un moyen intéressant pour étudier des informations spécifiques dans une base de données. Pour cela nous utilisons la fonction `filter` et une série 
+**d'opérateurs logiques**. Pour analyser les données, les opérateurs logiques les plus utilisés sont :
+
+- `==` pour "égal à""
+- `!=` pour "non égal à"
+- `>` ou `<` pour "plus grand" ou "plus petit à"
+- `>=` ou `<=` pour "plus grand ou égal à" ou "plus petit ou égal à"
+</div>
+
+Nous pouvons aussi obtenir un résumé numérique pour ces vols :
+
+```{r rdu-flights-summ}
+rdu_flights %>%
+  summarise(mean_dd = mean(dep_delay), sd_dd = sd(dep_delay), n = n())
+```
+
+
+Notons que dans la fonction `summarise`, nous avons créé une liste de deux éléments. Les noms de ces éléments sont personnalisables (ne pas mettre d'espaces). Le `n()` renvoie la taille de l'échantillon.
+
+<div id="boxedtext">
+**Statistique descriptive: ** Certaines fonctions retourne une valeur numérique spécifique (statistique) utile pour résumer nos données :
+
+- `mean`
+- `median`
+- `sd`
+- `var`
+- `IQR`
+- `range`
+- `min`
+- `max`
+</div>
+
+Nous pouvons aussi filtrer selon certains critères. Supposons que nous nous intéressons aux vols à destination de San Fransisco (SFO) en Février :
+
+```{r}
+sfo_feb_flights <- nycflights %>%
+  filter(dest == "SFO", month == 2)
+```
+
+Notons que nous pouvons séparer les conditions par des virgules pour ici les vols à destination de SFO **et** en Février. Si nous voulions les vols à destination de SFO **ou** en Février nous utilisons le `|` au lieu d'une virgule.
+
+
+
+1. Créer une nouvelle base de données qui inclut les vols à destination de SFO en Juin, sauvegarder dans une data frame  `sfo_june_flights`. Combien de vols obtenez-vous?
+<ol>
+<li> 68 </li> 
+<li> 115 </li> 
+<li> 16 </li> 
+<li> 3563 </li>
+<li> 32735 </li>
+</ol>
+
+```{r sfo-june-flights}
+# Votre code ici
+sfo_june_flights <- nycflights %>%
+  filter(dest == "SFO", month == 6)
+
+dim(sfo_june_flights)
+
+```
+
+
+2. Faire un histogramme et calculer des statistiques descriptives pour les retards **à l'arrivée** de `sfo_feb_flights`. Quelle proposition suivante est fausse?? 
+<ol>
+<li> La distribution est symmétrique. </li> 
+<li> La distribution est unilatérale à droite. </li> 
+<li> Aucun vol n'est retardé plus de deux heures. </li> 
+<li> La distribution a des valeurs extres à droite. </li>
+<li> Plus de 50% des vols arrivent à l'heure ou en avance. </li>
+</ol>
+
+```{r sfo-feb-flights-arrival-delays}
+
+ggplot(data = sfo_feb_flights, aes(x = arr_delay)) +
+  geom_histogram()
+```
+
+Une autre fonctionnalité utile est de pouvoir calculer des statistiques descriptives pour différents groupes dans la base de données.
+Par exemple, nous pouvons modifier la commande précédene en utilisant la fonction `group_by` qui permet d'obtenir la même statistique descriptive pour chaque aéroport d'origine :
+
+```{r summary-custom-list-origin}
+sfo_feb_flights %>%
+  group_by(origin) %>%
+  summarise(no_flights_arrdel = sum(arr_delay > 0)) %>%
+  arrange(desc(no_flights_arrdel))
+```
+
+
+Ici nous avons d'abord regrouper les données avec `origin`, puis calculer la statistique descriptive :
+
+3.  Calculer la médiane et les écarts inter-quartiles (`IQR`) pour `arr_delay`s des vols dans la data frame dans 
+`sfo_feb_flights` groupé par entreprise de transport (carrier). Quelle entreprise de transport a le plus gros écart inter-quartile pour les retards aux arrivées? 
+<ol>
+<li> American Airlines </li> 
+<li> JetBlue Airways </li> 
+<li> Virgin America </li> 
+<li> Delta and United Airlines </li>
+<li> Frontier Airlines </li>
+</ol>
+
+```{r sfo-feb-flights-arrival-delays-carrier}
+sfo_feb_flights %>%
+  group_by(carrier) %>%
+  summarise(iqr = IQR(arr_delay)) %>%
+  arrange(desc(iqr))
+
+med = median(sfo_feb_flights$arr_delay)
+med
+
+```
+
+### Retard au départ au fil des mois
+
+Quel mois vous vous attendriez à avoir le plus grand retard au départ en moyenne à l'aéroport de New York NYC?
+
+Voyons comment nous pourrions répondre à cette question :
+
+- D'abord, calculons les moyennes pour chaque mois pour les retards au départ. Nous avons besoin de :
+    + `group_by` mois, puis
+    + `summarise` moyenne des retards au départ.
+- Puis, Nous avons besoin de `arrange` ces moyennes de retard dans un ordre `desc`
+
+```{r mean-dep-delay-months}
+nycflights %>%
+  group_by(month) %>%
+  summarise(mean_dd = mean(dep_delay)) %>%
+  arrange(desc(mean_dd))
+```
+
+4.  Quel mois a le plus grand retard au départ en moyenne à l'aéroport de New York NYC? 
+<ol>
+<li> Janvier </li> 
+<li> Mars </li> 
+<li> Juillet </li> 
+<li> Octobre </li>
+<li> Décembre </li>
+</ol>
+
+```{r highest-avg-dep-delay-month}
+print("Juillet")
+
+```
+
+
+5.  Quel mois a la plus grande médiane pour les retards au départ à l'aéroport de NYC?
+<ol>
+<li> Janvier </li> 
+<li> Mars </li> 
+<li> Juillet </li> 
+<li> Octobre </li>
+<li> Décembre </li>
+</ol>
+
+```{r highest-median-dep-delay-month}
+# Votre code ici
+nycflights %>%
+  group_by(month) %>%
+  summarise(mean_dd = median(dep_delay)) %>%
+  arrange(desc(mean_dd))
+
+```
+Il s'agit de décembre
+
+6.  Est-ce la moyenne ou la médiane que vous utiliseriez pour décider d'éviter de voyager car vous détestez les retards au départ, pourquoi? 
+<ol>
+<li> La moyenne serait plus fiable car elle me donne la vraie moyenne. </li> 
+<li> La moyenne serait plus fiable sachant que la distribution des retards est symmétrique. </li> 
+<li> La médiane serait plus fiable sachant que la distrbution des retards est penchée. </li> 
+<li> La médiane serait plus fiable sachant que la distribution des retards est symmétrique. </li>
+<li> Les deux nous donne des informations intéressantes. </li>
+</ol>
+
+Nous pouvons aussi visualiser les distributions des retards au départ à travers les mois en utilisant 
+un affichage par "boîte côte à côte".
+
+```{r delay-month-box}
+ggplot(nycflights, aes(x = factor(month), y = dep_delay)) +
+  geom_boxplot()
+```
+
+Ici, nous voulons les retards au départ en ordonné et les mois en abscisse pour produire le graphique de "boîte côte à côte". Cela
+nécessite une variable catégorique pour les abscisses, cependant dans la data frame, `month` est stocké comme une variable numérique (nombre de 1 à 12). Nous pouvons donc forcer R à traiter cette variable comme catégorique, ce que R nomme un **factor**
+`factor(month)`.
+
+### Départ à l'heure pour l'aéroport de NYC
+
+Supposons que nous volerons au départ de NYC et voudrions savoir lequel des trois aéroports principaux de NYC a le meilleure ratio de départ à l'heure. Supposons aussi que pour nous, un vol qui est retardé de moins de 5 minutes reste "à l'heure". Nous considérons un départ retardé de 5 minutes ou plus comme "en retard".
+
+Dans le but de déterminer quel aéroport a le meilleure taux de départ à l'heure, nous avons besoin de :
+
+- Classifier chaque vol comme "à l'heure" ou "retardé",
+- Grouper les vols par aéroport d'origine,
+- Calculer le taux de départ à l'heure pour chaque aéroport d'origine,
+- Et finalement arranger les aéroports dnas l'ordre décroissant pour les pourcentages de départs à l'heure
+
+Commençons par classer chaque vol comme "à l'heure" ou "retardé" en créant une nouvelle variable avec la fonction `mutate`.
+
+```{r dep-type}
+nycflights <- nycflights %>%
+  mutate(dep_type = ifelse(dep_delay < 5, "on time", "delayed"))
+```
+
+Le premier argument dans la fonction `mutate` est le nom de la nouvelle variable que nous voulons créer, dans ce cas
+ `dep_type`. Puis si `dep_delay < 5` nous classons les vols  `"on time"` et `"delayed"` sinon.
+
+Notons que nous écrivons sur la data frame `nycflights` avec la nouvelle version de cette data frame qui inclut la nouvelle variable `dep_type`.
+
+
+Effectuer les étapes suivantes :
+
+Compter le nombre d'enregistrement du groupe traité à l'heure (sum(dep_type == "on time"")) - et diviser ce résultat par le nombre total d'éléments dans le groupe traité - n() - pour avoir la proportion, puis stocker la réponse dans une nouvelle variable appelée ot_dep_rate.
+
+
+7.  Si vous étiez en train de sélectionner un aéroport seulement en se basant sur le pourcentage de départ à l'heure, quel aéroport parmi les 3 principaux de NYC vous choisiriez?
+<ol>
+<li> EWR </li> 
+<li> JFK </li> 
+<li> LGA </li> 
+</ol>
+
+
+```{r}
+nycflights <- nycflights %>%
+  mutate(ot_dep_rate=sum(dep_type == "on time")/n())
+
+nycflights %>% arrange(ot_dep_rate)
+
+
+  
+
+
+
+```
+
+Nous pouvons visualiser la distribution du taux de départ à l'heure sur les 3 aéroports en utilisant un bar plot segmenté.
+
+
+```{r}
+ggplot(data = nycflights, aes(x = origin, fill = dep_type)) +
+  geom_bar()
+```
+
+8.  Muter la data frame pour qu'elle inclut une nouvelle variable qui contient la moyenne des vitesse, `avg_speed` effectuée par l'avion pour chaque vol (en miles par heure). Quel est la valeur de l'avion avec la plus rapide  `avg_speed`? **Conseil:** La vitesse moyenne peut être calculée comme une distance divisée par le temps de voyage,
+`air_time` en minutes. Si vous voulez afficher seulement `avg_speed` et 
+`tailnum` la valeur max sans les autres variables, utiliser la fonction select avec `select(avg_speed, tailnum)`.
+<ol>
+<li> N666DN </li> 
+<li> N755US </li> 
+<li> N779JB </li> 
+<li> N947UW </li> 
+<li> N959UW </li> 
+</ol>
+
+```{r fastest-avg-speed-tailnum}
+# Votre code ici
+```
+
+
+9.  Faire un nuage de points de `avg_speed` vs. `distance`. Quele affirmation suivante est vraie?
+
+<li> Si la distance augmente, la vitesse moyenne des vols diminue. </li> 
+<li> Leur lien est linéaire. </li> 
+<li> Il y a en général un rapport entre la distance et la vitesse moyenne.</li> 
+<li> Il n'y a pas de cas particulier. </li> 
+<li> La distribution des distances sont uniformes de 0 à 5000 miles. </li> 
+</ol>
+
+```{r avg-speed-dist-scatter}
+# Votre code
+
+```
+
+
+10.  Supposons que vous définissiez un vol "à l'heure" s'il arrive à destination à l'heure ou en avance, peu importe les retards au départ. Muter la data frame pour créer une nouvelle variable appelée `arr_type` avec des attributs `"on time"` et 
+`"delayed"`. Ensuite, déterminer le pourcentage d'arrivée à l'heure sachant si les départs sont en retards ou non. Quelle proportion de vols qui sont `"delayed"` au départ, arrivent `"on time"`? 
+
+```{r on-time-arr-perc}
+# Votre code
+
+```

@@ -1,0 +1,280 @@
+---
+title: "Inférence 3 - Intervalle de confiance"
+output: statsr:::statswithr_lab
+---
+
+Si vous avez accés aux données d'une population entière, disons la taille des maisons à Ames dans l'Iowa, vous pouvez répondre aux questions comme, "Quel est la taille moyenne d'une maison à Ames?" et "Quelle variation y a-t-il dans les tailles des maisons?". Si vous avez accés à seulement un échantillon d'une population, ce qui est souvent le cas, la tâche devient plus compliquée. Quelle est la meilleure estimation pour une taille moyenne si vous ne connaissez seulement que les tailles de quelques douzaines de maisons? Cette situation nécessite d'utiliser un échantillon pour faire de l'inférence sur ce à quoi ressemble votre population.
+
+<div id="boxedtext">
+**Setting a seed:** Nous allons prendre quelques échantillons aléatoires et calculer la niveau de confiance basée sur ces échantillons, ce qui implique que nous devons fixer une "graine" (seed) en haut du code. Fixer une graine va forcer R à prendre le même échantillon à chaque fois quand vous compilez le document. Cela permettra de ne pas avoir des résultats différents à chaque fois et permettra de pouvoir reproduire votre travail. Vous pouvez fixer la graine de la manière suivante :
+
+```{r set-seed}
+set.seed(92019021)                 # Mettez une valeur différente
+```
+
+Le chiffre au-dessus est complétement arbitraire. Le point important est d'utiliser chaque valeur qu'une seule fois.
+</div>
+
+
+## Démarrage
+
+### Charger les packages
+
+Nous allons explorer les données en utilisant le package 'dplyr' et visualiser les résultats en utilisant le package 'ggplot2'. Les données peuvent être trouvées dans le package 'statsr'.
+
+
+```{r load-packages, message=FALSE}
+library(statsr)
+library(dplyr)
+library(ggplot2)
+```
+
+### Les données
+
+On considère les données d'agence immobilière de la ville Ames dans l'Iowa. C'est la même base de données qu'utilisée précédement. Le détail de chaque transaction d'agence immobilière à Ames est enregistré par un cabinet d'expertise. Nous allons nous intéresser aux ventes des maisons à Ames entre 2006 et 2010. Cette collection représente notre population d'intérêt. Dans ce TD, nous voulons apprendre de ces ventes en prenant des échantillons plus petits que la population totale.
+
+```{r load-data}
+data(ames)
+```
+
+On commence par un échantillon aléatoire de la population, de taille 60. Notons que la base de données possède plusieurs informations mais nous nous intéressons seulement à la taille représentée par la variable `area`.
+
+```{r sample}
+n <- 60
+samp <- sample_n(ames, n)
+```
+
+<div id="exercise">
+**Exercise**: Décrire la distribution des maisons dans votre échantillon. Quel serait la taille moyenne dans votre échantillon? 
+
+</div>
+```{r describe-sample}
+samp %>%
+  summarise(mu = mean(area), pop_med = median(area), 
+            sigma = sd(area), pop_iqr = IQR(area),
+            pop_min = min(area), pop_max = max(area),
+            pop_q1 = quantile(area, 0.25),  # first quartile, 25th percentile
+            pop_q3 = quantile(area, 0.75))  # third quartile, 75th percentile
+
+```
+
+La moyenne de notre échantillon est µ=1501
+
+
+## Intervalles de confiance
+
+Retournons un moment à la question qui nous motivait : d'après cet échantillon, que peut-on en déduire sur la population? D'après cet seul échantillon, la meilleure valeur estimée de la moyenne des superficies des maisons vendues à Ames devrait être la moyenne, qu'on peut noté $\bar{x}$. Ce serait une bonne estimation mais ce serait bien d'informer à quel point il est incertain. On peut quantifier cela avec un **intervalle de confiance**.
+
+Un intervalle de confiance pour une moyenne de population est de la forme
+
+\[ \bar{x} \pm z^\star \frac{s}{\sqrt{n}} \]
+
+Vous devriez être à l'aise avec le calcul de moyenne et d'écart type pour un échantillon. Nous savons que la taille de l'échantillon est 60, donc il nous reste à calculer la valeur critique appropriée pour un certain niveau de confiance. On peut utiliser la fonction `qnorm` pour cela, qui calculera la valeur critique associée pour un centile donné sous la distribution normale. Rappelons nous que les niveaux de confiance et centiles ne sont pas équivalents. Par exemple, un niveau de confiance de 95% fait référence à 95% du milieu de la distribution et la valeur critique associée à cette zone correspondra au 97.5ème centile.
+
+On peut trouver la valeur critique pour un intervalle de confiance de 95% en utilisant
+```{r z_star_95}
+z_star_95 <- qnorm(0.975)
+z_star_95
+```
+ce qui est pratiquement égal à la valeur critique 1.96 que nous avons déjà vu.
+
+Calculons l'intervalle de confiance :
+```{r ci}
+samp %>%
+  summarise(lower = mean(area) - z_star_95 * (sd(area) / sqrt(n)),
+            upper = mean(area) + z_star_95 * (sd(area) / sqrt(n)))
+```
+
+Pour résumer: même si nous ne savons pas à quoi ressemble la population totale, nous sommes à 95% confiant que la vraie taille moyenne des maisons à Ames se trouve entre les valeurs *lower* et *upper*. Il y a plusieurs conditions qui doivent être respectées pour que cet intervalle soit validé.
+
+#2. Pour que cet intervalle de confiance soit validé, la moyenne des échantillons doit être distribuée suivant une loi normale et avoir une erreur type $s / \sqrt{n}$. Quel affirmation n'est pas une condition nécessaire pour que cela soit vraie?
+#<ol>
+#<li> L'échantillon est aléatoire. </li>
+#<li> La taille de l'échantillon, 60, est inférieur de 10% à celle de toute les maisons. </li>
+#<li> La distribution de l'échantillon doit suivre à peu près une loi normale. </li>
+#</ol>
+
+La 2
+## Niveaux de confiance
+
+3.  Que représente "confiance de 95%"?
+<ol>
+<li> 95% des fois, la vraie moyenne des superficies des maisons à Ames, Iowa, sera dans cet intervalle. </li>
+<li> 95% des échantillons aléatoires de taille 60 produira des intervalles de confiance qui contiendront la vraie superfice moyenne des maisons à Ames, Iowa. </li>
+<li> 95% des maisons à Ames ont une superfice dans cet intervalle. </li>
+<li> 95% confiant que la moyenne de l'échantillon est dans cet intervalle. </li>
+</ol>
+
+La 1
+
+Dans notre cas ici, nous avons la rare chance de connaitre la vraie moyenne de la population vu que nous avons les données de toute la population. Calculons cette valeur pour que nous puissons déterminer si nos intervalles de confiance la capture vraiment. Sauvegardons cette valeur dans une dataframe nommée `params` et appelons la `mu`.
+
+```{r pop-mean}
+params <- ames %>%
+  summarise(mu = mean(area))
+
+```
+
+<div id="exercise">
+**Exercise**: Est-ce que l'intervalle de confiance capture la vraie superfice moyenne des maisons à Ames?
+</div>
+```{r check-ci-contain-true-mean}
+params
+#La moyenne est bien dans l'intervalle de confiance.
+```
+
+4. Quel proportion des intervalles de confiance de 95% attendriez vous qu'ils capturent la vraie moyenne de la population?
+<ol>
+<li> 1% </li>
+<li> 5% </li>
+<li> 95% </li>
+<li> 99% </li>
+</ol>
+
+95% ?
+
+En utilisant R, nous allons collecter plusieurs échantillons pour en savoir plus sur comment les moyennes d'échantillons et les intervalles de confiance varient d'un échantillon à un autre. 
+
+Voici les grandes lignes :
+
+-   Obtenir un échantillon aléatoire.
+-   Calculer la moyenne et l'écart-type de l'échantillon, et utiliser les pour calculer et sauvegarder les bords (lower and upper) des intervalles de confiance.
+-   Répéter cela 50 fois.
+
+On peut faire cela en utilisant la fonction `rep_sample_n`. Les lignes suivantes prennent 50 échantillons aléatoires de taille `n` à partir de la population (se rappeler que nous avons défini $n = 60$ plus tôt) et calculent les bords supérieurs et inférieurs des intervalles de confiance de ces échantillons.
+
+
+```{r calculate-50-cis}
+ci <- ames %>%
+        rep_sample_n(size = n, reps = 50, replace = TRUE) %>%
+        summarise(lower = mean(area) - z_star_95 * (sd(area) / sqrt(n)),
+                  upper = mean(area) + z_star_95 * (sd(area) / sqrt(n)))
+```
+
+Regardons les 5 premiers intervalles :
+
+```{r first-five-intervals}
+ci %>%
+  slice(1:5)
+```
+
+D'abord nous créons une nouvelle variable dans la dataframe `ci` qui indique si l'intervalle contient ou pas la vraie moyenne de la population. Notons que cela signifie que le bord inférieur est inférieur à la valeur et le bord supérieur est supérieur à la valeur. Rappelons quen créous créons de nouvelles variables avec la fonction `mutate`.
+
+```{r capture-mu}
+ci <- ci %>%
+  mutate(capture_mu = ifelse(lower < params$mu & upper > params$mu, "yes", "no"))
+```
+
+La fonction `ifelse` prend 3 arguments : 1er argument un booléen, 2ème la valeur que nous souhaitons si le booléen est vrai, 3ème la valeur que nous voulons si le booléen est faux.
+
+Nous avons maitenant toutes les informations nécessaires pour créer un affichage, mais nous avons besoin de ré-organiser nos données pour un plot plus agréable. Nous avons besoin d'organiser les données dans une nouvelle dataframe où chaque ligne représente un bord, contrairement à un intervalle. Donc cela
+
+~~~
+     lower    upper capture_mu
+1 1350.540 1544.360        yes
+2 1333.441 1584.425        yes
+3 1412.133 1663.801        yes
+...
+~~~
+
+devrait ressembler plutôt à
+
+~~~
+  ci_id ci_bounds capture_mu
+1     1  1350.540        yes
+2     2  1333.441        yes
+3     3  1412.133        yes
+4     1  1544.360        yes
+5     2  1584.425        yes
+6     3  1663.801        yes
+...
+~~~
+
+On peut faire cela avec
+
+```{r create-ci-data-for-plot}
+ci_data <- data.frame(ci_id = c(1:50, 1:50),
+                      ci_bounds = c(ci$lower, ci$upper),
+                      capture_mu = c(ci$capture_mu, ci$capture_mu))
+```
+
+Et finalement nous pouvons créer le plot en utilisant
+
+```{r plot-ci}
+ggplot(data = ci_data, aes(x = ci_bounds, y = ci_id, 
+                           group = ci_id, color = capture_mu)) +
+  geom_point(size = 2) +  # add points at the ends, size = 2
+  geom_line() +           # connect with lines
+  geom_vline(xintercept = params$mu, color = "darkgray") # draw vertical line
+```
+
+<div id="exercise">
+**Exercise**: Quelle proportion des intervalles de confiance contiennent la vraie moyenne de la population? Est-ce que cete proportion est exactement égale au niveau de confiance? Si non, expliquer pourquoi.
+</div>
+```{r }
+n_captured = sum(ci_data$capture_mu=="yes")
+
+n_captured/length(ci_data$capture_mu)
+
+```
+
+
+5. Quelle est la valeur critique appropriée pour un niveau de confiance de 99%?
+<ol>
+<li> 0.01 </li>
+<li> 0.99 </li> 
+<li> 1.96 </li>
+<li> 2.33 </li>
+<li> 2.58 </li>
+</ol>
+```{r find-99-perc-crit-val}
+z_99 = qnorm(0.995)
+z_99
+```
+
+<div id="exercise">
+**Exercise**: Calculer 50 intervalles de confiance avec un niveau de confiance de 99%. Ce n'est pas nécessaire d'obtenir de nouveaux échantillons, calculer simplement de nouveaux intervalles à partir des extrémités de l'intervalle de confiance de 95% calculé précèdemment. Afficher tous les intervalles et calculer la proportion d'intervalles qui contient la vraie moyenne de la population.
+</div>
+```{r plot-99-perc-cis}
+ci2 <- ames %>%
+        rep_sample_n(size = n, reps = 50, replace = TRUE) %>%
+        summarise(lower = mean(area) - z_99 * (sd(area) / sqrt(n)),
+                  upper = mean(area) + z_99 * (sd(area) / sqrt(n)),
+                  capture_mu = ifelse(lower<params$mu & upper > params$mu,"yes","no"))
+
+ci2 %>%
+  slice(1:10)
+
+ci2_data <- data.frame(ci_id = c(1:50, 1:50),
+                      ci_bounds = c(ci2$lower, ci2$upper),
+                      capture_mu = c(ci2$capture_mu, ci2$capture_mu))
+
+
+ggplot(data = ci2_data, aes(x = ci_bounds, y = ci_id, 
+                           group = ci_id, color = capture_mu)) +
+  geom_point(size = 2) +  # add points at the ends, size = 2
+  geom_line() +           # connect with lines
+  geom_vline(xintercept = params$mu, color = "darkgray") # draw vertical line
+
+
+
+n_captured = sum(ci2_data$capture_mu=="yes")
+
+n_captured/length(ci2_data$capture_mu)
+
+
+```
+
+6. On attendrait que 99% des intervalles contiennent la vraie moyenne de la population.
+<ol>
+<li> Vrai </li>
+<li> Faux </li>
+</ol>
+
+On s'attendait effectivement à ce que 99% des intervalles contiennent la vraie moyenne. =)
+
+<div id="license">
+This is a product of OpenIntro that is released under a [Creative Commons 
+Attribution-ShareAlike 3.0 Unported](http://creativecommons.org/licenses/by-sa/3.0).
+This lab was written for OpenIntro by Andrew Bray and Mine &Ccedil;etinkaya-Rundel.
+</div>

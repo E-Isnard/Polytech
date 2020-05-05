@@ -122,12 +122,12 @@ def factLUP(A):
 # print(x)
 # print(lin.inv(A)*b)
 
-A = np.array([[1, 1 + 0.5E-15, 3], [2, 2, 20], [3, 6, 4]])
-L, U = factLU(A)
-print(np.dot(L, U))
+# A = np.array([[1, 1 + 0.5E-15, 3], [2, 2, 20], [3, 6, 4]])
+# L, U = factLU(A)
+# print(np.dot(L, U))
 
-L2, U2, P = factLUP(A)
-print(np.dot(P,np.dot(L2,U2)))
+# L2, U2, P = factLUP(A)
+# print(np.dot(P,np.dot(L2,U2)))
 
 
 # ϵ = 1E-13

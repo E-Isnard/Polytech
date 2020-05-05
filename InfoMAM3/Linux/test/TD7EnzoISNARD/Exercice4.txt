@@ -1,0 +1,2 @@
+Le script nous déplace bien au répertoire choisi mais à la fin de son exécution on retourne au répetoire 
+de départ (il faut utiliser la commande source pour y rester)

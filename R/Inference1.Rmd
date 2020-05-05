@@ -1,0 +1,251 @@
+---
+title: "Inférence 1"
+author: "Michaël Brunengo - Agustin Yabo"
+date: "April 22, 2020"
+output: html_document
+runtime: shiny
+---
+
+
+## Charger les packages
+
+Dans ce TD, nous allons explorer les données en utilisant le package `dplyr` et visualiser cela en utilisant le package `ggplot2` pour visualiser les données. Les données peuvent être trouvées dans le packages `statsr`.
+
+```{r load-packages, message=FALSE, warning=FALSE}
+library(statsr)
+library(dplyr)
+library(shiny)
+library(ggplot2)
+```
+
+## Les données
+
+Nous considérons les données d'agence immobilière de la ville Ames, en Iowa. Les détails de toutes les transactions d'agences immobilières à Ames sont enregistrés par le bureau d'expertise de la ville. Nous allons nous intéresser ici aux ventes de maisons résidentielles à Ames entre 2006 et 2010. Cette collection représente notre population d'intérêt. Nous voulons ici en apprendre un peu plus sur ces ventes en prennant des échantillons plus petits que la population totale. Chargeons les données :
+
+```{r load-data}
+data(ames)
+```
+
+Nous voyons plusieurs variables dans la base de données. Dans ce TD, nous nous concentrons sur deux variables : la superficie habitable de la maison en mètre carrée (`area`) et leur prix de vente (`price`).
+
+Nous pouvons observer la distribution des superficies avec un histogramme.
+
+```{r area-hist}
+ggplot(data = ames, aes(x = area)) +
+  geom_histogram(binwidth = 200)
+```
+
+Calculons des statistiques résumées (comme `mean`, `median`, `sd`, `IQR`, `min`, and `max`). Noter la fonction `quantile` : example `quantile(x, 0.25)` retourne la valeur du 25ème percentile de la distribution de x.
+
+```{r area-stats}
+ames %>%
+  summarise(mu = mean(area), pop_med = median(area), 
+            sigma = sd(area), pop_iqr = IQR(area),
+            pop_min = min(area), pop_max = max(area),
+            pop_q1 = quantile(area, 0.25),  # first quartile, 25th percentile
+            pop_q3 = quantile(area, 0.75))  # third quartile, 75th percentile
+```
+
+1.  Quelle proposition suivante est **fausse**?
+<ol>
+<li> La distribution des superfies des maisons à Ames est étalée à droite </li>
+<li> 50\% des maisons à Ames sont plus petites que 1500 pieds carrés. (1 mètre carré = 10,7639 pieds carrés) </li>
+<li> 50\% des superficies en milieu de disribution sont autour de 1,126 pieds carrés et 1743 pieds carrés. </li>
+<li> L'écart inter-quartile est de 617 pieds carrés. </li>
+<li> La plus petite maison a une superficie de 334 pieds carrés et la plus grande 5642 pieds carrés. </li>
+</ol>
+
+La proposition 2 est fausse car la médiane est 1442 et non pas 1500.
+
+## La distribution d'échantillonage inconnue
+
+Dans ce TD, nous avons accés à la population totale, mais c'est rarement le cas dans la vraie vie. Rassembler toutes les informations sur toute une population est souvent très coûteux et donc impossible. A cause de cela, nous prenons un échantillon de la population est l'utilisons pour comprendre les propriétés de la population.
+
+Si nous voulons calculer la moyenne des surfaces habitables à Ames, basé sur un échantillon, nous pouvons utiliser la commande suivante :
+
+```{r samp1}
+samp1 <- ames %>%
+  sample_n(size = 50)
+```
+
+
+Cette commande prend un échantillon aléatoire de taille `size` 50 dans la base `ames`, 
+assignée à `samp1`. C'est comme si nous allons au bureau d'expert et demandions 50 dossiers de ventes de maison au lieu de récupérer les 2930 dossiers.
+
+<div id="exercise">
+**Exercise**: Décrire la distribution de cet échantillon? Comment se comporte-elle par rapport à la distribution de la population? **Conseil:** Réutiliser les fonctions utilisées au-dessus. Attention à renommer le nom des statistiques résumées autrement, ici on travaille sur un échantillon.
+</div>
+```{r samp1-dist}
+samp1 %>%
+  summarise(mu2 = mean(area), pop_med2 = median(area), 
+            sigma2 = sd(area), pop_iqr2 = IQR(area),
+            pop_min2 = min(area), pop_max2 = max(area),
+            pop_q12 = quantile(area, 0.25),  # first quartile, 25th percentile
+            pop_q32 = quantile(area, 0.75))  # third quartile, 75th percentile
+
+```
+
+On remarque que la distribution de l'échantillon est assez similaire à celle de la population totale.
+
+
+Pour estimer la surface habitable moyenne de la population, nous utilisons la moyenne de l'échantillon.
+
+```{r mean-samp1}
+samp1 %>%
+  summarise(x_bar = mean(area))
+```
+
+
+Sachant que c'est un échantillon de taille 50, la moyenne de l'échantillon calculée peut être en dessous ou au dessus  de la vraie moyenne de la population 1499.69 pieds carrés. En générale, la moyenne de l'échantillon est une bonne estimation en prenant 3\% des observations de la population totale.
+
+En prenant un autre échantillon, nous obtenons une autre moyenne échantillonée.
+```{r mean-samp2}
+ames %>%
+  sample_n(size = 50) %>%
+  summarise(x_bar = mean(area))
+```
+
+Ce serait intéressant de connaitre la variabilité du résultat quand nous voulons calculer une estimation. La distribution de l'échantillon, la distribution d'échantillonage, peut nous aider à calculer cette variabilité. 
+ Vu que nous avons accés à la population totale, nous allons ici prendre 15000 échantillons de taille 50 et calculer la moyenne échantillonée à chaque fois. Notons le `replace = TRUE` que nous connaissons.
+
+```{r loop}
+sample_means50 <- ames %>%
+                    rep_sample_n(size = 50, reps = 15000, replace = TRUE) %>%
+                    summarise(x_bar = mean(area))
+
+ggplot(data = sample_means50, aes(x = x_bar)) +
+  geom_histogram(binwidth = 20)
+```
+
+Le vecteur `sample_means50` contient donc les moyennes des superficies des 15000 échantillons de taille 50. Cette distribution d'échantillonage nous donne des informations sur l'estimation de la supercice habitable moyenne des maisons à Ames. Elle est centrée en la vraie moyenne de la population, et l'écart-type nous informe de la variabilité en prenant seulement 50 ventes de maisons.
+
+
+<div id="exercise">
+**Exercise**: Nous pouvons utiliser l'intéraction suivante pour générer des distributions d'échantillonage pour les moyennes des surfaces `area`s à partir d'échantillons de tailles 10, 50, and 100. Nous pouvons voir comment la moyenne, l'écart-type et l'allure de la courbe de la distribution change quand nous changeons la taille des échantillons. Et le nombre de répétitions ?
+</div>
+    
+```{r shiny, echo=FALSE}
+shinyApp(
+  ui <- fluidPage(
+    
+    # Sidebar with a slider input for number of bins 
+    sidebarLayout(
+      sidebarPanel(
+        
+        selectInput("selected_var",
+                    "Variable:",
+                    choices = list("area", "price"),
+                    selected = "area"),         
+        
+        numericInput("n_samp",
+                     "Sample size:",
+                     min = 1,
+                     max = nrow(ames),
+                     value = 30),
+        
+        numericInput("n_sim",
+                     "Number of samples:",
+                     min = 1,
+                     max = 30000,
+                     value = 15000) 
+        
+      ),
+      
+      # Show a plot of the generated distribution
+      mainPanel(
+        plotOutput("sampling_plot"),
+        verbatimTextOutput("sampling_mean"),
+        verbatimTextOutput("sampling_se")
+      )
+    )
+  ),
+  
+  # Define server logic required to draw a histogram
+  server <- function(input, output) {
+    
+    # create sampling distribution
+    sampling_dist <- reactive({
+      ames[[input$selected_var]] %>%
+        sample(size = input$n_samp * input$n_sim, replace = TRUE) %>%
+        matrix(ncol = input$n_samp) %>%
+        rowMeans() %>%
+        data.frame(x_bar = .)
+      #ames %>%
+      #  rep_sample_n(size = input$n_samp, reps = input$n_sim, replace = TRUE) %>%
+      #  summarise_(x_bar = mean(input$selected_var))
+    })
+    
+    # plot sampling distribution
+    output$sampling_plot <- renderPlot({
+      x_min <- quantile(ames[[input$selected_var]], 0.1)
+      x_max <- quantile(ames[[input$selected_var]], 0.9)
+      
+      ggplot(sampling_dist(), aes(x = x_bar)) +
+        geom_histogram() +
+        xlim(x_min, x_max) +
+        ylim(0, input$n_sim * 0.35) +
+        ggtitle(paste0("Sampling distribution of mean ", 
+                       input$selected_var, " (n = ", input$n_samp, ")")) +
+        xlab(paste("mean", input$selected_var)) +
+        theme(plot.title = element_text(face = "bold", size = 16))
+    })
+    
+    # mean of sampling distribution
+    output$sampling_mean <- renderText({
+      paste0("mean of sampling distribution = ", round(mean(sampling_dist()$x_bar), 2))
+    })
+    
+    # mean of sampling distribution
+    output$sampling_se <- renderText({
+      paste0("SE of sampling distribution = ", round(sd(sampling_dist()$x_bar), 2))
+    })
+  },
+  
+  options = list(height = 500) 
+)
+```
+
+5. Plus nous augmentons la taille des échantillons, plus le centre de la distribution d'échantillonage est une bonne estimation. Plus la taille des échantillons augmente, la variabilité de la distribution d'échantillonage **diminue**. 
+
+
+
+<div id="exercise">
+**Exercise**: Prendre un échantillon aléatoire de taille 50 dans `price`. Calculer sa moyenne.
+</div>
+```{r price-sample}
+ames %>%
+  sample_n(size = 50) %>%
+  summarise(x_bar = mean(price))
+
+```
+
+<div id="exercise">
+**Exercise**: Vu que vous avez accés à la population totale, simuler la distribution d'échantillonage pour  $\bar{x}_{price}$ en prenant 5000 échantillons de la population de taille 50 et en calulant les 5000 moyennes. Sauvegarder ces moyennes dans un vecteur `sample_means50`. Afficher les données et décrivez l'allure de la distribution. Quelle l'estimation de la moyenne de la population?
+</div>
+```{r price-sampling}
+sample_means50 <- ames %>%
+                    rep_sample_n(size = 50, reps = 5000, replace = TRUE) %>%
+                    summarise(x_bar = mean(price))
+
+ggplot(data = sample_means50, aes(x = x_bar)) +
+  geom_histogram(binwidth = 2000)
+
+```
+
+
+On peut estimer la moyenne à 180 000
+
+<div id="exercise">
+**Exercise**: Changer la taille des échantillons à 150, puis calculer la distribution d'échantillonage en utilisant la même méthode, et sauvegarder les moyennes dans un vecteur `sample_means150`. Décrire l'allure de la distribution et comparer avec la distribution obtenue précédemmenent. Quelle l'estimation de la moyenne de la population?
+</div>
+```{r price-sampling-more}
+sample_means150 <- ames %>%
+                    rep_sample_n(size = 150, reps = 5000, replace = TRUE) %>%
+                    summarise(x_bar = mean(price))
+
+ggplot(data = sample_means150, aes(x = x_bar)) +
+  geom_histogram(binwidth = 2000)
+
+```
+
+Le distribution semble toujours suivre une loi normale de moyenne µ=180 000 mais semble avoir une variance un peu plus petite.
