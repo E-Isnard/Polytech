@@ -21,6 +21,7 @@ int main(int argc, char const *argv[])
     try
     {
         Rat q(-4, 2);
+        q--;
         cout << q << endl;
         q.inv();
     }
