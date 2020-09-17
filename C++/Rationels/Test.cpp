@@ -18,11 +18,15 @@ int main(int argc, char const *argv[])
     // Rat c(1, 2);
     // cout << -c << endl;
     // cout << c - c << endl;
-    Rat q(-1, 3);
-    cout << q.inv() << endl;
-    Rat r(1, 2);
-    cout << q / r << endl;
-    // cout << q.inv() << endl;
-
+    try
+    {
+        Rat q(-4, 2);
+        cout << q << endl;
+        q.inv();
+    }
+    catch (const char *err)
+    {
+        cout << err << endl;
+    }
     return 0;
 }

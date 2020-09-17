@@ -22,7 +22,8 @@ public:
     void simplify()
     {
         int k = pgcd(num, denom);
-        if(k<0){
+        if (k < 0)
+        {
             k = -k;
         }
         while (k != 1)
@@ -45,11 +46,16 @@ public:
     }
     Rat(int n, unsigned int p)
     {
+        if (p == 0)
+        {
+            throw "Erreur: Division par 0";
+        }
         int k = pgcd(n, p);
-        if(k<0){
+        if (k < 0)
+        {
             k = -k;
         }
-        
+
         while (k != 1)
         {
             n /= k;
@@ -89,37 +95,81 @@ public:
         return *this + (-r);
     }
 
-    Rat inv(){
+    Rat inv()
+    {
         Rat q;
-        if(num<0){
+        if (num == 0)
+        {
+            throw "Erreur: division par 0";
+        }
+        if (num < 0)
+        {
             q.num = -denom;
             q.denom = -num;
-        }else{
+        }
+        else
+        {
             q.num = denom;
             q.denom = num;
         }
         return q;
     }
 
-    Rat operator/(Rat r){
+    Rat operator/(Rat r)
+    {
         Rat q = (*this * r.inv());
         return q;
     }
 
-    // void setNum(int n)
-    // {
-    //     num = n;
-    // }
+    bool operator==(Rat r)
+    {
+        Rat s = *this;
+        s.simplify();
+        r.simplify();
+        return (r.num == s.num && r.denom == s.denom);
+    }
 
-    // void setDenom(int unsigned p)
-    // {
-    //     denom = p;
-    // }
+    bool operator!=(Rat r)
+    {
+        return !((*this) == r);
+    }
+
+    bool operator<=(Rat r)
+    {
+        int n = num * r.denom;
+        int p = r.num * denom;
+        return n <= p;
+    }
+
+    bool operator>=(Rat r)
+    {
+        int n = num * r.denom;
+        int p = r.num * denom;
+        return n >= p;
+    }
+
+    bool operator<(Rat r)
+    {
+
+        return !(*this >= r);
+    }
+
+    bool operator>(Rat r)
+    {
+        return !(*this <= r);
+    }
 };
 
 ostream &operator<<(ostream &os, Rat r)
 {
-    os << r.num << "/" << r.denom;
+    if (r.denom == 1)
+    {
+        os << r.num;
+    }
+    else
+    {
+        os << r.num << "/" << r.denom;
+    }
     return os;
 }
 
