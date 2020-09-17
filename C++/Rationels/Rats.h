@@ -159,19 +159,17 @@ public:
         return !(*this <= r);
     }
 
-    Rat operator++(int){
+    Rat operator++(int)
+    {
         *this = *this + 1;
         return *this;
     }
 
-    Rat operator--(int){
+    Rat operator--(int)
+    {
         *this = *this - 1;
         return *this;
     }
-
-
-    
-
 };
 
 ostream &operator<<(ostream &os, Rat r)
@@ -194,7 +192,6 @@ istream &operator>>(istream &is, Rat &r)
     r.simplify();
     return is;
 }
-
 
 // istream &operator>>(istream &is, Rat r)
 // {
