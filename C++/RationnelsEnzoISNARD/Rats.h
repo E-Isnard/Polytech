@@ -159,16 +159,27 @@ public:
         return !(*this <= r);
     }
 
-    Rat operator++(int)
+    Rat operator++()
     {
         *this = *this + 1;
         return *this;
     }
 
-    Rat operator--(int)
+    Rat operator--()
     {
         *this = *this - 1;
         return *this;
+    }
+    Rat operator++(int)
+    {
+        *this = *this + 1;
+        return *this-1;
+    }
+
+    Rat operator--(int)
+    {
+        *this = *this - 1;
+        return *this+1;
     }
 };
 
