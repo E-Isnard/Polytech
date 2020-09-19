@@ -22,12 +22,13 @@ public:
     void simplify()
     {
         int k = pgcd(num, denom);
-        if (k < 0)
-        {
-            k = -k;
-        }
+
         while (k != 1)
         {
+            if (k < 0)
+            {
+                k = -k;
+            }
             num /= k;
             denom /= k;
             k = pgcd(num, denom);
@@ -173,13 +174,13 @@ public:
     Rat operator++(int)
     {
         *this = *this + 1;
-        return *this-1;
+        return *this - 1;
     }
 
     Rat operator--(int)
     {
         *this = *this - 1;
-        return *this+1;
+        return *this + 1;
     }
 };
 
