@@ -24,5 +24,6 @@ public:
 };
 
 int numberDayInMonth(int month,int year);
+int numberDayInYear(int year);
 bool isBissextile(int year);
 #endif

@@ -68,7 +68,7 @@ int main()
 	// }
 
 	// Conversion constructor
-	cout << Date(1492992000);	// convert number of seconds (since Jan 1. 1970 0h00) to Date
-	// cout << din == 1492992000;	// Does is it work ? Why ?
+	cout << Date(1492992000) << endl;	// convert number of seconds (since Jan 1. 1970 0h00) to Date
+    // cout << din == 1492992000;	// Does is it work ? Why ?
 	// cout << 1492992000 + din;	// Does is it work ? Why ?
 }

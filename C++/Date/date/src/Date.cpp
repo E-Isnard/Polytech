@@ -26,7 +26,7 @@ Date::Date(int s)
     int y = 1970;
     int m = 1;
     int d = 0;
-    while (s>366*nbSecondInOneDay)
+    while (s>numberDayInYear(y)*nbSecondInOneDay)
     {
         if (isBissextile(y))
         {
@@ -38,12 +38,12 @@ Date::Date(int s)
         }
         y++;
     }
-    while (s>31*nbSecondInOneDay)
+    while (s>numberDayInMonth(m,y)*nbSecondInOneDay)
     {
-        m++;
         s -= nbSecondInOneDay * numberDayInMonth(m,y);
+        m++;
     }
-    d = s / nbSecondInOneDay;
+    d = (s / nbSecondInOneDay)+1;
 
     _year = y;
     _month = m;
@@ -110,6 +110,10 @@ bool isBissextile(int year)
 {
 
     return (year % 4 == 0 && (year % 100 != 0 || year % 400 == 0));
+}
+
+int numberDayInYear(int year){
+    return isBissextile(year) ? 366 : 365;
 }
 
 int numberDayInMonth(int month, int year)
