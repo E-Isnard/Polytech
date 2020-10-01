@@ -26,37 +26,37 @@ int main()
     OUT(d1 + 2);
     OUT(d1 + 365);
 
-    // Date d2(2003, 2, 1);
-    // OUT(d2);
-    // OUT(d2 - 0); // return date d2 minus 0 day
-    // OUT(d2 - 1); // return date d2 minus 1 day
-    // OUT(d2 - 2); // return date d2 minus 2 day
+    Date d2(2003, 2, 1);
+    OUT(d2);
+    OUT(d2 - 0); // return date d2 minus 0 day
+    OUT(d2 - 1); // return date d2 minus 1 day
+    OUT(d2 - 2); // return date d2 minus 2 day
 
-    // for (int i = 0; i <= 31; i++) OUT(d0 - i);
+    for (int i = 0; i <= 31; i++) OUT(d0 - i);
 
-    // Date d3(2003, 1, 1);
-    // OUT(d3);
-    // OUT(d3 - 1);
-    // OUT(d3 - 365);
+    Date d3(2003, 1, 1);
+    OUT(d3);
+    OUT(d3 - 1);
+    OUT(d3 - 365);
 
-    // OUT(d0 - (d0 + 1)); // return the number of days between two dates
-    // OUT(d0 - (d0 - 1));
-    // Date d4(2002, 12, 31);
-    // OUT(d3);
-    // OUT(d4);
-    // OUT(d3 - d4);
-    // OUT(d4 - d3);
-    // OUT(d4 - (d4 + 366));
+    OUT(d0 - (d0 + 1)); // return the number of days between two dates
+    OUT(d0 - (d0 - 1));
+    Date d4(2002, 12, 31);
+    OUT(d3);
+    OUT(d4);
+    OUT(d3 - d4);
+    OUT(d4 - d3);
+    OUT(d4 - (d4 + 366));
 
-    // OUT(Date(2003, 2, 10) - Date(2003, 6, 12));
+    OUT(Date(2003, 2, 10) - Date(2003, 6, 12));
 
-    // Date d5(2003, 5, 10);
-    // OUT(d5 + 5);
+    Date d5(2003, 5, 10);
+    OUT(d5 + 5);
 
-    // MSG(Relational operators);
-    // OUT(Date(2004, 3, 20) <= Date(2004, 12, 8));
-    // OUT(Date(2004, 12, 8) < Date(2004, 3, 25));
-    // OUT(Date(2004, 12, 8) < Date(2004, 3, 20) + 5);
+    MSG(Relational operators);
+    OUT(Date(2004, 3, 20) <= Date(2004, 12, 8));
+    OUT(Date(2004, 12, 8) < Date(2004, 3, 25));
+    OUT(Date(2004, 12, 8) < Date(2004, 3, 20) + 5);
 
     // Date din;
     // cout << "Enter a date (yyyy/mm/dd, terminate with EOF): " << flush;
@@ -67,8 +67,8 @@ int main()
 	// 	cout << "Enter a date (yyyy/mm/dd, terminate with EOF): " << flush;
 	// }
 
-	// // Conversion constructor
-	// cout << Date(1492992000);	// convert number of seconds (since Jan 1. 1970 0h00) to Date
+	// Conversion constructor
+	cout << Date(1492992000);	// convert number of seconds (since Jan 1. 1970 0h00) to Date
 	// cout << din == 1492992000;	// Does is it work ? Why ?
 	// cout << 1492992000 + din;	// Does is it work ? Why ?
 }
