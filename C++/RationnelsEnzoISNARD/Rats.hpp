@@ -49,7 +49,7 @@ public:
     {
         if (p == 0)
         {
-            throw "Erreur: Division par 0";
+            throw "Error: Division by 0";
         }
         int k = pgcd(n, p);
         if (k < 0)
@@ -101,7 +101,7 @@ public:
         Rat q;
         if (num == 0)
         {
-            throw "Erreur: division par 0";
+            throw "Error: Division by 0";
         }
         if (num < 0)
         {
@@ -201,6 +201,9 @@ istream &operator>>(istream &is, Rat &r)
 {
     is >> r.num;
     is >> r.denom;
+    if(r.denom == 0){
+        throw "Error: Division by 0";
+    }
     r.simplify();
     return is;
 }

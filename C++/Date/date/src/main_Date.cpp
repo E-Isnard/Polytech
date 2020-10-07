@@ -6,8 +6,8 @@
 // $Id: main_Date.cpp,v 1.3 2004/11/07 10:52:52 jpr Exp $
 //=======================================================================
 
-#include "common_defs.h"
-#include "Date.h"
+#include "common_defs.hpp"
+#include "Date.hpp"
 int main()
 {
     Date d0(2016,11,21); // default initialization (eg your favourite date)

@@ -1,35 +1,36 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
-from random import randint,sample
+from random import randint, sample
 
-print("Hello it's me")
 
 def afficher(nbAlumettes):
     print("| "*nbAlumettes)
 
+
 def checkWin(nbAlumettes):
-    if nbAlumettes <=0:
+    if nbAlumettes <= 0:
         return True
     else:
         return False
 
+
 def ia(nbAlumettes):
     """Ne marche qu'avec la règle [1,2,3]"""
-    if nbAlumettes%4 == 0:
+    if nbAlumettes % 4 == 0:
         return 1
     else:
-        return nbAlumettes%4
-        
-    
+        return nbAlumettes % 4
+
 
 def make_rule():
-    length = randint(3,4)
-    rule = sample(range(1,9),length)
+    length = randint(3, 4)
+    rule = sample(range(1, 9), length)
     rule.sort()
     return rule
 
+
 rule = make_rule()
-nbAlumettes = randint(10,20)
+nbAlumettes = randint(10, 20)
 print("Le jeu commence avec {} alumettes".format(nbAlumettes))
 print("Les règles sont {}".format(rule))
 afficher(nbAlumettes)
