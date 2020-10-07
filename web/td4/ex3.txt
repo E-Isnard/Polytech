@@ -1,9 +1,0 @@
-La partie http://Jojo indique que le nom d'utilisateur est Jojo et que le protocol utilisé est
-http.
-
-Le :IApIn indique que le mot de passe utilisé pour se connecter est IapIn.
-
-@www.example.com:8888 veut dire que la machine utilisé a comme nom de domaine
-example et qu'on s'y connecte via le port 8888.
-
-/chemin/d/acc%C3%A8s.php?q=req&q2=req2#signet est le chemin de la ressource souhaitée.

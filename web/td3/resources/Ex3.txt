@@ -1,2 +1,0 @@
-Il faudra utiliser l'expression media suivante : @media only screen and (min-width:800px) and (max-width:1024px){CSS-Code}
-On peut aussi modifier la balise HREF : <link rel="stylesheet" type="text/css" media="screen and (min-width:800px) and (max-width:1024px)" href="pluspetit.css">

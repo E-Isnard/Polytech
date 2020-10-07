@@ -1,4 +1,0 @@
-tomatoes.jpg:           De jolies tomates
-el-capitan.jpg:         El Capitan (Yosemite Park)
-new-zealand.jpg:        Un ponton en Nouvelle Zélande 
-autumn.jpg:             Feuilles en automne
