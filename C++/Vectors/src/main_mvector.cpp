@@ -1,3 +1,4 @@
+
 //=======================================================================
 // Basic C++: a simple mathematical vector class
 //      Test
@@ -11,6 +12,7 @@
 
 int main()
 {
+    cout << boolalpha;
     MSG(Constructors);
 
     MVector mv0; 
@@ -42,15 +44,14 @@ int main()
     EXEC(mv0[2] = 5.5);
     OUT(mv0[2]);
 
-    // const MVector cmv = mv1;
-    // OUT(cmv[2]);
-    // // cmv[2] = 3.5; DOES NOT COMPILE. WHY?
+    const MVector cmv = mv1;
+    OUT(cmv[2]);
+    // cmv[2] = 3.5; DOES NOT COMPILE. WHY?
+    vector<double> vv = {1.0, 2.0, 3.0};
+    MVector mv3(vv); // conversion constructor with vector<double>
 
-	// MVector mv3(vv); // conversion constructor with vector<double>
-
-	// OUT(mv3 + vv); // implicit conversion of second argument
-	// OUT(vv + mv3); // implicit conversion of first argument
-
+	OUT(mv3 + vv); // implicit conversion of second argument
+	OUT(vv + mv3); // implicit conversion of first argument
 
     return 0;
 }

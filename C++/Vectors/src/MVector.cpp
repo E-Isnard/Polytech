@@ -7,13 +7,28 @@ MVector::MVector(int d, double x) : _components(d, x)
 {
 }
 
+MVector::MVector(vector<double> v) : _components(v) {}
+
 unsigned int MVector::size()
 {
     return _components.size();
 }
 
-double &MVector::operator[](int i)
+double &MVector::operator[](unsigned int i)
 {
+    if ((*this).size() == 0 || i > (*this).size() - 1)
+    {
+        throw OutOfBound();
+    }
+    return _components.at(i);
+}
+
+double MVector::operator[](unsigned int i) const
+{
+
+    if(_components.size()==0 || i>_components.size()-1){
+        throw OutOfBound();
+    } 
     return _components.at(i);
 }
 
@@ -72,33 +87,33 @@ MVector MVector::operator-()
     return v2;
 }
 
-MVector MVector::operator+(MVector v)
+MVector operator+(MVector v, MVector w)
 {
-    unsigned int n = _components.size();
-    if (n != v.size())
+    unsigned int n = v.size();
+    if (n != w.size())
     {
-        throw "Error: vectors have different sizes";
+        throw MVector::BadDimension();
     }
     MVector v2(n);
     for (unsigned int i = 0; i < n; i++)
     {
-        v2[i] = _components[i] + v[i];
+        v2[i] = v[i] + w[i];
     }
     return v2;
 }
 
 // On n'utilise pas l'opérateur - unaire pour des raisons d'efficacité
-MVector MVector::operator-(MVector v)
+MVector operator-(MVector v, MVector w)
 {
-    unsigned int n = _components.size();
-    if (n != v.size())
+    unsigned int n = v.size();
+    if (n != w.size())
     {
-        throw "Error: vectors have different sizes";
+        throw MVector::BadDimension();
     }
     MVector v2(n);
     for (unsigned int i = 0; i < n; i++)
     {
-        v2[i] = _components[i] - v[i];
+        v2[i] = v[i] - w[i];
     }
     return v2;
 }
@@ -108,7 +123,7 @@ double MVector::operator*(MVector v)
     unsigned int n = _components.size();
     if (n != v.size())
     {
-        throw "Error: vectors have different sizes";
+        throw BadDimension();
     }
     double p = 0;
     for (unsigned int i = 0; i < n; i++)
