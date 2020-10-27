@@ -26,44 +26,44 @@ int main()
     OUT(mat1.size()[1]);
     OUT(mat0);
     OUT(mat1);
-    // OUT(mat1 == mat0);
+    OUT(mat1 == mat0);
 
-    // MSG(Assignments);
+    MSG(Assignments);
 
-    // EXEC(mat0 = mat1);
-    // OUT(mat0);
-    // OUT(mat1 == mat0);
-    // OUT(mat1 += mat1);
-    // OUT(mat1 -= mat1);
-    // OUT(mat0 *= mat0);
+    EXEC(mat0 = mat1);
+    OUT(mat0);
+    OUT(mat1 == mat0);
+    OUT(mat1 += mat1);
+    OUT(mat1 -= mat1);
+    OUT(mat0 *= mat0);
 
-    // MSG (Arithmetic operations); 
+    MSG (Arithmetic operations); 
 
-    // OUT(mat0 + mat0);
-    // OUT(mat0 - mat0);
-    // OUT(mat0 * mat0);
+    OUT(mat0 + mat0);
+    OUT(mat0 - mat0);
+    OUT(mat0 * mat0);
 
-    // try
-    // {
-    //     Matrix mat(10, 10);
-    //     OUT(mat0 + mat);
-    // }
-    // catch (Matrix::Bad_Dimensions)
-    // {
-    //     cerr << "*** Bad dimensions" << endl;
-    // }
+    try
+    {
+        Matrix mat(10, 10);
+        OUT(mat0 + mat);
+    }
+    catch (Matrix::Bad_Dimensions)
+    {
+        cerr << "*** Bad dimensions" << endl;
+    }
 
-    // try
-    // {
-    //     Matrix mat(5, 10, 3.0);
-    //     OUT(mat0 * mat);
-    //     OUT(mat0 * mat.transpose());        
-    // }
-    // catch (Matrix::Bad_Dimensions)
-    // {
-    //     cerr << "*** Bad dimensions" << endl;
-    // }
-    
+    try
+    {
+        Matrix mat(5, 10, 3.0);
+        OUT(mat0 * mat);
+        OUT(mat0 * mat.transpose());
+    }
+    catch (Matrix::Bad_Dimensions)
+    {
+        cerr << "*** Bad dimensions" << endl;
+    }
+
     // MSG (Subscript and transpose);
 
     // Matrix mat2(3, 4);
