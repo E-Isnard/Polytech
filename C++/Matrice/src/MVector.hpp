@@ -1,8 +1,14 @@
+#ifndef _MVECTOR_H_
+#define _MVECTOR_H_
+#define ui unsigned int
 #include "common_defs.hpp"
+#include "Matrix.hpp"
 #include <iostream>
 #include <vector>
 #include <math.h>
 using namespace std;
+
+class Matrix;
 class MVector
 {
 
@@ -19,6 +25,7 @@ public:
     };
     MVector(int d = 0, double x = 0.0);
     MVector(vector<double> v);
+    MVector(const Matrix &m);
     unsigned int size() const;
     double &operator[](unsigned int i);
     double operator[](unsigned int i) const;
@@ -30,5 +37,8 @@ public:
     MVector operator+=(MVector v);
     MVector operator-=(MVector v);
     double operator*(MVector v);
+    friend MVector operator*(double alpha, MVector v);
     double norm();
 };
+
+#endif

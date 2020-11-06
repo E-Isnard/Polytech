@@ -9,6 +9,7 @@
 #include "common_defs.hpp"
 #include <iostream>
 #include "Matrix.hpp"
+#include "MVector.hpp"
 
 using namespace std;
 
@@ -64,32 +65,33 @@ int main()
         cerr << "*** Bad dimensions" << endl;
     }
 
-    // MSG (Subscript and transpose);
+    MSG (Subscript and transpose);
 
-    // Matrix mat2(3, 4);
-    // for (int i = 0; i < 3; ++i)
-    //     for (int j = 0; j < 4; ++j)
-    //         mat2[i][j] = i;
-    // OUT(mat2);
-    // OUT(mat2.transpose());    
-    // OUT(~mat2);
-    // EXEC(mat2(0, 0) = 2.75);
-    // OUT(mat2(0, 0));
+    Matrix mat2(3, 4);
+    for (int i = 0; i < 3; ++i)
+        for (int j = 0; j < 4; ++j)
+            mat2[i][j] = i;
+    OUT(mat2);
+    OUT(mat2.transpose());    
+    OUT(~mat2);
+    EXEC(mat2(0, 0) = 2.75);
+    OUT(mat2(0, 0));
 
-    // MSG(Conversion between Matrices and MVectors);
+    MSG(Conversion between Matrices and MVectors);
 
-    // OUT(mat2.line(1));
-    // OUT(mat2.transpose().column(1));
+    OUT(mat2.line(1));
+    OUT(mat2.transpose().column(1));
 
-    // MVector mv(5, 2.5);
-    // Matrix mat3 = mv;
+    MVector mv(5, 2.5);
+    Matrix mat3 = mv;
+    OUT(mat3);
+    OUT(mat3.transpose());
+    // EXEC(mat3(0, 1) = 1);
     // OUT(mat3);
-    // OUT(mat3.transpose());
-     
-    // EXEC(mv = mat3);
-    // OUT(mv);
-    // OUT(static_cast<MVector>(mv));
-   
-	// OUT(mat1.det()); // only for square matrix
+    EXEC(mv = mat3);
+    OUT(mv);
+    OUT(static_cast<MVector>(mv));
+    OUT(mat1);
+    OUT(mat1.det()); // only for square matrix
     return 0;
 }

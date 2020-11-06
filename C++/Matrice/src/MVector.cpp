@@ -1,13 +1,29 @@
 #include <iostream>
 #include "MVector.hpp"
-
 using namespace std;
 
 MVector::MVector(int d, double x) : _components(d, x)
 {
+
 }
 
 MVector::MVector(vector<double> v) : _components(v) {}
+
+MVector::MVector(const Matrix &m):_components(m.size()[0]*m.size()[1])
+{
+
+    const ui *size = m.size();
+
+    for (ui i = 0; i < size[0]; i++)
+    {
+        for (ui j = 0; j < size[1]; j++)
+        {
+            (*this)[i*size[1]+j] = m(i, j);
+        }
+        
+    }
+    
+}
 
 unsigned int MVector::size() const
 {
@@ -141,4 +157,14 @@ double MVector::operator*(MVector v)
 double MVector::norm()
 {
     return sqrt((*this) * (*this));
+}
+
+MVector operator*(double alpha,MVector v)
+{
+    MVector u(v.size());
+    for (ui i = 0; i < v.size(); i++)
+    {
+        u[i] = alpha * v[i];
+    }
+    return u;
 }
