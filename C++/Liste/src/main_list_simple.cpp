@@ -40,7 +40,6 @@ int main()
     OUT(l1);
 
     List l3; // insert in the right place in a sorted list
-    l3.append(2);
     l3.insert(25);
     l3.insert(3);
     l3.insert(30);

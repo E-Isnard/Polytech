@@ -50,7 +50,7 @@ void List::insert(int v)
     else
     {
         Cell *p = head;
-        Cell *r = head;
+        Cell *r = NULL;
         while (p->next != NULL && p->val < v)
         {
             r = p;
@@ -58,8 +58,13 @@ void List::insert(int v)
         }
         if (p->val > v)
         {
-            Cell *q = new Cell(v, p);
-            r->next = q;
+            if (r == NULL)
+                prepend(v);
+            else
+            {
+                Cell *q = new Cell(v, p);
+                r->next = q;
+            }
         }
         else
         {
