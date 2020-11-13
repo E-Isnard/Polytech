@@ -37,6 +37,15 @@ int main()
 
     while (!l1.is_empty())
         OUT(l1.get_first());
+    
+    try{
+
+    l1.get_first();
+    }
+    catch(List::EmptyListException ele)
+    {
+        cout << ele.msg << endl;
+    }
     OUT(l1);
 
     List l3; // insert in the right place in a sorted list

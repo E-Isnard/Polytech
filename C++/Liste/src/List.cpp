@@ -38,6 +38,8 @@ void List::prepend(int v)
 
 int List::get_first()
 {
+    if (is_empty())
+        throw EmptyListException("You cannot remove the first element because the list is empty");
     int v = head->val;
     Cell *p = head;
     head = head->next;

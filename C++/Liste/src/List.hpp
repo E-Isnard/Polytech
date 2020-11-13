@@ -37,9 +37,19 @@ public:
 
     List() : head(0), tail(0) {}
 
+    class EmptyListException
+    {
+    public:
+        string msg;
+        EmptyListException(string str) : msg(str) {}
+    };
+
     // Accessor
 
-    bool is_empty() const { return head == 0; }
+    bool is_empty() const
+    {
+        return head == 0;
+    }
 
     // Adding elements to the list
 
