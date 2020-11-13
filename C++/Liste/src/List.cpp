@@ -39,7 +39,9 @@ void List::prepend(int v)
 int List::get_first()
 {
     int v = head->val;
+    Cell *p = head;
     head = head->next;
+    delete p;
     return v;
 }
 
