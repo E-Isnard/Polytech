@@ -154,14 +154,19 @@ int List::get_middle_value()
     if (head == tail)
         tail = 0;
     Cell *p = head;
-    Cell *q = 0;
-    for (size_t i = 0; i < size() / 2; i++)
+    Cell *q = head;
+    Cell *r = 0;
+    while (q!=0)
     {
-        q = p;
+        r = p;
         p = p->next;
+        q = q->next;
+        if (q != 0)
+            q = q->next;
     }
+
     int v = p->val;
-    q->next = p->next;
+    r->next = p->next;
     delete p;
     return v;
 }
