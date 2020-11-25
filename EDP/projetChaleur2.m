@@ -1,7 +1,11 @@
+clear;
+clc;
 dt=15; % door temperature
-ht=500; % heat temperature
+ht=200; % heat temperature
 ot =-10; % outside temperature
-n=100; % n² = number of point in mesh
+n=100; % nÂ² = number of point in mesh
+nt=100;
+cfl=30;
 x = linspace(-1,1,n);                            
 [X,Y] = meshgrid(x,x);                            
 G = ((Y<0.8) & (Y<1) & (X>-1) & (X<1) & (Y>-1)) | ((Y>0.8) & (Y<1) & (X >-0.2) & (X<0.2)); % geometry of the room
@@ -42,20 +46,26 @@ for i = 2:n-1
 end
 
 h = 2/(n-1);
-A = -A/h^2;                         % division par h^2
+t = h^2*cfl;
+
 b = zeros(length(k),1);
+% window = G(end-1,G(end-1,:)>0);     % indices correspondant a la fenetre
 heat = G(H);                        % indices correspondant au radiateur
-b(window) = -1/h^2*ot;              % prise en compte des CL Dirichlet
-b(heat) = -ht;                      % et du chauffage
-b(door) = -1/h^2*dt;
-u = A\b;                            % solution du systeme sous forme de vecteur
-U = G;
-U(G>0) = full(u(G(G>0)));           % on met la solution dans une matrice
+b(window) = 1/h^2*ot*t;              % prise en compte des CL Dirichlet
+b(heat) = ht*t;                      % et du chauffage
+b(door) = 1/h^2*dt*t;
 
-spy(G)
-mesh(X,Y,U);                        % correspondant a la grille 
-axis('ij');  
-xlabel('X')
-ylabel('Y')
-zlabel('Temperature')
+u=b;
 
+B= A*(t/h^2) + eye(length(k));
+L=chol(B);
+for i=1:nt
+%   u = B*u + b;                            % solution du systeme sous forme de vecteur
+  w = L'\(u+b);
+  u = L\w;
+  U = G;
+  U(G>0) = full(u(G(G>0)));           % on met la solution dans une matrice
+  mesh(X,Y,U);                        % correspondant a la grille 
+  axis('ij');                         % on dessine la solution sur la grille
+  pause(0.1);
+end
