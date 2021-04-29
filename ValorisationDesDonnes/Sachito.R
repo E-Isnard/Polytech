@@ -40,16 +40,17 @@ fig <- eth %>% plot_ly(x = ~eth$Date, type="candlestick",
                        increasing = i, decreasing = d)
 fig
 
-index = 1800
+index = 1845
 btc_ts = ts(btc$Close,start = c(2013,4,29),frequency = 1)
 btc_ts2 = ts(btc_ts[1:index])
 autoplot(btc_ts2,type="l")
 btc_diff2 = diff(btc_ts2)
 plot(btc_diff2,type="l")
 
-model = auto.arima(btc_ts2,d=1,D=1,approximation = FALSE,stepwise = FALSE,seasonal = TRUE)
+model = auto.arima(btc_ts2,approximation = FALSE,stepwise = FALSE,seasonal = TRUE)
 summary(model)
-h_pred=7
+checkresiduals(model)
+h_pred=28
 forecast = forecast(model,h=h_pred)
 autoplot(forecast,include = 100)
 
