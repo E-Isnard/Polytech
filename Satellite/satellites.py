@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.integrate import odeint
 from scipy.optimize import fsolve
+from autograd import jacobian
 
 AU = 149597870690
 mu_boddy=1.32712440018e+020
@@ -67,7 +68,7 @@ def sol(p):
     lu0=p[2]
     lv0=p[3]
     y0=np.array([r0,u0,v0,lr0,lu0,lv0])
-    sol = odeint(dynpol,y0,np.linspace(0,tf,2),atol=1e-6,rtol=1e-6)
+    sol = odeint(dynpol,y0,np.linspace(0,tf,2),atol=1e-8,rtol=1e-8)
     return sol[-1]
 
 def gnultmin(p):
@@ -77,7 +78,8 @@ def gnultmin(p):
     return g
 #print(m(1))
 #print(dynpol([1,1,1,1,1,1],3))
-popt = fsolve(gnultmin,np.array([10,1,1,1]))
+print(10*TU/(24*3600))
+popt = fsolve(gnultmin,np.array([10,1/np.sqrt(3),1/np.sqrt(3),1/np.sqrt(3)]),xtol=1e-6)
 tf =popt[0]*TU
 days = int(tf//(24*3600))
 time = tf%(24*3600)
@@ -95,11 +97,9 @@ for ti in t:
     s = sol([ti,popt[1],popt[2],popt[3]])
     phi = np.arctan2(s[4],s[5])
     phi_hist.append(phi)
-#%%
+
 plt.plot(t*TU/86400,np.array(phi_hist)*180/np.pi)
 plt.xlabel("t [j]")
 plt.ylabel("$\\varphi$[°]")
 plt.grid(linestyle="--")
 plt.show()
-
-# %%
