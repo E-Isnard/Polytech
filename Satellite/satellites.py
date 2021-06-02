@@ -2,7 +2,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.integrate import odeint
 from scipy.optimize import fsolve
-from autograd import jacobian
 
 AU = 149597870690
 mu_boddy=1.32712440018e+020
@@ -72,14 +71,29 @@ def sol(p):
     return sol[-1]
 
 def gnultmin(p):
-    l = p[1:];
-    x = sol(p);
-    g = [x[0]-rfN,x[1]-ufN,x[2]-vfN,np.linalg.norm(l)-1];
+    l = p[1:]
+    x = sol(p)
+    g = [x[0]-rfN,x[1]-ufN,x[2]-vfN,np.linalg.norm(l)-1]
+    return g
+
+def gnultmin2(p):
+    x = sol(p)
+    lr0,lu0,lv0 = p[1:]
+    r,u,v,lrf,luf,lvf = x
+    tf = p[0]
+    phi = np.arctan2(luf,lvf)
+    g = [r-rfN,lvf,luf,1+lrf*u+luf*((v**2)/r-muN/(r**2)+TN/m(tf)*np.sin(phi))+lvf*(-(u*v)/r+TN/m(tf)*np.cos(phi))]
     return g
 #print(m(1))
 #print(dynpol([1,1,1,1,1,1],3))
-print(10*TU/(24*3600))
-popt = fsolve(gnultmin,np.array([10,1/np.sqrt(3),1/np.sqrt(3),1/np.sqrt(3)]),xtol=1e-6)
+# print(gnultmin([1,1,1,1]))
+# print(sol([1,1,1,1]))
+tf0 = 2*np.pi*np.sqrt(rfN/muN)
+# print(tf0*TU/(24*3600))
+
+popt = fsolve(gnultmin,np.array([tf0,1/np.sqrt(3),-1/np.sqrt(3),-1/np.sqrt(3)]),xtol=1e-6)
+# print(gnultmin2(popt))
+# print(f"popt={popt}")
 tf =popt[0]*TU
 days = int(tf//(24*3600))
 time = tf%(24*3600)
