@@ -1,4 +1,6 @@
+#!python
 import numpy as np
+import os
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 from mpl_toolkits.axes_grid1 import make_axes_locatable
@@ -10,37 +12,36 @@ def progress(i, n):
 
 
 ns = 100
-nt=100
+nt=300
 mu = 5e-3
 delta = 1/ns
 x = np.linspace(0,1,ns)
 y = np.linspace(0,1,ns)
 X,Y = np.meshgrid(x,y)
 u = np.zeros((2,ns,ns))
-u=np.cos(np.pi*Y*0)
-v=0.6*np.sin(np.pi/2*X*0)
+u=np.cos(np.pi*Y)
+v=0.6*np.sin(np.pi/2*X)
 V = np.array([u,v])
 c = np.max(u**2+v**2)
-dt = min(delta**2/(8*mu),0.125*c/delta)
-
-plt.quiver(X,Y,u,v,units="xy")
+dt = 1/8*min(delta**2/(mu),c/delta)
+plt.quiver(X,Y,V[0],V[1],units="xy")
 plt.show()
 
 T = np.zeros((nt,ns,ns))
-T[0,10:30,10:30] = 100
+# T[0,10:30,10:30] = 100
+T[0] = (((X-0.5)**2+(Y-0.5)**2)<=0.001)*100
 
 def gradT(n,i,j):
-    grad = np.zeros((2,1))
-    if u[i,j]<=0:
-        grad[0]=(T[n,i+1,j]-T[n,i,j])/delta
+    grad = np.zeros((2,))
+    if V[0,i,j]>=0:
+        grad[1]=(T[n,i+1,j]-T[n,i,j])/delta
     else:
-        grad[0]=(T[n,i,j]-T[n,i-1,j])/delta
+        grad[1]=(T[n,i,j]-T[n,i-1,j])/delta
 
-    if v[i,j]<=0:
-        grad[1]=(T[n,i,j+1]-T[n,i,j])/delta
+    if V[1,i,j]>=0:
+        grad[0]=(T[n,i,j+1]-T[n,i,j])/delta
     else:
-        grad[1]=(T[n,i,j]-T[n,i,j-1])/delta
-
+        grad[0]=(T[n,i,j]-T[n,i,j-1])/delta
 
     return grad
 
@@ -52,15 +53,15 @@ for n in range(nt-1):
     progress(n,nt-1)
     for i in range(1,ns-1):
         for j in range(1,ns-1):
-            grad = gradT(n,i,j)
-            T[n+1,i,j]=T[n,i,j]+dt*(mu*laplacienT(n,i,j)+u[i,j]*grad[0]+v[i,j]*grad[1])
+            T[n+1,i,j]=T[n,i,j]+dt*(-V[:,i,j]@gradT(n,i,j)+mu*laplacienT(n,i,j))
 
+# print(T[-1])
 fig = plt.figure()
 ax = fig.add_subplot(111)
 div = make_axes_locatable(ax)
 cax = div.append_axes('right', '5%', '5%')
 cv0 = T[0]
-im = ax.imshow(cv0,origin="lower")
+im = ax.imshow(cv0,origin="lower",cmap="jet")
 cb = fig.colorbar(im,cax=cax)
 tx = ax.set_title('Frame 0')
 def animate(i):
