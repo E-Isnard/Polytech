@@ -67,17 +67,33 @@ def sol(p):
     lu0=p[2]
     lv0=p[3]
     y0=np.array([r0,u0,v0,lr0,lu0,lv0])
-    sol = odeint(dynpol,y0,np.linspace(0,tf,2),atol=1e-6,rtol=1e-6)
+    sol = odeint(dynpol,y0,np.linspace(0,tf,2),atol=1e-8,rtol=1e-8)
     return sol[-1]
 
 def gnultmin(p):
-    l = p[1:];
-    x = sol(p);
-    g = [x[0]-rfN,x[1]-ufN,x[2]-vfN,np.linalg.norm(l)-1];
+    l = p[1:]
+    x = sol(p)
+    g = [x[0]-rfN,x[1]-ufN,x[2]-vfN,np.linalg.norm(l)-1]
+    return g
+
+def gnultmin2(p):
+    x = sol(p)
+    lr0,lu0,lv0 = p[1:]
+    r,u,v,lrf,luf,lvf = x
+    tf = p[0]
+    phi = np.arctan2(luf,lvf)
+    g = [r-rfN,lvf,luf,1+lrf*u+luf*((v**2)/r-muN/(r**2)+TN/m(tf)*np.sin(phi))+lvf*(-(u*v)/r+TN/m(tf)*np.cos(phi))]
     return g
 #print(m(1))
 #print(dynpol([1,1,1,1,1,1],3))
-popt = fsolve(gnultmin,np.array([10,1,1,1]))
+# print(gnultmin([1,1,1,1]))
+# print(sol([1,1,1,1]))
+tf0 = 2*np.pi*np.sqrt(rfN/muN)
+# print(tf0*TU/(24*3600))
+
+popt = fsolve(gnultmin,np.array([tf0,1/np.sqrt(3),-1/np.sqrt(3),-1/np.sqrt(3)]),xtol=1e-6)
+# print(gnultmin2(popt))
+# print(f"popt={popt}")
 tf =popt[0]*TU
 days = int(tf//(24*3600))
 time = tf%(24*3600)
@@ -95,11 +111,9 @@ for ti in t:
     s = sol([ti,popt[1],popt[2],popt[3]])
     phi = np.arctan2(s[4],s[5])
     phi_hist.append(phi)
-#%%
+
 plt.plot(t*TU/86400,np.array(phi_hist)*180/np.pi)
 plt.xlabel("t [j]")
 plt.ylabel("$\\varphi$[°]")
 plt.grid(linestyle="--")
 plt.show()
-
-# %%
