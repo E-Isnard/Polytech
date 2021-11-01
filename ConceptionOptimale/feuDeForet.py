@@ -171,10 +171,10 @@ def NelderMead(f,dim,alpha=1,lb=0,ub=1,gamma=2,rho=1/2,sigma=1/2,eps=1e-8,nmax=1
     
 
 
-res = NelderMead(lambda x:x**2,dim=1)
-print(res)
-# x0 = [0.3, 0.5, 0.3, 0.5]
-# res = minimize(J, x0, method="Nelder-Mead", tol=1e-3)
+# res = NelderMead(lambda x:x**2,dim=1)
 # print(res)
-# C, T = simu(*(res.x))
-# anim2d(C, T)
+x0 = [0.3, 0.5, 0.3, 0.5]
+res = minimize(J, x0, method="Nelder-Mead", tol=1e-3)
+print(res)
+C, T = simu(*(res.x))
+anim2d(C, T)

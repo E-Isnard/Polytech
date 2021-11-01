@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import torch.nn as nn
 import torch.optim as optim
 import torch
+import pandas as pd
 from torch.utils.data import DataLoader
 import os
 
@@ -10,7 +11,6 @@ os.environ['KMP_DUPLICATE_LIB_OK'] = 'True'
 # torch.manual_seed(42)
 
 random_seed = 128
- 
 
 class Sin(nn.Module):
     def __init__(self, ):
@@ -18,7 +18,6 @@ class Sin(nn.Module):
 
     def forward(self, x):
         return torch.sin(x)
-
 
 class NeuralNet(nn.Module):
 
@@ -131,7 +130,7 @@ class Pinns:
         input_boundary_L[:, 1] = torch.full(input_boundary_L[:, 1].shape, xL)
 
         output_boundary_0 = torch.zeros((input_boundary.shape[0], 2))
-        output_boundary_0[:,0] = (3)/(1+torch.exp(-200*(input_boundary_0[:,0]-0.25)))+1
+        output_boundary_0[:,0] = 3/(1+torch.exp(-200*(input_boundary_0[:,0]-0.25)))+1
         output_boundary_L = torch.zeros((input_boundary.shape[0], 2))
         return torch.cat([input_boundary_0, input_boundary_L], 0), torch.cat([output_boundary_0,output_boundary_L], 0)
 
@@ -154,19 +153,25 @@ class Pinns:
 
     # Function to compute the terms required in the definition of the SPATIAL boundary residual
     def apply_boundary_conditions(self, input_boundary, output_boundary):
+        input_boundary.requires_grad = True
         pred_output_boundary = self.approximate_solution(input_boundary)
-        Tf_0 = pred_output_boundary[:1024,0]
-        Tf_L = pred_output_boundary[1024:,0]
-        Ts_0 = pred_output_boundary[:1024,1]
-        Ts_L = pred_output_boundary[1024:,1]
-
-        gradx_Ts_0 = torch.autograd.grad(Ts_0.sum(), input_boundary,create_graph=True)[0][:,1]
-        gradx_Ts_L = torch.autograd.grad(Ts_L.sum(), input_boundary,create_graph=True)[0][:,1]
-        gradx_Tf_L = torch.autograd.grad(Tf_L.sum(), input_boundary,create_graph=True)[0][:,1]
+        print(f"{pred_output_boundary.shape = }")
+        print(f"{input_boundary.shape = }")
+        # pred_output_boundary.requires_grad = True
+        Tf_0 = pred_output_boundary[:512,0]
+        Tf_L = pred_output_boundary[512:,0]
+        Ts_0 = pred_output_boundary[:512,1]
+        Ts_L = pred_output_boundary[512:,1]
+        print(f"{Tf_0.shape = }")
+        print(f"{Tf_0.sum().shape = }")
+        gradx_Ts_0 = torch.autograd.grad(Ts_0.sum(),input_boundary[512:], create_graph=True)[0][:,1]
+        gradx_Ts_L = torch.autograd.grad(Ts_L.sum(),input_boundary[:512],create_graph=True)[0][:,1]
+        gradx_Tf_L = torch.autograd.grad(Tf_L.sum(),input_boundary[:512],create_graph=True)[0][:,1]
+        print(f"{gradx_Ts_0.shape = }")
 
         Tf_boundaries = torch.cat([Tf_0,gradx_Tf_L],0)
         Ts_boundaries = torch.cat([gradx_Ts_0,gradx_Ts_L],0)
-
+        print(f"{Tf_boundaries.shape = }")
         pred_output_boundary[:,0] = Tf_boundaries
         pred_output_boundary[:,1] = Ts_boundaries
 
@@ -204,7 +209,7 @@ class Pinns:
         # u_tt = a**2 u_xx
         residual = torch.zeros(u.shape)
         residual[:,0] = grad_Tf_t+grad_Tf_x-0.05*grad_Tf_xx+5*(Tf-Ts)
-        residual[:,1] = grad_Ts_t-0.08*grad_Ts_xx+6*(Tf-Ts)
+        residual[:,1] = grad_Ts_t-0.08*grad_Ts_xx-6*(Tf-Ts)
         return residual.reshape(-1,2)
 
     # Function to linearly transform a tensor whose value are between 0 and 1
@@ -237,15 +242,23 @@ class Pinns:
     def plotting(self):
         inputs = self.soboleng.draw(10000)
         inputs = self.convert(inputs)
+        print(inputs.shape)
 
         output = self.approximate_solution(inputs)
-        print(output.shape)
-        print(inputs.shape)
 
         plt.scatter(inputs[:, 1].detach().numpy(), inputs[:, 0].detach().numpy(), c=output.detach().numpy()[:,0].T)
         plt.colorbar()
         plt.xlabel("x")
         plt.ylabel("t")
+        plt.title("Ts")
+
+        plt.show()
+
+        plt.scatter(inputs[:, 1].detach().numpy(), inputs[:, 0].detach().numpy(), c=output.detach().numpy()[:,1].T)
+        plt.colorbar()
+        plt.xlabel("x")
+        plt.ylabel("t")
+        plt.title("Tf")
 
         plt.show()
 
@@ -273,8 +286,7 @@ input_c_, output_c_ = pinn.add_collocation_points(n_coll)  # S_int
 # plt.ylabel("t")
 # plt.legend()
 # plt.show()
-print(input_i_.shape)
-print(output_i_.shape)
+
 training_set_b = DataLoader(torch.utils.data.TensorDataset(input_b_, output_b_), batch_size=2 * n_bound, shuffle=False)
 training_set_i = DataLoader(torch.utils.data.TensorDataset(input_i_, output_i_), batch_size=n_init, shuffle=False)
 training_set_c = DataLoader(torch.utils.data.TensorDataset(input_c_, output_c_), batch_size=n_coll, shuffle=False)
@@ -285,4 +297,25 @@ optimizer_LBFGS = optim.LBFGS(pinn.approximate_solution.parameters(), lr=float(0
                               tolerance_change=1.0 * np.finfo(float).eps)
 hist = fit(pinn, training_set_b, training_set_i, training_set_c, num_epochs=n_epochs, optimizer=optimizer_LBFGS, verbose=True)
 
-pinn.plotting()
+
+exact_sol = pd.read_csv("./exact_solution.txt",sep=" ")
+exact_sol = torch.Tensor(exact_sol.values)
+
+t = exact_sol[:,0]
+x = exact_sol[:,1]
+input = exact_sol[:,:2]
+Ts = exact_sol[:,2]
+Tf = exact_sol[:,3]
+
+plt.scatter(t,x,c=Ts)
+plt.show()
+plt.scatter(t,x,c=Tf)
+plt.show()
+sol = pinn.approximate_solution(input)
+Ts = sol[:,0]
+Tf = sol[:,1]
+plt.scatter(t,x,c=Ts.detach().numpy())
+plt.title("Ts numérique")
+plt.show()
+plt.scatter(t,x,c=Ts.detach().numpy())
+print(Ts)
