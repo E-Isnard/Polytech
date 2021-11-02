@@ -2,6 +2,7 @@
 
 import numpy as np
 import matplotlib as mpl
+from numpy.lib import s_
 from numpy.random import rand
 import os
 from scipy.optimize import minimize, LinearConstraint, Bounds
@@ -10,7 +11,23 @@ from matplotlib.animation import FuncAnimation
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 from time import perf_counter
 import pyswarm as ps
+from munch import DefaultMunch
+from scipy.optimize.optimize import rosen
+from dataclasses import dataclass
 
+@dataclass()
+class Result:
+    x: float
+    feval: float
+    n: int
+    std:float
+    def __init__(self,x,feval,n,std) -> None:
+        self.x = x
+        self.n = n
+        self.feval = feval
+        self.std = std
+    def __repr__(self) -> str:
+        return self.__dict__.__str__()
 
 def progress(i, n):
     i += 1
@@ -128,22 +145,30 @@ def cost_func(xmin, xmax, ymin, ymax):
     fc = np.mean(C[-1])
     fc0 = np.mean(C[0])
     f = np.abs(fc0-fc)+(xmax-xmin)*(ymax-ymin)+100*max(0, 0.2-ymin)
-    print(f, xmin, xmax, ymin, ymax)
+    # print(f, xmin, xmax, ymin, ymax)
     return f
 
 def J(x): return cost_func(*x)
 
-def NelderMead(f,dim,alpha=1,lb=0,ub=1,gamma=2,rho=1/2,sigma=1/2,eps=1e-8,nmax=1):
-    x = (ub-lb)*rand(dim+1,dim)+lb
-    n=0
-    while n<=nmax:
-        n+=1
-        fx = f(x)
-        sort = fx.argsort(axis=0)
-        print(sort)
+def NelderMead(f,x0,step=0.1,alpha=1,gamma=2,rho=1/2,sigma=1/2,eps=1e-8,nmax=100,disp=False):
+    dim = len(x0)
+    f2 = lambda x: np.apply_along_axis(f,1,x)
+    x = np.zeros((dim+1,dim))
+    x[-1] = x0
+    for i in range(dim):
+        xi = x0.copy()
+        xi[i] = x0[i]+step
+        x[i] = xi
+    for n in range(nmax):
+        fx = f2(x).reshape(-1,)
+        if np.std(fx,axis=0)<=eps:
+            break
+        sort = np.argsort(fx)
         x = x[sort]
         fx = fx[sort]
-        xg = np.mean(x[:-1],axis=1)
+        if disp:
+            print(fx[0],x[0])
+        xg = np.mean(x[:-1],axis=0)
         xr = xg+alpha*(xg-x[-1])
         fr = f(xr)
         if fx[0]<fr and fr<fx[-2]:
@@ -161,20 +186,19 @@ def NelderMead(f,dim,alpha=1,lb=0,ub=1,gamma=2,rho=1/2,sigma=1/2,eps=1e-8,nmax=1
             if f(xc)<fx[-1]:
                 x[-1]=xc
             continue
-        for xi in x:
-            xi = x[0]+sigma*(xi-x[0])
-    return n,x[0] 
+        for i in range(1,dim+1):
+            x[i] = x[0]+sigma*(x[i]-x[0])
+
+    return Result(x[0],fx[0],n,np.std(fx))
+
+def test_func(x):
+    return rosen(x)
 
 
 
-
-    
-
-
-# res = NelderMead(lambda x:x**2,dim=1)
-# print(res)
-x0 = [0.3, 0.5, 0.3, 0.5]
-res = minimize(J, x0, method="Nelder-Mead", tol=1e-3)
+x0 = [0.3, 0.5, 0.3, 0.4]
+# res = minimize(J, x0, method="Nelder-Mead",tol=1e-3)
+res = NelderMead(J,x0,eps=1e-2,disp=True,nmax=30)
 print(res)
 C, T = simu(*(res.x))
 anim2d(C, T)

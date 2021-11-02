@@ -155,23 +155,20 @@ class Pinns:
     def apply_boundary_conditions(self, input_boundary, output_boundary):
         input_boundary.requires_grad = True
         pred_output_boundary = self.approximate_solution(input_boundary)
-        print(f"{pred_output_boundary.shape = }")
-        print(f"{input_boundary.shape = }")
         # pred_output_boundary.requires_grad = True
         Tf_0 = pred_output_boundary[:512,0]
-        Tf_L = pred_output_boundary[512:,0]
-        Ts_0 = pred_output_boundary[:512,1]
-        Ts_L = pred_output_boundary[512:,1]
-        print(f"{Tf_0.shape = }")
-        print(f"{Tf_0.sum().shape = }")
-        gradx_Ts_0 = torch.autograd.grad(Ts_0.sum(),input_boundary[512:], create_graph=True)[0][:,1]
-        gradx_Ts_L = torch.autograd.grad(Ts_L.sum(),input_boundary[:512],create_graph=True)[0][:,1]
-        gradx_Tf_L = torch.autograd.grad(Tf_L.sum(),input_boundary[:512],create_graph=True)[0][:,1]
-        print(f"{gradx_Ts_0.shape = }")
+        # Tf_L = pred_output_boundary[512:,0]
+        # Ts_0 = pred_output_boundary[:512,1]
+        # Ts_L = pred_output_boundary[512:,1]
+        gradx_Ts = torch.autograd.grad(pred_output_boundary[:,0].sum(),input_boundary,create_graph=True)[0][:,1]
+        gradx_Ts_0 = gradx_Ts[:512]
+        gradx_Ts_L = gradx_Ts[512:]
+        gradx_Tf = torch.autograd.grad(pred_output_boundary[:,1].sum(),input_boundary,create_graph=True)[0][:,1]
+        # gradx_Tf_0 = gradx_Tf[:512]
+        gradx_Tf_L = gradx_Tf[512:]
 
         Tf_boundaries = torch.cat([Tf_0,gradx_Tf_L],0)
         Ts_boundaries = torch.cat([gradx_Ts_0,gradx_Ts_L],0)
-        print(f"{Tf_boundaries.shape = }")
         pred_output_boundary[:,0] = Tf_boundaries
         pred_output_boundary[:,1] = Ts_boundaries
 
@@ -242,7 +239,6 @@ class Pinns:
     def plotting(self):
         inputs = self.soboleng.draw(10000)
         inputs = self.convert(inputs)
-        print(inputs.shape)
 
         output = self.approximate_solution(inputs)
 
@@ -308,8 +304,10 @@ Ts = exact_sol[:,2]
 Tf = exact_sol[:,3]
 
 plt.scatter(t,x,c=Ts)
+plt.title("Ts exa")
 plt.show()
 plt.scatter(t,x,c=Tf)
+plt.title("Tf exa")
 plt.show()
 sol = pinn.approximate_solution(input)
 Ts = sol[:,0]
@@ -317,5 +315,6 @@ Tf = sol[:,1]
 plt.scatter(t,x,c=Ts.detach().numpy())
 plt.title("Ts numérique")
 plt.show()
-plt.scatter(t,x,c=Ts.detach().numpy())
-print(Ts)
+plt.scatter(t,x,c=Tf.detach().numpy())
+plt.title("Tf numérique")
+plt.show()
