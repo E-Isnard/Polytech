@@ -2,7 +2,6 @@
 
 import numpy as np
 import matplotlib as mpl
-from numpy.lib import s_
 from numpy.random import rand
 import os
 from scipy.optimize import minimize, LinearConstraint, Bounds
@@ -11,23 +10,26 @@ from matplotlib.animation import FuncAnimation
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 from time import perf_counter
 import pyswarm as ps
-from munch import DefaultMunch
 from scipy.optimize.optimize import rosen
 from dataclasses import dataclass
+
 
 @dataclass()
 class Result:
     x: float
     feval: float
     n: int
-    std:float
-    def __init__(self,x,feval,n,std) -> None:
+    std: float
+
+    def __init__(self, x, feval, n, std) -> None:
         self.x = x
         self.n = n
         self.feval = feval
         self.std = std
+
     def __repr__(self) -> str:
         return self.__dict__.__str__()
+
 
 def progress(i, n):
     i += 1
@@ -144,61 +146,86 @@ def cost_func(xmin, xmax, ymin, ymax):
     C, T = simu(xmin, xmax, ymin, ymax)
     fc = np.mean(C[-1])
     fc0 = np.mean(C[0])
-    f = np.abs(fc0-fc)+(xmax-xmin)*(ymax-ymin)+100*max(0, 0.2-ymin)
+    f = np.abs(fc0-fc)+(xmax-xmin)*(ymax-ymin)+100*(ymin<=0.2 or ymax>=1 or xmin<=0 or xmax>=1 or xmax<=xmin or ymax<=ymin)
     # print(f, xmin, xmax, ymin, ymax)
     return f
 
+
 def J(x): return cost_func(*x)
 
-def NelderMead(f,x0,step=0.1,alpha=1,gamma=2,rho=1/2,sigma=1/2,eps=1e-8,nmax=100,disp=False):
+
+def NelderMead(f, x0, step=0.1, alpha=1, gamma=2, rho=1/2, sigma=1/2, eps=1e-8, nmax=100, disp=False):
     dim = len(x0)
-    f2 = lambda x: np.apply_along_axis(f,1,x)
-    x = np.zeros((dim+1,dim))
-    x[-1] = x0
-    for i in range(dim):
-        xi = x0.copy()
-        xi[i] = x0[i]+step
-        x[i] = xi
+    def f2(x): return np.apply_along_axis(f, 1, x)
+    x = np.zeros((dim+1, dim))
+    x[0] = x0
+    x[1:] = x0+np.eye(dim, dim)*step
     for n in range(nmax):
         fx = f2(x).reshape(-1,)
-        if np.std(fx,axis=0)<=eps:
+        if np.std(fx, axis=0) <= eps:
             break
         sort = np.argsort(fx)
         x = x[sort]
         fx = fx[sort]
         if disp:
-            print(fx[0],x[0])
-        xg = np.mean(x[:-1],axis=0)
+            print(fx[0], x[0])
+        xg = np.mean(x[:-1], axis=0)
         xr = xg+alpha*(xg-x[-1])
         fr = f(xr)
-        if fx[0]<fr and fr<fx[-2]:
-            x[-1]=xr
+        if fx[0] < fr and fr < fx[-2]:
+            x[-1] = xr
             continue
-        elif fr<fx[0]:
+        elif fr < fx[0]:
             xe = xg+gamma*(xg-x[-1])
-            if f(xe)<fr:
-                x[-1]=xe
+            if f(xe) < fr:
+                x[-1] = xe
             else:
-                x[-1]=xr
+                x[-1] = xr
             continue
-        elif fr>=fx[-2]:
+        elif fr >= fx[-2]:
             xc = xg+rho*(x[-1]-xg)
-            if f(xc)<fx[-1]:
-                x[-1]=xc
+            if f(xc) < fx[-1]:
+                x[-1] = xc
             continue
-        for i in range(1,dim+1):
-            x[i] = x[0]+sigma*(x[i]-x[0])
 
-    return Result(x[0],fx[0],n,np.std(fx))
+        x = x[0]+sigma*(x-x[0])
 
-def test_func(x):
-    return rosen(x)
+    return Result(x[0], fx[0], n, np.std(fx))
 
 
+def Torczon(f, x0, step=0.1, alpha=1, gamma=2, beta=1/2, eps=1e-8, nmax=100, disp=False):
+    dim = len(x0)
+    def f2(x): return np.apply_along_axis(f, 1, x)
+    x = np.zeros((dim+1, dim))
+    x[0] = x0
+    x[1:] = x0+np.eye(dim, dim)*step
+    for n in range(nmax):
+        fx = f2(x)
+        if np.std(fx, 0) <= eps:
+            break
+        sort = np.argsort(fx)
+        x = x[sort]
+        fx = fx[sort]
+        if disp:
+            print(fx[0], x[0])
+        x2 = np.zeros(x.shape)
+        x2 = (1+alpha)*x[0]-alpha*x
+        min2 = np.min(f2(x2[1:]))
+        if min2 < fx[0]:
+            x = gamma*x2+(1-gamma)*x
+        else:
+            x = beta*x2+(1-beta)*x[0]
+    return Result(x[0], min(min2, fx[0]), n, np.std(f2(x)))
 
-x0 = [0.3, 0.5, 0.3, 0.4]
+
+# x0 = np.array([1, -1])
+# print(Torczon(rosen, x0, eps=1e-8, step=1, nmax=100,disp=True))
+
+
+x0 = [0.3, 0.5, 0.3, 0.5]
 # res = minimize(J, x0, method="Nelder-Mead",tol=1e-3)
-res = NelderMead(J,x0,eps=1e-2,disp=True,nmax=30)
+# res = Torczon(J,x0,eps=1e-2,disp=True,nmax=20)
+res = Torczon(J,x0,eps=1e-2,disp=True,nmax=40)
 print(res)
 C, T = simu(*(res.x))
 anim2d(C, T)
