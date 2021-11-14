@@ -75,12 +75,8 @@ def gradT2(n,i,j):
         grad[0] = (T[n,i,j+1]-T[n,i,j])/delta
     return grad
 
-
-
-
 def laplacienT(n):
     return (T[n, 2:, 1:-1]+T[n, :-2, 1:-1]+T[n, 1:-1, 2:]+T[n, 1:-1, :-2]-4*T[n, 1:-1, 1:-1])/delta**2
-
 
 @np.vectorize
 def R(T, C):
