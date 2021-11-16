@@ -23,7 +23,7 @@ def pde(x,u):
 	return u_t+u*u_x-0.01*np.pi*u_xx
 
 geom = dde.geometry.Interval(-1,1)
-time_domain = dde.geometry.TimeDomain(0,0.99)
+time_domain = dde.geometry.TimeDomain(0,1)
 geom_time = dde.geometry.GeometryXTime(geom,time_domain)
 def boundary(x,on_boundary):
 	return on_boundary
@@ -45,17 +45,21 @@ model.compile("adam",lr=1e-3)
 losshistory, train_state = model.train(epochs=10000)
 
 G = geom_time.uniform_points(100000)
-print(G.shape)
+u = model.predict(G)
+plt.scatter(G[:,1],G[:,0],c=u)
+plt.title("Résultat de DeepXDE pour l'équation de Burgers 1D")
+plt.xlabel("t")
+plt.ylabel("x")
+plt.show()
+
 x = np.linspace(-1,1)
 G = np.ones((len(x),2))
 G[:,0] = x
-u = model.predict(G)
-
-# plt.scatter(G[:,1],G[:,0],c=u)
-# plt.show()
 ut = model.predict(G)
 plt.plot(x,ut)
-# plt.plot(x,-np.sin(np.pi*x))
+plt.title("Résultat de DeepXDE pour l'équation de Burgers en 1D à t=tf=1")
+plt.xlabel("t")
+plt.ylabel("u(x)")
 plt.show()
 
 
