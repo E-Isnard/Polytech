@@ -38,8 +38,10 @@ model.train(epochs=10000)
 
 x = geom.uniform_points(1000,True)
 y = model.predict(x)
-plt.plot(x,y)
-plt.plot(x, f(x))
+plt.plot(x,y,label="Solution numérique")
+plt.plot(x, f(x),label="Solution exacte")
+plt.title("Résultat de DeepXDE pour résoudre une équation de Poisson 1D")
+plt.legend()
 plt.show()
 
 

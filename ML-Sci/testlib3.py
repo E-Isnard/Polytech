@@ -17,36 +17,46 @@ from scipy.interpolate import griddata
 
 
 def pde(x,u):
+	u_t = dde.grad.jacobian(u,x,i=0,j=1)
+	u_x = dde.grad.jacobian(u,x,i=0,j=0)
 	u_xx = dde.grad.hessian(u,x,i=0,j=0)
-	u_yy = dde.grad.hessian(u,x,i=1,j=1)
-	return -u_xx -u_yy - 1
+	return u_t+u*u_x-0.01*np.pi*u_xx
 
-# geom = dde.geometry.Polygon([[0, 0], [1, 0], [1, -1], [-1, -1], [-1, 1], [0, 1]])
-geom = dde.geometry.Disk(0,1)
+geom = dde.geometry.Interval(-1,1)
+time_domain = dde.geometry.TimeDomain(0,0.99)
+geom_time = dde.geometry.GeometryXTime(geom,time_domain)
 def boundary(x,on_boundary):
 	return on_boundary
 
 def g(x):
 	return 0
+def h(x):
+	return -np.sin(np.pi*x[:,0:1])
 
-bc = dde.NeumannBC(geom,g,boundary)
-data = dde.data.PDE(geom,pde,bc,1200,120,num_test=0)
+bc = dde.DirichletBC(geom_time,g,boundary)
+ic = dde.IC(geom_time,h,boundary)
+data = dde.data.TimePDE(geom_time,pde,[bc,ic],num_domain=2540,num_boundary=80,num_initial=160)
 
 layer = [2]+[50]*4+[1]
-nn = dde.maps.FNN(layer,"tanh","He normal")
+nn = dde.maps.FNN(layer,"tanh","Glorot normal")
 
 model = dde.Model(data,nn)
 model.compile("adam",lr=1e-3)
 losshistory, train_state = model.train(epochs=10000)
 
-G = geom.uniform_points(100000)
+G = geom_time.uniform_points(100000)
+print(G.shape)
+x = np.linspace(-1,1)
+G = np.ones((len(x),2))
+G[:,0] = x
 u = model.predict(G)
-x = G[:,0]
-y = G[:,1]
 
-plt.scatter(x,y,c=u)
-plt.title("Solution de DeepXDE pour résoudre $-\Delta u = 1$")
-plt.xlabel("x")
-plt.ylabel("y")
-plt.colorbar()
+# plt.scatter(G[:,1],G[:,0],c=u)
+# plt.show()
+ut = model.predict(G)
+plt.plot(x,ut)
+# plt.plot(x,-np.sin(np.pi*x))
 plt.show()
+
+
+
