@@ -21,23 +21,23 @@ def pde(x,u):
 	u_yy = dde.grad.hessian(u,x,i=1,j=1)
 	return -u_xx -u_yy - 1
 
-geom = dde.geometry.Polygon([[0, 0], [1, 0], [1, -1], [-1, -1], [-1, 1], [0, 1]])
+# geom = dde.geometry.Polygon([[0, 0], [1, 0], [1, -1], [-1, -1], [-1, 1], [0, 1]])
+geom = dde.geometry.Disk(0,1)
 def boundary(x,on_boundary):
 	return on_boundary
 
-f = lambda x: 1/np.pi**2*np.sin(np.pi*x)
 def g(x):
 	return 0
 
-bc = dde.DirichletBC(geom,g,boundary)
-data = dde.data.PDE(geom,pde,bc,12000,120,num_test=0,train_distribution="LHS")
+bc = dde.NeumannBC(geom,g,boundary)
+data = dde.data.PDE(geom,pde,bc,1200,120,num_test=0)
 
 layer = [2]+[50]*4+[1]
 nn = dde.maps.FNN(layer,"tanh","He normal")
 
 model = dde.Model(data,nn)
 model.compile("adam",lr=1e-3)
-losshistory, train_state = model.train(epochs=1)
+losshistory, train_state = model.train(epochs=10000)
 
 G = geom.uniform_points(100000)
 u = model.predict(G)
@@ -45,4 +45,8 @@ x = G[:,0]
 y = G[:,1]
 
 plt.scatter(x,y,c=u)
+plt.title("Solution de DeepXDE pour résoudre $-\Delta u = 1$")
+plt.xlabel("x")
+plt.ylabel("y")
+plt.colorbar()
 plt.show()

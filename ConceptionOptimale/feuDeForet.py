@@ -10,7 +10,6 @@ import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 from time import perf_counter
-import pyswarm as ps
 from scipy.optimize.optimize import rosen
 from dataclasses import dataclass
 np.random.seed(7)
@@ -248,17 +247,46 @@ def Torczon(f, x0, step=0.1, alpha=1, gamma=2, beta=1/2, eps=1e-8, nmax=100, dis
         n+=1
     return Result(x[0], fx[0], n, std(x),f_vec)
 
-x0 = [0.3, 0.5, 0.3, 0.5]
-f_vec = []
-def append(xk):
-    print(xk)
-    f_vec.append(J(xk))
-res = NelderMead(J,x0,eps=1e-2,nmax=50,disp=True,hist=True)
-# res = Torczon(J,x0,eps=1e-2,disp=True,nmax=50,hist=True)
-# res = minimize(J,x0,method="Nelder-Mead",options={"maxiter": 50},callback=append)
-# res.f_vec = f_vec
+def muLambda(f,x0,sigma0,mu,lamb,tau,nmax=100,eps=1e-8,disp=False,hist=False):
+    assert lamb>mu
+    f_vec  = []
+    d = len(x0)
+    f2 = lambda x: np.apply_along_axis(f,1,x)
+    n=0
+    xbar = x0
+    sigma_bar = sigma0
+    while n<nmax and sigma_bar>eps:
+        sigma = sigma_bar*np.exp(tau*np.random.normal(size=lamb))
+        cov = np.diag(sigma**2)
+        x = xbar+np.random.multivariate_normal(np.zeros((lamb,)),cov,size=d).T
+        fx = f2(x)
+        sort = np.argsort(fx)
+        x = x[sort]
+        sigma = sigma[sort]
+        x = x[:mu]
+        sigma = sigma[:mu]
+        xbar = np.mean(x,axis=0)
+        sigma_bar = np.mean(sigma)
+        if hist:
+            f_vec.append(f(xbar))
+        if disp:
+            print(f(xbar),xbar)
+        n+=1
+    return Result(xbar,f(xbar),n,sigma_bar,f_vec)
+
+res = muLambda(lambda x: x.T@x,[10,10,10,10,10],sigma0=0.3,mu=5,lamb=100,tau=1,nmax=500)
 print(res)
-C, T = simu(*(res.x))
-anim2d(C, T)
-plt.plot(res.f_vec)
-plt.show()
+# x0 = [0.3, 0.5, 0.3, 0.5]
+# f_vec = []
+# def append(xk):
+#     print(xk)
+#     f_vec.append(J(xk))
+# res = NelderMead(J,x0,eps=1e-2,nmax=50,disp=True,hist=True)
+# # res = Torczon(J,x0,eps=1e-2,disp=True,nmax=50,hist=True)
+# # res = minimize(J,x0,method="Nelder-Mead",options={"maxiter": 50},callback=append)
+# # res.f_vec = f_vec
+# print(res)
+# C, T = simu(*(res.x))
+# anim2d(C, T)
+# plt.plot(res.f_vec)
+# plt.show()
