@@ -274,19 +274,50 @@ def muLambda(f,x0,sigma0,mu,lamb,tau,nmax=100,eps=1e-8,disp=False,hist=False):
         n+=1
     return Result(xbar,f(xbar),n,sigma_bar,f_vec)
 
-res = muLambda(lambda x: x.T@x,[10,10,10,10,10],sigma0=0.3,mu=5,lamb=100,tau=1,nmax=500)
-print(res)
-# x0 = [0.3, 0.5, 0.3, 0.5]
+def cma_es(f,x0,sigma0,lamb,mu,nmax=100,eps=1e-8,disp=False,hist=False):
+    assert lamb>mu
+    f_vec  = []
+    d = len(x0)
+    f2 = lambda x: np.apply_along_axis(f,1,x)
+    n=0
+    xbar = x0
+    p_sigma = np.zeros((d,1))
+    p_c = np.zeros((d,1))
+    sigma = sigma0
+    C = np.eye(d,d)
+    while n<nmax and sigma>eps:
+        # sigma = sigma_bar*np.exp(tau*np.random.normal(size=lamb))
+        x = xbar+sigma*np.random.multivariate_normal(np.zeros((lamb,)),C,size=d).T
+        fx = f2(x)
+        sort = np.argsort(fx)
+        x = x[sort]
+        sigma = sigma[sort]
+        x = x[:mu]
+        sigma = sigma[:mu]
+        xbar = np.mean(x,axis=0)
+        sigma_bar = np.mean(sigma)
+        if hist:
+            f_vec.append(f(xbar))
+        if disp:
+            print(f(xbar),xbar)
+        n+=1
+    return Result(xbar,f(xbar),n,sigma_bar,f_vec)
+
+
+# res = muLambda(lambda x: x.T@x,[10,10,10,10,10],sigma0=0.3,mu=5,lamb=100,tau=1,nmax=500)
+# print(res)
+x0 = [0.3, 0.5, 0.3, 0.5]
 # f_vec = []
 # def append(xk):
 #     print(xk)
 #     f_vec.append(J(xk))
 # res = NelderMead(J,x0,eps=1e-2,nmax=50,disp=True,hist=True)
 # # res = Torczon(J,x0,eps=1e-2,disp=True,nmax=50,hist=True)
+res = muLambda(J,x0,0.3,2,5,1,eps=1e-2,disp=True)
 # # res = minimize(J,x0,method="Nelder-Mead",options={"maxiter": 50},callback=append)
 # # res.f_vec = f_vec
 # print(res)
-# C, T = simu(*(res.x))
-# anim2d(C, T)
+C, T = simu(*(res.x))
+anim2d(C, T)
 # plt.plot(res.f_vec)
 # plt.show()

@@ -1,10 +1,12 @@
+import enum
 import numpy as np
 from numpy.random import multivariate_normal
 import matplotlib.pyplot as plt
 from scipy.linalg import sqrtm
+import matplotlib.cm as cm
 pi = np.pi
-@np.vectorize
-def kg(x,x2,sigma=1,theta=1):
+# @np.vectorize
+def kg(x,x2,sigma=1,theta=0.2):
     return sigma**2*np.exp(-np.linalg.norm(x-x2)**2/theta**2)
 @np.vectorize
 def ke(x,x2,sigma=1,theta=1):
@@ -47,16 +49,68 @@ Yb = np.real(sqrtm(Kb))@Z
 # plt.legend()
 # plt.show()
 
-def fb(x1,x2):
-    (x2-5.1/(4*pi**2)*x1**2+5/pi*x1-6)**2+10*((1-1/(8*pi))*np.cos(x1)+1)+5*x1
+def Rn(Xn,k=kg):
+    n = len(Xn)
+    Kn = np.zeros((n,n))
+    for i,xi in enumerate(Xn):
+        for j,xj in enumerate(Xn):
+            Kn[i,j] = k(xi,xj)
+    return Kn
 
-x1 = np.linspace(-5,10)
-x2 = np.linspace(0,15)
+def fb(x1,x2):
+    return (x2-5.1/(4*pi**2)*x1**2+5/pi*x1-6)**2+10*((1-1/(8*pi))*np.cos(x1)+1)+5*x1
+
+N=51
+x1 = np.linspace(-5,10,N)
+x2 = np.linspace(0,15,N)
 X1,X2 = np.meshgrid(x1,x2)
 Z = np.zeros(X1.shape)
-for i,xi in enumerate(x1):
-    for j,xj in enumerate(x2):
-        Z[i,j]=fb(xi,xj)
-print(Z)
-plt.contourf(X1,X2,Z)
-plt.show()
+
+# for i,xi in enumerate(x1):
+#     for j,xj in enumerate(x2):
+#         Z[i,j]=fb(xi,xj)
+# plt.imshow(Z)
+# plt.show()
+# fig = plt.figure()
+# ax = plt.axes(projection="3d")
+# ax.plot_surface(X1,X2,Z,cmap=cm.jet)
+# plt.show()
+
+x = np.linspace(0,1,num=3)
+X = np.array([[xi,xj] for xi in x for xj in x])
+
+def y(X):
+    y = np.zeros((len(X),1))
+    for i,x in enumerate(X):
+        y[i] = fb(*x)
+    return y
+
+
+def sigman(Rn,yn,eps=1e-5):
+    n=len(yn)
+    u = np.linalg.solve(Rn+eps*np.eye(n,n),yn)
+    return np.dot(yn.T,u)/n
+
+def Kn(X):
+    yn = y(X)
+    sn = sigman(Rn,yn)
+    return sn**2*Rn
+
+def kn(x,Xn):
+    R = Rn(Xn)
+    yn = y(X)
+    sn = sigman(R,yn)
+    k = np.zeros((len(x),1))
+    for i in range(len(x)):
+        k[i] = kg(x,xi,sigma=sn)
+    return k
+        
+
+
+
+
+
+
+    
+
+
