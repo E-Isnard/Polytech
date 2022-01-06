@@ -1,11 +1,8 @@
-function t=ElemFinisPk()
-  Ne = 6;
-  Np = 3*Ne;
-  Nddl_P1 = Np;
-  Ndde_P1 = 3;
-  Nddl_P2=Np+14;
+function [var_P2,u_ext,Nuddl,coor]=ElemFinisPk()
+  Ne = 8;
+  Nddl_P2=25;
   Ndde_P2 = 6;
-  
+  gen_meshP2(3,3)
   
   Nddl = Nddl_P2;
   Ndde = Ndde_P2;
@@ -55,7 +52,7 @@ function t=ElemFinisPk()
           Bj = Bf_P2(g,jl);
           Gj(1:2) = Grad_P2(jl,1:2);
           aeij = sum(Gi.*Gj);
-          MatA(is,js) = MatA(is,js)+2*AireT*wg(g)*aeij;
+          MatA(is,js) = MatA(is,js)+2.0*AireT*wg(g)*aeij;
         endfor
       endfor
     endfor
@@ -68,11 +65,9 @@ for iedge=EdgePoints
   MatA(iedge,iedge)=1;
   VecB(iedge) = 0;
 endfor
-sA = sparse(MatA);
-sb = sparse(VecB);
-var_P2 = bicg(sA,sb);
+
+var_P2 = (MatA+1e-6*eye(Nddl,Nddl))\VecB;
 u_ext = sin(pi*coor(:,1)).*sin(2*pi*coor(:,2));
-norm(var_P2-u_ext)
 
 endfunction
 
@@ -179,6 +174,15 @@ function tab=coord_P2()
   tab(23,:) = [2.00 0.50];
   tab(24,:) = [2.00 0.75];
   tab(25,:) = [2.00 1.00];
+endfunction
+
+function [coor,Num,edgePoints] = gen_meshP2(Nx,Ny)
+  x = linspace(0,1,Nx);
+  y = linspace(0,1,Ny);
+  coor = zeros(2,Nx*Ny);
+  coor
+
+  
 endfunction
 
 function [wg,xig,Ng] = gaussPoints()

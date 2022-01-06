@@ -3,7 +3,10 @@ import numpy as np
 from numpy.random import multivariate_normal
 import matplotlib.pyplot as plt
 from scipy.linalg import sqrtm
+from scipy.optimize import minimize
 import matplotlib.cm as cm
+from pyDOE import lhs
+from pykrige.ok import OrdinaryKriging
 pi = np.pi
 # @np.vectorize
 def kg(x,x2,sigma=1,theta=0.2):
@@ -49,12 +52,12 @@ Yb = np.real(sqrtm(Kb))@Z
 # plt.legend()
 # plt.show()
 
-def Rn(Xn,k=kg):
+def Rn(Xn,k_func=kg):
     n = len(Xn)
     Kn = np.zeros((n,n))
     for i,xi in enumerate(Xn):
         for j,xj in enumerate(Xn):
-            Kn[i,j] = k(xi,xj)
+            Kn[i,j] = k_func(xi,xj)
     return Kn
 
 def fb(x1,x2):
@@ -63,12 +66,15 @@ def fb(x1,x2):
 N=51
 x1 = np.linspace(-5,10,N)
 x2 = np.linspace(0,15,N)
-X1,X2 = np.meshgrid(x1,x2)
-Z = np.zeros(X1.shape)
 
-# for i,xi in enumerate(x1):
-#     for j,xj in enumerate(x2):
-#         Z[i,j]=fb(xi,xj)
+def eval_func(x1,x2,f):
+    X1,X2 = np.meshgrid(x1,x2)
+    Z = np.zeros(X1.shape)
+    for i,xi in enumerate(x1):
+        for j,xj in enumerate(x2):
+            Z[i,j]=f([xi,xj])
+    return X1,X2,Z
+# X1,X2,Z = eval_func(x1,x2,fb)
 # plt.imshow(Z)
 # plt.show()
 # fig = plt.figure()
@@ -76,41 +82,88 @@ Z = np.zeros(X1.shape)
 # ax.plot_surface(X1,X2,Z,cmap=cm.jet)
 # plt.show()
 
-x = np.linspace(0,1,num=3)
-X = np.array([[xi,xj] for xi in x for xj in x])
+x_uni = np.linspace(0,1,num=3)
+X_uni = np.array([[xi,xj] for xi in x_uni for xj in x_uni])
 
-def y(X):
+def r(x,X,k_func=kg):
+    r_vec = np.zeros((len(X),1))
+    for i,xi in enumerate(X):
+        r_vec[i] = k_func(x,xi)
+    return r_vec
+
+def R(X,k_func=kg):
+    R_mat = np.zeros((len(X),len(X)))
+    for i,xi in enumerate(X):
+        for j,xj in enumerate(X):
+            R_mat[i,j] = k_func(xi,xj)
+    return R_mat
+
+def y_func(X):
     y = np.zeros((len(X),1))
-    for i,x in enumerate(X):
-        y[i] = fb(*x)
+    for i,xi in enumerate(X):
+        y[i] = fb(*xi)
     return y
 
 
-def sigman(Rn,yn,eps=1e-5):
-    n=len(yn)
-    u = np.linalg.solve(Rn+eps*np.eye(n,n),yn)
-    return np.dot(yn.T,u)/n
+def mn(x,X,k_func=kg):
+    r_vec = r(x,X,k_func)
+    R_mat = R(X,k_func)
+    y = y_func(X)
+    return r_vec.T@(np.linalg.solve(R_mat,y))
 
-def Kn(X):
-    yn = y(X)
-    sn = sigman(Rn,yn)
-    return sn**2*Rn
+def sigman(Xn,k_func=kg):
+    y = y_func(Xn)
+    R_mat = R(Xn,k_func)
+    n = R_mat.shape[0]
+    return 1/n*y.T@(np.linalg.solve(R_mat,y))
+x_test = np.linspace(0,1)
+X_lhs = lhs(2,9)
+X1,X2,Z = eval_func(x_test,x_test,lambda x: fb(*x))
+# plt.imshow(Z)
+# plt.colorbar()
+# plt.show()
+# X1,X2,Z = eval_func(x_test,x_test,lambda x: mn(x,X_uni))
+# plt.imshow(Z)
+# plt.colorbar()
+# plt.show()
+X1,X2,z = eval_func(x_test,x_test,lambda x: mn(x,X_lhs))
+# plt.imshow(Z)
+# plt.colorbar()
+# plt.show()
+# data = np.append(X_lhs,y_func(X_lhs),axis=1)
+# ok = OrdinaryKriging(data[:,0],data[:,1],data[:,2])
+# z,ss = ok.execute("grid",x_test,x_test)
+fig,(ax1,ax2) = plt.subplots(1,2)
+plot = ax1.imshow(z)
+ax1.set_title("Ordinary Kriging")
+ax2.imshow(Z)
+ax2.set_title("True Function")
+fig.colorbar(plot,ax = (ax1,ax2))
+plt.show()
+# print(mn(X_uni[0],X_uni))
+# y = y_func(X_uni)
+# print(y[0])
 
-def kn(x,Xn):
-    R = Rn(Xn)
-    yn = y(X)
-    sn = sigman(R,yn)
-    k = np.zeros((len(x),1))
-    for i in range(len(x)):
-        k[i] = kg(x,xi,sigma=sn)
-    return k
-        
 
+# print(mn(X_lhs[0],X_lhs))
+# y = y_func(X_lhs)
+# print(y[0])
+@np.vectorize
+def ll(theta,X=X_uni):
+    k_func = lambda x,x2: kg(x,x2,theta=theta)
+    sigma2 = sigman(X,k_func)
+    R_mat = R(X,k_func)
+    n = R_mat.shape[0]
+    return -n/2*np.log(2*np.pi)-n/2*np.log(sigma2)-1/2*np.log(np.linalg.det(R_mat))-n/2
 
+theta_vec = np.linspace(0.1,25)
+ll_vec = ll(theta_vec)
 
+# plt.plot(theta_vec,ll_vec)
+# plt.show()
 
-
-
+theta_opt = minimize(lambda x: -ll(x),0.2)
+print(theta_opt.x)
     
 
 
