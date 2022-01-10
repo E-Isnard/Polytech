@@ -1,6 +1,6 @@
 clear;
 clc;
-n_mesh = [4 8 16 32 64 128];
+n_mesh = 2.^[1 2 3 4 5 6];
 eL2 = [];
 for i_mesh=n_mesh
   [x,uh] = solve_laplacian_FV(1,i_mesh);
@@ -8,8 +8,6 @@ for i_mesh=n_mesh
   h = x(2)-x(1);
   e = u-uh;
   eL2 = [eL2 norm(e)/h];
-
-
 endfor
 beta = polyfit(log2(n_mesh),log2(eL2),1)
 plot(log2(n_mesh),polyval(beta,log2(n_mesh)),"-xb")
