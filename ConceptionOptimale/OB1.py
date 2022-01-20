@@ -6,7 +6,7 @@ from scipy.linalg import sqrtm
 from scipy.optimize import minimize
 import matplotlib.cm as cm
 from pyDOE import lhs
-from pykrige.ok import OrdinaryKriging
+from pyKriging import kriging
 pi = np.pi
 # @np.vectorize
 def kg(x,x2,sigma=1,theta=0.2):

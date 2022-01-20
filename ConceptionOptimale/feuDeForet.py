@@ -99,15 +99,6 @@ c = np.max((u**2+v**2)**(1/2))
 dt = 1/8*min(delta**2/(mu), c/delta)
 C0 = 5+randomC(3, -5, 5)
 T0 = (((X-0.1)**2+(Y-0.1)**2) <= 0.0001)*10
-# norm2 = mpl.colors.Normalize(vmin=0, vmax=10)
-# img = plt.imshow(C0,cmap="Greens",norm=norm2,extent=[0, 1, 1, 0])
-# plt.colorbar(img,pad=0.1)
-# plt.title("Exemple de distribution initiale pour la végétation")
-# plt.xlabel("x")
-# plt.ylabel("y")
-# plt.savefig("C_0.png")
-# plt.show()
-
 
 def grad(T, V, n):
     mask = (V[0, 1:-1, 1:-1] <= 0)
@@ -186,9 +177,9 @@ def anim2d(C, T):
         axs[0].set_title(f"Température Frame {i}")
         axs[1].set_title(f"Végétation Frame {i}")
 
-    animation = FuncAnimation(fig, animate, frames=nt-1, interval=1)
-
-    plt.show()
+    animation = FuncAnimation(fig, animate, frames=nt-1, interval=100)
+    # plt.show()
+    return animation
 
 def plot(C):
     norm2 = mpl.colors.Normalize(vmin=0, vmax=10)
@@ -347,51 +338,49 @@ def muLambda(f, x0, sigma0, mu, lamb, tau, nmax=100, eps=1e-8, disp=False, hist=
 
 def cost_func(xmin, xmax, ymin, ymax):
     C, T = simu(xmin, xmax, ymin, ymax)
-    f = np.mean(C0-C[-1])+100*(ymin < 0.2 or ymax > 1 or xmin <
+    f = np.mean(C0-C[-1])+100.0*np.float64(ymin < 0.2 or ymax > 1 or xmin <
                                0 or xmax > 1 or xmax < xmin or ymax < ymin)+(xmax-xmin)*(ymax-ymin)
     return f
 
+def cost_func_unpenalized(xmin,xmax,ymin,ymax):
+    C, T = simu(xmin, xmax, ymin, ymax)
+    f = np.mean(C0-C[-1])+(xmax-xmin)*(ymax-ymin)
+    return f
 
 def cost_func2(xmin, xmax, ymin, ymax, w=1/2):
     C, T = simu(xmin, xmax, ymin, ymax)
     n_half = int(0.5/delta)
     f = (1-w)*np.mean(C0[:, n_half:]-C[-1, :, n_half:])+w*np.mean(C0[:, :n_half]-C[-1, :, :n_half]
                                                                   )+100*(ymin < 0.2 or ymax > 1 or xmin < 0 or xmax > 1 or xmax < xmin or ymax < ymin)
-    # print(f, xmin, xmax, ymin, ymax)
-    
-    # f = (1-w)*np.mean(C0[n_half:,:]-C[-1,  n_half:,:])+w*np.mean(C0[ :n_half,:]-C[-1,  :n_half,:]
-                                                                #   )+100*(ymin < 0.2 or ymax > 1 or xmin < 0 or xmax > 1 or xmax < xmin or ymax < ymin)
     return f
 
 
 def J(x): return cost_func(*x)
 def J2(x): return cost_func2(*x, w=1/4)
 
+if __name__=="__main__":
+    x0 = [0.3, 0.5, 0.3, 0.5]
 
-# res = muLambda(lambda x: x.T@x,np.array([100]*4),sigma0=0.1,mu=5,lamb=20,tau=1,nmax=1000,version="comma")
-# print(res)
-x0 = [0.3, 0.5, 0.3, 0.5]
+    mu2 = 5
+    lamb = 10
+    sigma0 = 0.1
+    tau = 0.1
+    # C,T = simu(*x0)
+    # anim2d(C,T)
+    res = Torczon(J2,x0,eps=1e-4,disp=1,nmax=50,hist=True)
+    res2 = muLambda(J2, x0, sigma0, mu2, lamb, tau, eps=1e-4,
+                disp=1,hist=True, nmax=50, version="comma")
+    C1, T1 = simu(*(res.x))
+    C2,T2 = simu(*(res2.x))
+    plot(C1)
+    plot(C2)
+    plt.plot(res.n_eval_vec,res.f_vec,label="Torczon")
+    plt.plot(res2.n_eval_vec,res2.f_vec,label="$(\mu,\lambda)$-ES")
+    plt.legend()
+    plt.xlabel("Nombre de simulations")
+    plt.ylabel("Valeur du critère")
+    plt.title(f"Comparaison entre Torczon et $(\mu,\lambda)$-ES avec $\lambda={lamb}$, $\mu={mu2}$, $\sigma_0={sigma0}$ et $\\tau={tau}$")
+    plt.show()
 
-mu2 = 5
-lamb = 10
-sigma0 = 0.1
-tau = 0.1
-# C,T = simu(*x0)
-# anim2d(C,T)
-res = Torczon(J2,x0,eps=1e-4,disp=1,nmax=50,hist=True)
-res2 = muLambda(J2, x0, sigma0, mu2, lamb, tau, eps=1e-4,
-               disp=1,hist=True, nmax=50, version="comma")
-C1, T1 = simu(*(res.x))
-C2,T2 = simu(*(res2.x))
-plot(C1)
-plot(C2)
-plt.plot(res.n_eval_vec,res.f_vec,label="Torczon")
-plt.plot(res2.n_eval_vec,res2.f_vec,label="$(\mu,\lambda)$-ES")
-plt.legend()
-plt.xlabel("Nombre de simulations")
-plt.ylabel("Valeur du critère")
-plt.title(f"Comparaison entre Torczon et $(\mu,\lambda)$-ES avec $\lambda={lamb}$, $\mu={mu2}$, $\sigma_0={sigma0}$ et $\\tau={tau}$")
-plt.show()
-
-# optim = cma.CMAEvolutionStrategy(x0,sigma0)
-# res = optim.optimize(J2,maxfun=400,verb_disp=True,n_jobs=-1).result[0]
+    # optim = cma.CMAEvolutionStrategy(x0,sigma0)
+    # res = optim.optimize(J2,maxfun=400,verb_disp=True,n_jobs=-1).result[0]
