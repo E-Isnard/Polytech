@@ -15,7 +15,6 @@ from scipy.optimize.optimize import rosen
 from dataclasses import dataclass
 import numpy.linalg as LA
 from scipy.linalg import sqrtm
-import cma
 from pyswarm import pso
 import multiprocessing
 def unpacking_apply_along_axis(all_args):
@@ -347,6 +346,18 @@ def cost_func_unpenalized(xmin,xmax,ymin,ymax):
     f = np.mean(C0-C[-1])+(xmax-xmin)*(ymax-ymin)
     return f
 
+def cost_func_noisy(xmin,xmax,ymin,ymax,delta=0.025):
+    xmin = xmin+delta*np.random.rand()
+    ymin = ymin+delta*np.random.rand()
+    xmax = xmax+delta*np.random.rand()
+    ymax = ymax+delta*np.random.rand()
+    return cost_func_unpenalized(xmin,xmax,ymin,ymax)
+
+def cost_func_MC(xmin,xmax,ymin,ymax,n=10):
+    x_mc = np.array(n*[[xmin,xmax,ymin,ymax]])
+    y_mc = parallel_apply_along_axis(J_noisy,1,x_mc)
+    return np.mean(y_mc)
+
 def cost_func2(xmin, xmax, ymin, ymax, w=1/2):
     C, T = simu(xmin, xmax, ymin, ymax)
     n_half = int(0.5/delta)
@@ -356,31 +367,34 @@ def cost_func2(xmin, xmax, ymin, ymax, w=1/2):
 
 
 def J(x): return cost_func(*x)
+def J_noisy(x):
+    return cost_func_noisy(*x)
 def J2(x): return cost_func2(*x, w=1/4)
 
 if __name__=="__main__":
     x0 = [0.3, 0.5, 0.3, 0.5]
+    print(cost_func_MC(*x0))
 
-    mu2 = 5
-    lamb = 10
-    sigma0 = 0.1
-    tau = 0.1
-    # C,T = simu(*x0)
-    # anim2d(C,T)
-    res = Torczon(J2,x0,eps=1e-4,disp=1,nmax=50,hist=True)
-    res2 = muLambda(J2, x0, sigma0, mu2, lamb, tau, eps=1e-4,
-                disp=1,hist=True, nmax=50, version="comma")
-    C1, T1 = simu(*(res.x))
-    C2,T2 = simu(*(res2.x))
-    plot(C1)
-    plot(C2)
-    plt.plot(res.n_eval_vec,res.f_vec,label="Torczon")
-    plt.plot(res2.n_eval_vec,res2.f_vec,label="$(\mu,\lambda)$-ES")
-    plt.legend()
-    plt.xlabel("Nombre de simulations")
-    plt.ylabel("Valeur du critère")
-    plt.title(f"Comparaison entre Torczon et $(\mu,\lambda)$-ES avec $\lambda={lamb}$, $\mu={mu2}$, $\sigma_0={sigma0}$ et $\\tau={tau}$")
-    plt.show()
+    # mu2 = 5
+    # lamb = 10
+    # sigma0 = 0.1
+    # tau = 0.1
+    # # C,T = simu(*x0)
+    # # anim2d(C,T)
+    # res = Torczon(J2,x0,eps=1e-4,disp=1,nmax=50,hist=True)
+    # res2 = muLambda(J2, x0, sigma0, mu2, lamb, tau, eps=1e-4,
+    #             disp=1,hist=True, nmax=50, version="comma")
+    # C1, T1 = simu(*(res.x))
+    # C2,T2 = simu(*(res2.x))
+    # plot(C1)
+    # plot(C2)
+    # plt.plot(res.n_eval_vec,res.f_vec,label="Torczon")
+    # plt.plot(res2.n_eval_vec,res2.f_vec,label="$(\mu,\lambda)$-ES")
+    # plt.legend()
+    # plt.xlabel("Nombre de simulations")
+    # plt.ylabel("Valeur du critère")
+    # plt.title(f"Comparaison entre Torczon et $(\mu,\lambda)$-ES avec $\lambda={lamb}$, $\mu={mu2}$, $\sigma_0={sigma0}$ et $\\tau={tau}$")
+    # plt.show()
 
     # optim = cma.CMAEvolutionStrategy(x0,sigma0)
     # res = optim.optimize(J2,maxfun=400,verb_disp=True,n_jobs=-1).result[0]
