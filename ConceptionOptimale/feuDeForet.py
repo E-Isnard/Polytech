@@ -347,10 +347,10 @@ def cost_func_unpenalized(xmin,xmax,ymin,ymax):
     return f
 
 def cost_func_noisy(xmin,xmax,ymin,ymax,delta=0.025):
-    xmin = xmin+delta*np.random.rand()
-    ymin = ymin+delta*np.random.rand()
-    xmax = xmax+delta*np.random.rand()
-    ymax = ymax+delta*np.random.rand()
+    xmin = xmin+delta*(2*np.random.rand()-1)
+    ymin = ymin+delta*(2*np.random.rand()-1)
+    xmax = xmax+delta*(2*np.random.rand()-1)
+    ymax = ymax+delta*(2*np.random.rand()-1)
     return cost_func_unpenalized(xmin,xmax,ymin,ymax)
 
 def cost_func_MC(xmin,xmax,ymin,ymax,n=10):
