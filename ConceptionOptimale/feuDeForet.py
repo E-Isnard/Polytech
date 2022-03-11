@@ -187,6 +187,7 @@ def plot(C):
     ax.invert_yaxis()
     ax.set_title("Végétation au temps final")
     plt.colorbar(im2, pad=0.1, ax=ax)
+    #plt.savefig("vegetation.png")
     plt.show()
 
 def std(x):
@@ -375,26 +376,26 @@ if __name__=="__main__":
     x0 = [0.3, 0.5, 0.3, 0.5]
     print(cost_func_MC(*x0))
 
-    # mu2 = 5
-    # lamb = 10
-    # sigma0 = 0.1
-    # tau = 0.1
-    # # C,T = simu(*x0)
-    # # anim2d(C,T)
-    # res = Torczon(J2,x0,eps=1e-4,disp=1,nmax=50,hist=True)
-    # res2 = muLambda(J2, x0, sigma0, mu2, lamb, tau, eps=1e-4,
-    #             disp=1,hist=True, nmax=50, version="comma")
-    # C1, T1 = simu(*(res.x))
-    # C2,T2 = simu(*(res2.x))
-    # plot(C1)
-    # plot(C2)
-    # plt.plot(res.n_eval_vec,res.f_vec,label="Torczon")
-    # plt.plot(res2.n_eval_vec,res2.f_vec,label="$(\mu,\lambda)$-ES")
-    # plt.legend()
-    # plt.xlabel("Nombre de simulations")
-    # plt.ylabel("Valeur du critère")
-    # plt.title(f"Comparaison entre Torczon et $(\mu,\lambda)$-ES avec $\lambda={lamb}$, $\mu={mu2}$, $\sigma_0={sigma0}$ et $\\tau={tau}$")
-    # plt.show()
+    mu2 = 5
+    lamb = 10
+    sigma0 = 0.1
+    tau = 0.1
+    # C,T = simu(*x0)
+    # anim2d(C,T)
+    res = Torczon(J2,x0,eps=1e-4,disp=1,nmax=50,hist=True)
+    res2 = muLambda(J2, x0, sigma0, mu2, lamb, tau, eps=1e-4,
+                disp=1,hist=True, nmax=50, version="comma")
+    C1, T1 = simu(*(res.x))
+    C2,T2 = simu(*(res2.x))
+    plot(C1)
+    plot(C2)
+    plt.plot(res.n_eval_vec,res.f_vec,label="Torczon")
+    plt.plot(res2.n_eval_vec,res2.f_vec,label="$(\mu,\lambda)$-ES")
+    plt.legend()
+    plt.xlabel("Nombre de simulations")
+    plt.ylabel("Valeur du critère")
+    plt.title(f"Comparaison entre Torczon et $(\mu,\lambda)$-ES avec $\lambda={lamb}$, $\mu={mu2}$, $\sigma_0={sigma0}$ et $\\tau={tau}$")
+    plt.show()
 
     # optim = cma.CMAEvolutionStrategy(x0,sigma0)
     # res = optim.optimize(J2,maxfun=400,verb_disp=True,n_jobs=-1).result[0]
